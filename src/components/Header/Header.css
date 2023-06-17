@@ -1,0 +1,13 @@
+#header{
+    display: flex;
+    width: 100%;
+    height: 60px;
+    background-color: gainsboro;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#mes{
+    margin-right: 20px;
+    height: 60px;
+}
