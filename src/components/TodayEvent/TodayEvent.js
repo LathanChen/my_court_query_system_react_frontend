@@ -6,11 +6,12 @@ export default function TodayEvent() {
 
     return (
         <Box sx={{
-            height: '260px',
-            // padding: '10px',
+            height: '32vh',
+            padding: '1vh',
             // marginLeft: '50px',
             // marginTop: '50px',
-            border: '1px solid skyblue'
+            border: '1px solid skyblue',
+            overflow:'hidden'
         }}>
             <div style={{
                 // 开启flex布局
@@ -20,19 +21,19 @@ export default function TodayEvent() {
             // 主轴的对齐方式
             justifyContent: 'space-between',
             // 交叉轴的对齐方式
-            alignItems: 'center',
-            flexWrap: 'wrap',
+            // alignItems: 'center',
+            // flexWrap: 'wrap',
             }}>
 
 
-            <div style={{padding:'10px'}}>
+            <div style={{padding:'1vh'}}>
             <Typography variant="h5" color="primary">
                     本日活动
                     </Typography>
                 <div style={{
-                    marginTop: '20px'
+                    marginTop: '2vh'
                 }}>
-                    <SportsHandballIcon style={{ fontSize: '120px', color: 'rgb(25, 118, 210)' }}></SportsHandballIcon>
+                    <SportsHandballIcon style={{ fontSize: '17vh', color: 'rgb(25, 118, 210)' }}></SportsHandballIcon>
                 </div>
             </div>
 
@@ -41,97 +42,97 @@ export default function TodayEvent() {
                 // flexDirection: 'column',
                 width:'65%',
                 flexWrap:'wrap',
-                marginTop:'30px'
+                marginTop:'1vh'
                 // justifySelf: 'center'
             }}>
                 <div style={{
                     width:'40%',
-                    height:'80px',
+                    height:'12vh',
                     margin:'3%',
                     padding:'1%',
                     border:'1px solid skyblue',
-                    fontSize:'20px'}}>
+                    fontSize:'3vh'}}>
                     <div>
                     <span>
                         篮球
                     </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             未开始
                         </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             已结束
                         </span>
                     </div>                  
                 </div>
                 <div style={{
                     width:'40%',
-                    height:'80px',
+                    height:'12vh',
                     margin:'3%',
                     padding:'1%',
                     border:'1px solid skyblue',
-                    fontSize:'20px'}}>
+                    fontSize:'3vh'}}>
                     <div>
                     <span>
                         乒乓球
                     </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             未开始
                         </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             已结束
                         </span>
                     </div>                  
                 </div>
                 <div style={{
                     width:'40%',
-                    height:'80px',
+                    height:'12vh',
                     margin:'3%',
                     padding:'1%',
                     border:'1px solid skyblue',
-                    fontSize:'20px'}}>
+                    fontSize:'3vh'}}>
                     <div>
                     <span>
                         羽毛球
                     </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             未开始
                         </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             已结束
                         </span>
                     </div>                  
                 </div>
                 <div style={{
                     width:'40%',
-                    height:'80px',
+                    height:'12vh',
                     margin:'3%',
                     padding:'1%',
                     border:'1px solid skyblue',
-                    fontSize:'20px'}}>
+                    fontSize:'3vh'}}>
                     <div>
                     <span>
                         排球
                     </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             未开始
                         </span>
                     </div>
                     <div>
-                        <span style={{fontSize: '14px'}}>
+                        <span style={{fontSize: '2vh'}}>
                             已结束
                         </span>
                     </div>                  

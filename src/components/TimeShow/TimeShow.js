@@ -6,7 +6,7 @@ export default function TimeShow() {
     const [time, setTime] = useState(new Date());
     // 创建一个表示当前日期的 Date 对象
     const currentDate = new Date();
-    console.log(currentDate)
+    // console.log(currentDate)
     // 获取当前日期是本月的第几天
     const currentDay = currentDate.getDate();
 
@@ -84,13 +84,13 @@ export default function TimeShow() {
            
             // flexWrap: 'wrap',
             // width: '100%',
-            height: '260px',
-            padding: '10px',
+            height: '32vh',
+            padding: '1vh',
             // marginLeft: '50px',
             // marginTop: '50px',
-            border: '1px solid skyblue'
+            border: '1px solid skyblue',
+            overflow:'hidden'
         }}>
-
                     <div>
                         {time.getFullYear()}年{time.getMonth()+1}月{time.getDate()}日
                     </div>
@@ -101,15 +101,15 @@ export default function TimeShow() {
             <div style={{
                 width: '100%',
                 display: 'flex',
-                marginTop:'50px',
+                marginTop:'6vh',
                 justifyContent:'flex-start',
                 alignItems:'center',
                 color: 'rgb(25, 118, 210)',
             }}>
                                 <div>
-                    <CalendarMonthIcon style={{ fontSize: '140px', color: 'rgb(25, 118, 210)' }}></CalendarMonthIcon>
+                    <CalendarMonthIcon style={{ fontSize:'18vh', color: 'rgb(25, 118, 210)' }}></CalendarMonthIcon>
                 </div>
-                <div style={{marginLeft:'80px',fontSize: '40px',}}>
+                <div style={{marginLeft:'20%',fontSize:'5vh',}}>
                     <div>
                         第{weekNum}周
                     </div>

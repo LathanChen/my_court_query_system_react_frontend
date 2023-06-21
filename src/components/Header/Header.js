@@ -8,7 +8,7 @@ const [mes] = useState('你好，请')
 
 return(
     <div id="header">
-        <span style={{lineHeight:'60px',}}>{mes}</span>          
+        <span style={{lineHeight:'8vh',}}>{mes}</span>          
         <Button variant="contained" size="small">登录</Button>
         <div>
             <SettingsIcon size="large"/>

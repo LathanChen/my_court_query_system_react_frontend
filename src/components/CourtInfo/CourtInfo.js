@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 // import './QueryForm.css'
 import Slider from "react-slick";
-import { InputLabel, FormControl, Select, MenuItem, Box, Typography, Button } from '@mui/material';
+import {  Box, Typography } from '@mui/material';
 export default function CourtInfo() {
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -21,32 +21,35 @@ export default function CourtInfo() {
         },
     ];
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-        }, 3000);
+    // 副作用函数，用于处理组件内图片轮播的时间间隔
+    // useEffect(() => {
+    //     const timer = setInterval(() => {
+    //         setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+    //     }, 3000);
 
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
+    //     return () => {
+    //         clearInterval(timer);
+    //     };
+    // }, []);
 
     const handleSlideChange = (value) => {
         setCurrentSlide(value);
     };
     return (
         <Box sx={{
-            height: '240px',
-            padding: '10px',
+            height: '32vh',
+            padding: '1vh',
             // marginLeft: '50px',
             // marginTop: '50px',
-            border: '1px solid skyblue'
+            border: '1px solid skyblue',
+            overflow:'hidden'
         }}>
             <div style={{
-                marginBottom: '10px'
+                padding:'1vh',
+                marginBottom: '1vh'
             }}>
                 <Typography variant="h5" color="primary">
-                    寻找队伍
+                    场馆信息
                 </Typography>
             </div>
             <div>

@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-export default function FindTeam() {
+export default function FindTeam(props) {
     const [age, setAge] = useState('')
 
     const handleChange = (event) => {
@@ -18,16 +18,22 @@ export default function FindTeam() {
         setSelectedDate(date);
     };
     const [ages, setAges] = useState([1, 2, 3])
+
+    const showData = () =>{
+        props.changeShowQuertFormOrNot(!(props.showQuertFormOrNot))
+    }
     return (
         <Box sx={{
-            height: '260px',
-            padding: '10px',
+            height: '32vh',
+            padding: '1vh',
             // marginLeft: '50px',
             // marginTop: '50px',
-            border: '1px solid skyblue'
+            border: '1px solid skyblue',
+            overflow:'hidden'
         }}>
             <div style={{ 
-                marginBottom: '10px'
+                padding:'1vh',
+                marginBottom: '1vh'
                  }}>
                 <Typography variant="h5" color="primary">
                     寻找队伍
@@ -40,7 +46,7 @@ export default function FindTeam() {
                     </DemoContainer>
                 </LocalizationProvider>
             </FormControl>
-            <FormControl sx={{ width: '100%', marginTop: '10px' }}>
+            <FormControl sx={{ width: '100%', marginTop: '1vh' }}>
                 <InputLabel id="demo-simple-select-label">项目</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
@@ -57,9 +63,9 @@ export default function FindTeam() {
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-around',
-                marginTop: '20px'
+                marginTop: '2vh'
             }}>
-                <Button variant="contained" sx={{ marginRight: '60px' }}>确认</Button>
+                <Button variant="contained" sx={{ marginRight: '3vh' }} onClick={showData}>确认</Button>
                 <Button variant="outlined">取消</Button>
             </Box>
         </Box>
