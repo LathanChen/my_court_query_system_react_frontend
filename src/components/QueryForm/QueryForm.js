@@ -6,7 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
-export default function QueryForm() {
+export default function QueryForm(props) {
     const [time, setTime] = useState('')
 
     // const handleChange = (event) => {
@@ -57,9 +57,14 @@ export default function QueryForm() {
         courtOpenItemId:courtOpenItemId,
     }
 
-    function sendAxios() {
+    // 使用父组件传递过来的函数，改变父组件中判断组件是否显示的变量，将查询到的数据返回给父组件，并切换到明细显示的页面
+    function sendAxiosAndGotoShowQueryData() {
         axios.get('/courtinfo/getcourtinfo',{params})
-            .then(response => console.log(response.data))
+            .then(response => {
+                if (response.data.length >0){
+                    props.setShowFlag(response.data,true)
+                }
+                })
             .catch(error => console.log(error));
     }
 
@@ -131,7 +136,7 @@ export default function QueryForm() {
                 justifyContent: 'space-between',
                 marginTop: '2vh'
             }}>
-                <Button onClick={sendAxios} variant="contained" sx={{ marginRight: '25vh' }}>确认</Button>
+                <Button onClick={sendAxiosAndGotoShowQueryData} variant="contained" sx={{ marginRight: '25vh' }}>确认</Button>
                 <Button variant="outlined">取消</Button>
             </Box>
             <div style={{ height: '38%', width: '100%', backgroundColor: 'rgb(25, 118, 210)', marginTop: '5vh', }}>

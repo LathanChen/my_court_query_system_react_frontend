@@ -6,18 +6,22 @@ import TodayEvent from '../../components/TodayEvent/TodayEvent'
 import CourtInfo from '../../components/CourtInfo/CourtInfo'
 import FindTeam from '../../components/FindTeam/FindTeam'
 import ShowTeamData from '../../components/ShowTeamData/ShowTeamData'
+import ShowQueryData from '../../components/ShowQueryData/ShowQueryData'
+import { Outlet } from 'react-router-dom';
 import { useState } from "react";
 
 export default function HomePage() {
 
     const [showQuertFormOrNot, SetShowQuertFormOrNot] = useState(false)
 
-    const changeShowQuertFormOrNot = (data) =>{
-        SetShowQuertFormOrNot(data)
-            console.log(showQuertFormOrNot)
+    const [showQueryData, SetShowQueryData] = useState([])
+
+    const [showQueryDataFlg, SetShowQueryDataFlg] = useState(false)
+
+    function changeShowQuertFormOrNot(data,flg){
+        SetShowQueryData(data)
+        SetShowQueryDataFlg(flg)
     }
-
-
 
     return (
         <div style={{width:'100%'}}>
@@ -47,7 +51,7 @@ export default function HomePage() {
                         width: '46%',
                         // marginLeft: '2%'
                     }}>
-                        <FindTeam changeShowQuertFormOrNot={changeShowQuertFormOrNot} showQuertFormOrNot={showQuertFormOrNot}></FindTeam>
+                        <FindTeam showQuertFormOrNot={showQuertFormOrNot}></FindTeam>
                     </div>
                     <div style={{
                         width: '46%',
@@ -71,7 +75,16 @@ export default function HomePage() {
                     marginTop: '8vh',
                     height:'76vh'
                 }}>
-                    {showQuertFormOrNot?<ShowTeamData/>:<QueryForm/>}
+                    {/* {showQueryDataFlg?(
+                    <ShowQueryData 
+                    showQueryData={showQueryData} 
+                    showQueryDataFlg={showQueryDataFlg} 
+                    setShowFlag={changeShowQuertFormOrNot}/>
+                    )
+                    :(<QueryForm 
+                    setShowFlag={changeShowQuertFormOrNot}/>
+                    )} */}
+                    <Outlet />
                 </div>
             </div>
 
