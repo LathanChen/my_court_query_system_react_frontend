@@ -2,7 +2,9 @@ import { useState } from "react";
 // import './QueryForm.css'
 import { Box, Typography, Button} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-
+// useSelector 和 useDispatch 是两个Hooks,用于连接redux store
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function ShowQueryData(props) {
 
@@ -13,7 +15,28 @@ export default function ShowQueryData(props) {
 
     ];
 
-    const rows = props.showQueryData.map((item) => {
+    // 数据的获取方式一：
+    // 旧方式，通过接收父组件传递过来的列表，展示查询到的信息
+    // const rows = props.showQueryData.map((item) => {
+    //     const { courtOpenTime,courtOpenInfoId } = item;
+    //     const { courtName, courtAdress } = item.courtInfo;
+
+    //     // 创建新的对象
+    //     return {
+    //         id:courtOpenInfoId,
+    //         courtOpenTime,
+    //         courtName,
+    //         courtAdress    
+    //     };
+    // });
+
+    // function setFlg(data,flg){
+    //     props.setShowFlag(null,false)
+    // }
+
+    // 数据的获取方式二：
+    // 使用 useSelector hook 来获取 Redux store 中的状态，并返回给组件使用
+    const courtInfoList = useSelector(state => state.courtInfoList).map((item) => {
         const { courtOpenTime,courtOpenInfoId } = item;
         const { courtName, courtAdress } = item.courtInfo;
 
@@ -25,9 +48,11 @@ export default function ShowQueryData(props) {
             courtAdress    
         };
     });
-
-    function setFlg(data,flg){
-        props.setShowFlag(null,false)
+    
+    // 创建navigate变量,用于router跳转
+    const navigate = useNavigate();
+    function backToQyeryForm(){
+        navigate('/')
     }
 
     return (
@@ -54,15 +79,15 @@ export default function ShowQueryData(props) {
                 justifyContent: 'space-between',
                 padding: '2vh',
                 textAlign:'lefy' }}>
-                <Typography variant="h5" color="primary">找到{rows.length}条记录</Typography>
+                <Typography variant="h5" color="primary">找到{courtInfoList.length}条记录</Typography>
                 <span>
-                <Button variant="contained" onClick={setFlg}>返回</Button>
+                <Button variant="contained" onClick={backToQyeryForm}>返回</Button>
                 </span>
             </div>
             <div style={{ width: '93%', padding: '2vh' }}>
                 <DataGrid
                     sx={{ border: 'none' }}
-                    rows={rows}
+                    rows={courtInfoList}
                     columns={columns}
                     initialState={{
                         pagination: {

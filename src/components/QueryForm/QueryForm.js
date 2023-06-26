@@ -6,16 +6,19 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import axios from 'axios';
-export default function QueryForm(props) {
-    const [time, setTime] = useState('')
+// useSelector 和 useDispatch 是两个Hooks,用于连接redux store
+import { useDispatch } from 'react-redux';
+// useNavigate用于实现路由跳转
+import { useNavigate } from 'react-router-dom';
 
+export default function QueryForm(props) {
     // const handleChange = (event) => {
     //     setAge(event.target.value)
     // }
     const [selectedDate, setSelectedDate] = useState(null);
 
     const [courtOpenWeekday, setCourtOpenWeekday] = useState();
-    
+
     const [courtOpenWeekNum, setCourtOpenWeekNum] = useState();
 
     const handleDateChange = (dateString) => {
@@ -32,8 +35,8 @@ export default function QueryForm(props) {
         const daysSinceStartOfMonth = adjustedDayOfWeek + dayOfMonth;
         const weekNumber = Math.floor(daysSinceStartOfMonth / 7) + 1;
         const dayOfWeekInWeek = (daysSinceStartOfMonth % 7) + 1;
-        console.log(weekNumber)
-        console.log(dayOfWeekInWeek)
+        console.log(`第${weekNumber}周`)
+        console.log(`周${dayOfWeekInWeek}`)
         setCourtOpenWeekday(dayOfWeekInWeek)
         setCourtOpenWeekNum(weekNumber)
     }
@@ -51,21 +54,52 @@ export default function QueryForm(props) {
     };
 
     const params = {
-        courtOpenWeekday:courtOpenWeekday,
-        courtOpenWeekNum:courtOpenWeekNum,
-        courtOpenTimeZone:courtOpenTimeZone,
-        courtOpenItemId:courtOpenItemId,
+        courtOpenWeekday: courtOpenWeekday,
+        courtOpenWeekNum: courtOpenWeekNum,
+        courtOpenTimeZone: courtOpenTimeZone,
+        courtOpenItemId: courtOpenItemId,
     }
 
+    // 使用 useSelector hook 来获取 Redux store 中的状态，并返回给组件使用
+    // const storeMSg = useSelector(state => state.courtInfoList)
+
+    // 使用 useDispatch hook 来获取一个 dispatch 函数，用于分发 action
+    const dispatch = useDispatch();
+
+    // 创建navigate变量,用于router跳转
+    const navigate = useNavigate();
+    // 传递数据的方式一：
     // 使用父组件传递过来的函数，改变父组件中判断组件是否显示的变量，将查询到的数据返回给父组件，并切换到明细显示的页面
+    // function sendAxiosAndGotoShowQueryData() {
+    //     axios.get('/courtinfo/getcourtinfo',{params})
+    //         .then(response => {
+    //             if (response.data.length >0){
+    //                 props.setShowFlag(response.data,true)
+    //             }
+    //             })
+    //         .catch(error => console.log(error));
+    // }
+
+    // 传递数据的方式二：
+    // 发送axios请求后，将接收到的数据保存到store中，通过router导航到数据展示页面
     function sendAxiosAndGotoShowQueryData() {
-        axios.get('/courtinfo/getcourtinfo',{params})
+        axios.get('/courtinfo/getcourtinfo', { params })
             .then(response => {
-                if (response.data.length >0){
-                    props.setShowFlag(response.data,true)
+                if (response.data.length >= 0) {
+                    dispatch({
+                        type:"FINDCOURTINFOLIST",
+                        payload:response.data,
+                    })
                 }
-                })
+                navigate('/ShowQueryData');
+            })
             .catch(error => console.log(error));
+    }
+
+    const claerForm = () =>{
+        setSelectedDate(null)
+        setCourtOpenTimeZone('')
+        setCourtOpenItemId('')
     }
 
     return (
@@ -137,7 +171,7 @@ export default function QueryForm(props) {
                 marginTop: '2vh'
             }}>
                 <Button onClick={sendAxiosAndGotoShowQueryData} variant="contained" sx={{ marginRight: '25vh' }}>确认</Button>
-                <Button variant="outlined">取消</Button>
+                <Button variant="outlined" onClick={claerForm}>取消</Button>
             </Box>
             <div style={{ height: '38%', width: '100%', backgroundColor: 'rgb(25, 118, 210)', marginTop: '5vh', }}>
 

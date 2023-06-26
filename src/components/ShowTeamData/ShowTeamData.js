@@ -1,30 +1,37 @@
 import { useState } from "react";
 // import './QueryForm.css'
-import { Box, Typography } from '@mui/material';
+import { Box, Typography,Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 export default function ShowTeamData() {
 
     const columns = [
-        { field: 'teamName', headerName: '队伍名称', width: 150 },
-        { field: 'timeZone', headerName: '时间段', width: 100 },
-        { field: 'regionName', headerName: '地区', sortable: false, width: 160 },
+        { field: 'teamName', headerName: '队伍名称', width: 100 },
+        { field: 'planningTime', headerName: '时间段', width: 120 },
+        { field: 'courtName', headerName: '地区', sortable: false, width: 180 },
 
     ];
 
-    const rows = [
-        { id: 1, teamName: 'AAA', timeZone: 'XXX', regionName: 'XXX体育馆' },
-        { id: 2, teamName: 'BBB', timeZone: 'YYY', regionName: 'YYY体育馆' },
-        { id: 3, teamName: 'CCC', timeZone: 'HHH', regionName: 'HHH体育馆' },
-        { id: 4, teamName: 'DDD', timeZone: 'AAA', regionName: 'AAA体育馆' },
-        { id: 5, teamName: 'EEE', timeZone: 'BBB', regionName: 'BBB体育馆' },
-        { id: 6, teamName: 'FFF', timeZone: 'CCC', regionName: 'CCC体育馆' },
-        { id: 7, teamName: 'GGG', timeZone: 'DDD', regionName: 'DDD体育馆' },
-        { id: 8, teamName: 'HHH', timeZone: 'EEE', regionName: 'EEE体育馆' },
-        { id: 9, teamName: 'III', timeZone: 'FFF', regionName: 'FFF体育馆' },
-        { id: 10, teamName: 'JJJ', timeZone: 'GGG', regionName: 'GGG体育馆' },
-    ];
+    const teamPlanningInfo = useSelector(state => state.teamPlanningInfo).map((item) => {
+        const { teamName } = item.teamInfo;
+        const { planningTime,planningInfoId } = item;
+        const { courtName} = item.courtInfo;
+
+        // 创建新的对象
+        return {
+            id:planningInfoId,
+            teamName,
+            planningTime,
+            courtName    
+        };
+    });
+
+    const navigate = useNavigate()
+    const backToQyeryForm =() => {
+        navigate('/')
+    }
 
     return (
         <Box sx={{
@@ -45,13 +52,20 @@ export default function ShowTeamData() {
             overflow:'auto'
 
         }}>
-            <div style={{ padding: '2vh' }}>
+            <div style={{ 
+                display: 'flex',
+                justifyContent: 'space-between',
+                padding: '2vh',
+                textAlign:'lefy' }}>
                 <Typography variant="h5" color="primary">XX年XX月XX日</Typography>
+                <span>
+                <Button variant="contained" onClick={backToQyeryForm}>返回</Button>
+                </span>
             </div>
             <div style={{ width: '93%', padding: '2vh' }}>
                 <DataGrid
                     sx={{ border: 'none' }}
-                    rows={rows}
+                    rows={teamPlanningInfo}
                     columns={columns}
                     initialState={{
                         pagination: {

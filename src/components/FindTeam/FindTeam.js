@@ -1,27 +1,71 @@
 import { useState } from "react";
 // import './QueryForm.css'
-import { InputLabel, FormControl, Select, MenuItem, Box, Typography,Button } from '@mui/material';
+import { InputLabel, FormControl, Select, MenuItem, Box, Typography, Button } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// useNavigate用于实现路由跳转
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+// useSelector 和 useDispatch 是两个Hooks,用于连接redux store
+import { useDispatch } from 'react-redux';
+// 用于将页面的日期格式转化为后端方便处理的数字格式
+import dayjs from 'dayjs';
 
 export default function FindTeam(props) {
-    const [age, setAge] = useState('')
+    const [teamItemId, setTeamItemId] = useState('')
 
     const handleChange = (event) => {
-        setAge(event.target.value)
+        setTeamItemId(event.target.value)
+        console.log(event.target.value)
     }
     const [selectedDate, setSelectedDate] = useState(null);
 
     const handleDateChange = (date) => {
-        setSelectedDate(date);
+        const formattedDate = dayjs(date).format('YYYYMMDD');
+        console.log(formattedDate)
+        setSelectedDate(formattedDate);
     };
-    const [ages, setAges] = useState([1, 2, 3])
 
-    const showData = () =>{
-        props.changeShowQuertFormOrNot(!(props.showQuertFormOrNot))
+    const axiosParam = {
+        teamItemId: teamItemId,
+        planningDate: selectedDate
     }
+
+    // 显示查询信息方式一:
+    // 通过props传递过来的方法,改变父组件中用于控制组件显示的变量值
+    // const showData = () =>{
+    //     props.changeShowQuertFormOrNot(!(props.showQuertFormOrNot))
+    // }
+
+    // 显示查询信息方式二:
+    // 通过路由方式跳转
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    // 踩坑记录：axios发送请求时，携带参数的对象名字不能随便起，最好命名为params，如果是其他名称，需要写成如下的对象形式
+    function sendAxiosAndGotoShowTeamData() {
+        axios.get('/teamPlanningInfo/getteamplanninginfo', { params:axiosParam })
+            .then(response => {
+                if (response.data.length >= 0) {
+                    console.log(response.data)
+                    dispatch({
+                        type: "FINDTEAMPLANNINGINFOF",
+                        payload: response.data,
+                    })
+                }
+                setTeamItemId("")
+                setSelectedDate(null)               
+                navigate('/ShowTeamData');
+            })
+            .catch(error => console.log(error));
+    }
+
+    const clearForm = () => {
+        setSelectedDate(null)
+        setTeamItemId('')
+    }
+
     return (
         <Box sx={{
             height: '32vh',
@@ -29,20 +73,24 @@ export default function FindTeam(props) {
             // marginLeft: '50px',
             // marginTop: '50px',
             border: '1px solid skyblue',
-            overflow:'hidden'
+            overflow: 'hidden'
         }}>
-            <div style={{ 
-                padding:'1vh',
+            <div style={{
+                padding: '1vh',
                 marginBottom: '1vh'
-                 }}>
+            }}>
                 <Typography variant="h5" color="primary">
                     寻找队伍
-                    </Typography>
+                </Typography>
             </div>
             <FormControl sx={{ width: '100%', }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
-                        <DatePicker label="请选择时间" sx={{ width: '100%' }} />
+                        <DatePicker
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            label="请选择时间"
+                            sx={{ width: '100%' }} />
                     </DemoContainer>
                 </LocalizationProvider>
             </FormControl>
@@ -51,13 +99,14 @@ export default function FindTeam(props) {
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={age}
-                    label="请选择时间段"
+                    value={teamItemId}
+                    label="请选择项目"
                     onChange={handleChange}
                 >
-                    <MenuItem value={10}>{ages[0]}</MenuItem>
-                    <MenuItem value={20}>{ages[1]}</MenuItem>
-                    <MenuItem value={30}>{ages[2]}</MenuItem>
+                    <MenuItem value={1}>篮球</MenuItem>
+                    <MenuItem value={2}>排球</MenuItem>
+                    <MenuItem value={3}>乒乓球</MenuItem>
+                    <MenuItem value={4}>羽毛球</MenuItem>
                 </Select>
             </FormControl>
             <Box sx={{
@@ -65,8 +114,8 @@ export default function FindTeam(props) {
                 justifyContent: 'space-around',
                 marginTop: '2vh'
             }}>
-                <Button variant="contained" sx={{ marginRight: '3vh' }} onClick={showData}>确认</Button>
-                <Button variant="outlined">取消</Button>
+                <Button variant="contained" sx={{ marginRight: '3vh' }} onClick={sendAxiosAndGotoShowTeamData}>确认</Button>
+                <Button variant="outlined" onClick={clearForm}>取消</Button>
             </Box>
         </Box>
     )

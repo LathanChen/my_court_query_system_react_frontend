@@ -7,14 +7,18 @@ export default function TimeShow() {
     // 创建一个表示当前日期的 Date 对象
     const currentDate = new Date();
     // console.log(currentDate)
-    // 获取当前日期是本月的第几天
-    const currentDay = currentDate.getDate();
 
-    // 获取当前日期是本周的第几天 (0 表示周日，1 表示周一，依次类推)
-    const currentWeekDay = currentDate.getDay();
+    const firstDayOfMonth = new Date(time.getFullYear(), time.getMonth(), 1);
+    const dayOfWeek = firstDayOfMonth.getDay();
+    const adjustedDayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // 将星期天(0)转换为6，星期一(1)转换为0，以此类推
+    const dayOfMonth = time.getDate() - 1;
+    const daysSinceStartOfMonth = adjustedDayOfWeek + dayOfMonth;
+    // 获取当前日期是本月的第几天
+    const weekNumber = Math.floor(daysSinceStartOfMonth / 7) + 1;
+    // 获取当前日期是本周的第几天
+    const dayOfWeekInWeek = (daysSinceStartOfMonth % 7) + 1;
 
     // 计算当前日期是本月的第几周
-    const currentWeekOfMonth = Math.ceil((currentDay + currentWeekDay) / 7);
     const weekMap = {
         1: '一',
         2: '二',
@@ -23,18 +27,18 @@ export default function TimeShow() {
         5: '五',
         6: '六',
     };
-    const [weekNum, setWeekNum] = useState(weekMap[currentWeekOfMonth]);
+    const [weekNum, setWeekNum] = useState(weekMap[weekNumber]);
 
     const dayMap = {
-        0: '星期日',
         1: '星期一',
         2: '星期二',
         3: '星期三',
         4: '星期四',
         5: '星期五',
         6: '星期六',
+        7: '星期日',
     };
-    const [dayNum, setDayNum] = useState(dayMap[currentWeekDay]);
+    const [dayNum, setDayNum] = useState(dayMap[dayOfWeekInWeek]);
 
 
     const monthMap = {
@@ -81,7 +85,7 @@ export default function TimeShow() {
 
     return (
         <Box sx={{
-           
+
             // flexWrap: 'wrap',
             // width: '100%',
             height: '32vh',
@@ -89,27 +93,27 @@ export default function TimeShow() {
             // marginLeft: '50px',
             // marginTop: '50px',
             border: '1px solid skyblue',
-            overflow:'hidden'
+            overflow: 'hidden'
         }}>
-                    <div>
-                        {time.getFullYear()}年{time.getMonth()+1}月{time.getDate()}日
-                    </div>
-                    <div>
-                        {time.toLocaleTimeString()}
-                    </div>
-            
+            <div>
+                {time.getFullYear()}年{time.getMonth() + 1}月{time.getDate()}日
+            </div>
+            <div>
+                {time.toLocaleTimeString()}
+            </div>
+
             <div style={{
                 width: '100%',
                 display: 'flex',
-                marginTop:'6vh',
-                justifyContent:'flex-start',
-                alignItems:'center',
+                marginTop: '6vh',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
                 color: 'rgb(25, 118, 210)',
             }}>
-                                <div>
-                    <CalendarMonthIcon style={{ fontSize:'18vh', color: 'rgb(25, 118, 210)' }}></CalendarMonthIcon>
+                <div>
+                    <CalendarMonthIcon style={{ fontSize: '18vh', color: 'rgb(25, 118, 210)' }}></CalendarMonthIcon>
                 </div>
-                <div style={{marginLeft:'20%',fontSize:'5vh',}}>
+                <div style={{ marginLeft: '20%', fontSize: '5vh', }}>
                     <div>
                         第{weekNum}周
                     </div>
