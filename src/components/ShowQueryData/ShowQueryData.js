@@ -52,7 +52,7 @@ export default function ShowQueryData(props) {
     // 创建navigate变量,用于router跳转
     const navigate = useNavigate();
     function backToQyeryForm(){
-        navigate('/')
+        navigate('/homepage')
     }
 
     return (

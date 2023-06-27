@@ -5,8 +5,6 @@ import TodayEvent from '../../components/TodayEvent/TodayEvent'
 // import TestDiv from '../../components/TestDiv/TestDiv'
 import CourtInfo from '../../components/CourtInfo/CourtInfo'
 import FindTeam from '../../components/FindTeam/FindTeam'
-import ShowTeamData from '../../components/ShowTeamData/ShowTeamData'
-import ShowQueryData from '../../components/ShowQueryData/ShowQueryData'
 import { Outlet } from 'react-router-dom';
 import { useState } from "react";
 
@@ -18,14 +16,20 @@ export default function HomePage() {
 
     const [showQueryDataFlg, SetShowQueryDataFlg] = useState(false)
 
-    function changeShowQuertFormOrNot(data,flg){
+    function changeShowQuertFormOrNot(data, flg) {
         SetShowQueryData(data)
         SetShowQueryDataFlg(flg)
     }
 
+    const [shouldShowLogin, setShouldShowLogin] = useState(false)
+
+    function changeShouldShowLogin(showFlg) {
+        setShouldShowLogin(showFlg)
+    }
+
     return (
-        <div style={{width:'100%'}}>
-            <Header></Header>
+        <div style={{ width: '100%', position: 'relative' }}>
+            <Header showLogin={changeShouldShowLogin} loginFlg={shouldShowLogin}></Header>
             <div style={{
                 width: '100%',
                 display: 'flex',
@@ -34,7 +38,7 @@ export default function HomePage() {
                 <div style={{
                     display: 'flex',
                     width: '60%',
-                    height:'76vh',
+                    height: '76vh',
                     justifyContent: 'space-between',
                     alignContent: 'space-between',
                     flexWrap: 'wrap',
@@ -73,7 +77,7 @@ export default function HomePage() {
                 <div style={{
                     width: '30%',
                     marginTop: '8vh',
-                    height:'76vh'
+                    height: '76vh'
                 }}>
                     {/* {showQueryDataFlg?(
                     <ShowQueryData 
@@ -87,7 +91,6 @@ export default function HomePage() {
                     <Outlet />
                 </div>
             </div>
-
         </div>
     )
 }

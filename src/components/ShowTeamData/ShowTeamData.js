@@ -30,7 +30,7 @@ export default function ShowTeamData() {
 
     const navigate = useNavigate()
     const backToQyeryForm =() => {
-        navigate('/')
+        navigate('/homepage')
     }
 
     return (

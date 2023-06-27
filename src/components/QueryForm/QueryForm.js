@@ -91,7 +91,7 @@ export default function QueryForm(props) {
                         payload:response.data,
                     })
                 }
-                navigate('/ShowQueryData');
+                navigate('/homepage/ShowQueryData');
             })
             .catch(error => console.log(error));
     }

@@ -56,7 +56,7 @@ export default function FindTeam(props) {
                 }
                 setTeamItemId("")
                 setSelectedDate(null)               
-                navigate('/ShowTeamData');
+                navigate('/homepage/ShowTeamData');
             })
             .catch(error => console.log(error));
     }

@@ -3,10 +3,11 @@ import ShowQueryData from './components/ShowQueryData/ShowQueryData';
 import ShowTeamData from './components/ShowTeamData/ShowTeamData';
 import TestDiv from './components/TestDiv/TestDiv';
 import HomePage from './pages/HomePage/HomePage';
+import LoginForm from './components/LoginForm/LoginForm';
 
 const routes = [
   {
-    path: '/',
+    path: '/homepage',
     element: <HomePage/>,
     children: [
       {
@@ -26,6 +27,10 @@ const routes = [
         element: <TestDiv/>,
       },
     ],
+  },
+  {
+    path: '/login',
+    element: <LoginForm/>,
   }
 ];
 
