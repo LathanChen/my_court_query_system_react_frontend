@@ -83,7 +83,7 @@ export default function QueryForm(props) {
     // 传递数据的方式二：
     // 发送axios请求后，将接收到的数据保存到store中，通过router导航到数据展示页面
     function sendAxiosAndGotoShowQueryData() {
-        axios.get('/courtinfo/getcourtinfo', { params })
+        axios.get('/courtOpenInfo/getInfo', { params })
             .then(response => {
                 if (response.data.length >= 0) {
                     dispatch({

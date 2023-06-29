@@ -4,9 +4,14 @@ import TimeShow from '../../components/TimeShow/TimeShow'
 import TodayEvent from '../../components/TodayEvent/TodayEvent'
 // import TestDiv from '../../components/TestDiv/TestDiv'
 import CourtInfo from '../../components/CourtInfo/CourtInfo'
+// 引入高阶组件函数
+import MakeDateParameter from '../../highOrderComponent/MakeDateParameter'
 import FindTeam from '../../components/FindTeam/FindTeam'
 import { Outlet } from 'react-router-dom';
 import { useState } from "react";
+
+// 使用高阶组件函数，实现代码复用，将高阶组件函数中生成的参数传递到TodayEvent组件中，形成新的组件
+const TodayEventComponent = MakeDateParameter(TodayEvent)
 
 export default function HomePage() {
 
@@ -62,7 +67,7 @@ export default function HomePage() {
                         // marginRight: '2%',
                         // marginTop:'20px'
                     }}>
-                        <TodayEvent></TodayEvent>
+                        <TodayEventComponent></TodayEventComponent>
                     </div>
                     <div style={{
                         width: '46%',

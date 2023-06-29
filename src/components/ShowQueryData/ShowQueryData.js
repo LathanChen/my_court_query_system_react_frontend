@@ -9,9 +9,9 @@ import { useNavigate } from 'react-router-dom';
 export default function ShowQueryData(props) {
 
     const columns = [
-        { field: 'courtName', headerName: '场地', width: 150 },
+        { field: 'courtName', headerName: '场地', width: 180 },
         { field: 'courtOpenTime', headerName: '时间段', width: 100 },
-        { field: 'courtAdress', headerName: '地址', sortable: false, width: 160 },
+        { field: 'courtAdress', headerName: '地址', sortable: false, width: 200 },
 
     ];
 

@@ -1,0 +1,23 @@
+一.TodayEvent组件使用了useEffect函数，用于在渲染时发送axios请求获取数据，但是打印日志显示，每次渲染时useEffect都会被调用两次，查找资料发现是因为react默认开启了严格模式，导致每次
+useEffect函数都会被调用两次，在index.js文件中将<React.StrictMode>标签去掉后解决了这个问题。
+附：原来index.js的结构
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
+严格模式的作用：
+1.组件渲染的警告：严格模式会检查组件的渲染过程，并警告一些不推荐使用的用法。例如，警告未使用的变量、不安全的生命周期方法、不兼容的更新等。
+
+2.不安全的生命周期方法检测：严格模式会捕获一些可能导致副作用和不一致性的生命周期方法使用，例如 componentWillMount、componentWillReceiveProps 和 componentWillUpdate。这些方法在未来的 React 版本中将被弃用，严格模式可以帮助您及早发现并迁移这些代码。
+
+3.丢失的异常捕获：在严格模式下，React 会捕获组件渲染期间发生的异常，并通过错误边界进行处理，防止异常导致整个应用程序崩溃。这有助于提高应用程序的稳定性。
+
+4.隐式函数组件命名：严格模式要求函数组件具有名称，这样可以更好地在开发者工具和堆栈跟踪中进行识别和调试。
+
+二.发送axios请求时，如果要携带参数，一定要写成{params}的形式，必须是params，必须是对象！
