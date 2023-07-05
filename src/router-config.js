@@ -3,7 +3,8 @@ import ShowQueryData from './components/ShowQueryData/ShowQueryData';
 import ShowTeamData from './components/ShowTeamData/ShowTeamData';
 import TestDiv from './components/TestDiv/TestDiv';
 import HomePage from './pages/HomePage/HomePage';
-import LoginForm from './components/LoginForm/LoginForm';
+import AdminPage from './pages/AdminPage/AdminPage';
+import LoginForm from './pages/LoginForm/LoginForm';
 
 const routes = [
   {
@@ -27,6 +28,10 @@ const routes = [
         element: <TestDiv/>,
       },
     ],
+  },
+  {
+    path: '/adminpage',
+    element: <AdminPage/>,
   },
   {
     path: '/login',

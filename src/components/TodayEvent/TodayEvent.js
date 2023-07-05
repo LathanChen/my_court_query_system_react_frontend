@@ -26,7 +26,7 @@ export default function TodayEvent(props) {
         return () => {
           // 可选的清除逻辑
         };
-      }, []);
+      }, [props.weekNumber,props.dayOfWeekInWeek]);
 
     return (
         <Box sx={{

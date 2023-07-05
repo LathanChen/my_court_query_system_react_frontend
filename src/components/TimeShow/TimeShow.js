@@ -5,7 +5,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 export default function TimeShow() {
     const [time, setTime] = useState(new Date());
     // 创建一个表示当前日期的 Date 对象
-    const currentDate = new Date();
+    // const currentDate = new Date();
     // console.log(currentDate)
 
     const firstDayOfMonth = new Date(time.getFullYear(), time.getMonth(), 1);
@@ -27,7 +27,7 @@ export default function TimeShow() {
         5: '五',
         6: '六',
     };
-    const [weekNum, setWeekNum] = useState(weekMap[weekNumber]);
+    const [weekNum] = useState(weekMap[weekNumber]);
 
     const dayMap = {
         1: '星期一',
@@ -38,37 +38,37 @@ export default function TimeShow() {
         6: '星期六',
         7: '星期日',
     };
-    const [dayNum, setDayNum] = useState(dayMap[dayOfWeekInWeek]);
+    const [dayNum] = useState(dayMap[dayOfWeekInWeek]);
 
 
-    const monthMap = {
-        0: '一',
-        1: '二',
-        2: '三',
-        3: '四',
-        4: '五',
-        5: '六',
-        6: '七',
-        7: '八',
-        8: '九',
-        9: '十',
-        10: '十一',
-        11: '十二',
-    };
-    const [monthNum, setMonthNum] = useState(monthMap[currentDate.getMonth()]);
+    // const monthMap = {
+    //     0: '一',
+    //     1: '二',
+    //     2: '三',
+    //     3: '四',
+    //     4: '五',
+    //     5: '六',
+    //     6: '七',
+    //     7: '八',
+    //     8: '九',
+    //     9: '十',
+    //     10: '十一',
+    //     11: '十二',
+    // };
+    // const [monthNum, setMonthNum] = useState(monthMap[currentDate.getMonth()]);
 
-    const textStyle = {
-        fontFamily: 'Arial, sans-serif',
-        fontSize: '16px',
-        fontWeight: 'bold',
-        color: '#333',
-        textAlign: 'center',
-        textDecoration: 'underline',
-        textTransform: 'uppercase',
-        lineHeight: '1.5',
-        letterSpacing: '1px',
-        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
-    };
+    // const textStyle = {
+    //     fontFamily: 'Arial, sans-serif',
+    //     fontSize: '16px',
+    //     fontWeight: 'bold',
+    //     color: '#333',
+    //     textAlign: 'center',
+    //     textDecoration: 'underline',
+    //     textTransform: 'uppercase',
+    //     lineHeight: '1.5',
+    //     letterSpacing: '1px',
+    //     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+    // };
     // useEffect函数接受两个参数：一个是副作用函数（Effect Function），另一个是依赖数组（Dependency Array）。
     // 副作用函数会在每次组件渲染完成后执行。它可以执行各种副作用操作，比如添加订阅、发送网络请求、修改DOM等。在函数组件中，
     // 副作用函数是无法直接使用async/await语法的，但可以通过在函数内部定义一个异步函数来达到相同的效果。

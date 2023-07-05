@@ -1,9 +1,10 @@
 import Header from '../../components/Header/Header'
-import QueryForm from '../../components/QueryForm/QueryForm'
 import TimeShow from '../../components/TimeShow/TimeShow'
 import TodayEvent from '../../components/TodayEvent/TodayEvent'
 // import TestDiv from '../../components/TestDiv/TestDiv'
 import CourtInfo from '../../components/CourtInfo/CourtInfo'
+// CssBaseline 是 Material-UI 中的一个组件，它的作用是提供一个基础的 CSS 样式重置或规范，确保应用程序在不同浏览器和环境下具有一致的外观和行为。
+// import CssBaseline from '@mui/material/CssBaseline';
 // 引入高阶组件函数
 import MakeDateParameter from '../../highOrderComponent/MakeDateParameter'
 import FindTeam from '../../components/FindTeam/FindTeam'
@@ -15,16 +16,16 @@ const TodayEventComponent = MakeDateParameter(TodayEvent)
 
 export default function HomePage() {
 
-    const [showQuertFormOrNot, SetShowQuertFormOrNot] = useState(false)
+    const [showQuertFormOrNot] = useState(false)
 
-    const [showQueryData, SetShowQueryData] = useState([])
+    // const [showQueryData, SetShowQueryData] = useState([])
 
-    const [showQueryDataFlg, SetShowQueryDataFlg] = useState(false)
+    // const [showQueryDataFlg, SetShowQueryDataFlg] = useState(false)
 
-    function changeShowQuertFormOrNot(data, flg) {
-        SetShowQueryData(data)
-        SetShowQueryDataFlg(flg)
-    }
+    // function changeShowQuertFormOrNot(data, flg) {
+    //     SetShowQueryData(data)
+    //     SetShowQueryDataFlg(flg)
+    // }
 
     const [shouldShowLogin, setShouldShowLogin] = useState(false)
 
@@ -33,7 +34,8 @@ export default function HomePage() {
     }
 
     return (
-        <div style={{ width: '100%', position: 'relative' }}>
+        <div style={{ width: '100%', height:'100vh',position: 'relative' }}>
+            {/* <CssBaseline/> */}
             <Header showLogin={changeShouldShowLogin} loginFlg={shouldShowLogin}></Header>
             <div style={{
                 width: '100%',

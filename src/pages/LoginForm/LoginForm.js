@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function LoginForm(props) {
-    const [username, setUsername] = useState('');
+    const [userName, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleUsernameChange = (event) => {
@@ -15,9 +16,29 @@ export default function LoginForm(props) {
     };
 
     const handleLogin = () => {
-        // 在此处执行登录逻辑
-        console.log('Username:', username);
-        console.log('Password:', password);
+        const fetchData = async () => {
+            try {
+              const params = {userName,password}
+              console.log(params)
+              const response = await axios.post('/user/login',params);
+              // 处理响应数据
+              if (response.data.code === 200){
+                const token = response.data.data.token
+                localStorage.setItem("token", token);
+                console.log(localStorage)
+                navigate('/adminpage')
+              }
+              else {
+                console.log(response.data.msg)
+              }
+            //   console.log(response.data.data.token);
+            } catch (error) {
+              // 处理错误
+              console.error(error);
+            }
+          };
+      
+          fetchData(); // 调用发送请求的函数
     };
 
     const navigate = useNavigate()
@@ -27,7 +48,6 @@ export default function LoginForm(props) {
 
     return (
         <div style={{
-            backgroundColor: 'white',
             height: '100vh',
             display: 'flex',
             flexDirection:'column',
@@ -55,7 +75,7 @@ export default function LoginForm(props) {
                     </Typography>
                     <TextField
                         label="Username"
-                        value={username}
+                        value={userName}
                         onChange={handleUsernameChange}
                         fullWidth
                         margin="normal"
