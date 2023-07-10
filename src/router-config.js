@@ -4,7 +4,8 @@ import ShowTeamData from './components/ShowTeamData/ShowTeamData';
 import TestDiv from './components/TestDiv/TestDiv';
 import HomePage from './pages/HomePage/HomePage';
 import AdminPage from './pages/AdminPage/AdminPage';
-import LoginForm from './pages/LoginForm/LoginForm';
+import LoginPage from './pages/LoginPage/LoginPage';
+import RegisterPage from './pages/RegisterPage/RegisterPage';
 
 const routes = [
   {
@@ -23,19 +24,28 @@ const routes = [
         path: 'ShowTeamData',
         element: <ShowTeamData/>,
       },
-      {
-        path: 'TestDiv',
-        element: <TestDiv/>,
-      },
+      // {
+      //   path: 'TestDiv',
+      //   element: <TestDiv/>,
+      // },
     ],
   },
   {
     path: '/adminpage',
     element: <AdminPage/>,
+    children: [
+      {
+        path: 'test',
+        element: <TestDiv/>,
+      }]
   },
   {
     path: '/login',
-    element: <LoginForm/>,
+    element: <LoginPage/>,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage/>,
   }
 ];
 

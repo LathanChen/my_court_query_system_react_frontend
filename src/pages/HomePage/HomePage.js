@@ -41,6 +41,7 @@ export default function HomePage() {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'space-around',
+                marginTop:'5vh'
             }}>
                 <div style={{
                     display: 'flex',

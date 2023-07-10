@@ -55,8 +55,9 @@ export default function FindTeam(props) {
                     })
                 }
                 setTeamItemId("")
-                setSelectedDate(null)               
-                navigate('/homepage/ShowTeamData');
+                setSelectedDate(null)
+                // 使用{ replace: true }，使得本次路由导航不记录到history里               
+                navigate('/homepage/ShowTeamData',{ replace: true });
             })
             .catch(error => console.log(error));
     }

@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { TextField, Button, Typography, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import axios from 'axios';
 
-export default function LoginForm(props) {
+export default function RegisterForm() {
     const [userName, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
 
+    useEffect(() => {
+        if (showSuccessAlert) {
+          const timer = setTimeout(() => {
+            setShowSuccessAlert(false);
+            navigate('/login',{ replace: true })
+          }, 2000); // 2秒后自动隐藏
+          return () => clearTimeout(timer);
+        }
+        if (showErrorAlert) {
+          const timer = setTimeout(() => {
+            setShowErrorAlert(false);
+          }, 2000); // 2秒后自动隐藏
+          return () => clearTimeout(timer);
+        }
+      }, [showSuccessAlert,showErrorAlert]);
+      
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
     };
@@ -15,21 +37,23 @@ export default function LoginForm(props) {
         setPassword(event.target.value);
     };
 
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
+
+    const dispatch = useDispatch();
     const handleLogin = () => {
         const fetchData = async () => {
             try {
-              const params = {userName,password}
-              console.log(params)
-              const response = await axios.post('/user/login',params);
+              const params = {userName,password,email}
+            //   console.log(params)
+              const response = await axios.post('/user/register',params);
               // 处理响应数据
-              if (response.data.code === 200){
-                const token = response.data.data.token
-                localStorage.setItem("token", token);
-                console.log(localStorage)
-                navigate('/adminpage')
+              if (response.data === true){
+                setShowSuccessAlert(true)
               }
               else {
-                console.log(response.data.msg)
+                setShowErrorAlert(true)
               }
             //   console.log(response.data.data.token);
             } catch (error) {
@@ -60,17 +84,30 @@ export default function LoginForm(props) {
                     返回
                 </Button>
             </div>
+            {showSuccessAlert && (
+                <Alert severity="success">
+                <AlertTitle>Success</AlertTitle>
+                注册成功，为您跳转到登录页面
+              </Alert>
+            )}
+            {showErrorAlert && (
+                <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                用户名已被使用，请重新输入
+              </Alert>
+            )}
+
             <div style={{
                 width: '30%',
-                height: '40vh',
+                height: '50vh',
                 border: '1px solid skyblue',
                 backgroundColor: 'white',
-                marginBottom:'30vh'
+                marginBottom:'25vh'
             }}>
                 <Container maxWidth="sm">
                     <Typography variant="h5" align="center" gutterBottom>
                         <div style={{ marginTop: '2vh' }}>
-                            您好，请登录
+                            您好，请输入注册信息
                         </div>
                     </Typography>
                     <TextField
@@ -88,9 +125,16 @@ export default function LoginForm(props) {
                         fullWidth
                         margin="normal"
                     />
+                    <TextField
+                        label="E-mail"
+                        value={email}
+                        onChange={handleEmailChange}
+                        fullWidth
+                        margin="normal"
+                    />
                     <div style={{ marginTop: '2vh' }}>
                         <Button variant="contained" color="primary" onClick={handleLogin} fullWidth>
-                            Login
+                            注册
                         </Button>
                     </div>
 

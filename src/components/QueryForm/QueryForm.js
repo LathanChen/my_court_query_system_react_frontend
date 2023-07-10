@@ -91,7 +91,8 @@ export default function QueryForm(props) {
                         payload:response.data,
                     })
                 }
-                navigate('/homepage/ShowQueryData');
+                // 使用{ replace: true }，使得本次路由导航不记录到history里  
+                navigate('/homepage/ShowQueryData',{ replace: true });
             })
             .catch(error => console.log(error));
     }

@@ -1,6 +1,10 @@
-import { createStore } from 'redux'
+import { configureStore } from '@reduxjs/toolkit';
 
-const initialState = { courtInfoList:[],teamPlanningInfo:[]};
+const initialState = { 
+  courtInfoList:[],
+  teamPlanningInfo:[],
+  isLogin:false,
+};
 
 // 创建store
 function reducer(state = initialState, action) {
@@ -10,10 +14,17 @@ function reducer(state = initialState, action) {
       return { ...state, courtInfoList: action.payload};
     case 'FINDTEAMPLANNINGINFOF':
       return { ...state, teamPlanningInfo: action.payload};
+    case 'LOGIN':
+      return { ...state, isLogin: action.payload};
+    case 'LOGOUT':
+      return { ...state, isLogin: action.payload};
     default:
       return state;
   }
 }
-const store = createStore(reducer);
+const store = configureStore({
+  reducer: reducer,
+  // 可选的其他配置选项
+});
 
 export default store;
