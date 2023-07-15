@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 // import './QueryForm.css'
 import { Box, Typography,Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -6,6 +6,13 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export default function ShowTeamData() {
+
+    useEffect(() => {
+        if(teamPlanningInfo.length === 0){
+            setTeamPlanningInfoIsNull(true)
+        }
+    },[])
+    const [teamPlanningInfoIsNull,setTeamPlanningInfoIsNull] = useState(false)
 
     const columns = [
         { field: 'teamName', headerName: '队伍名称', width: 100 },
@@ -57,12 +64,13 @@ export default function ShowTeamData() {
                 justifyContent: 'space-between',
                 padding: '2vh',
                 textAlign:'lefy' }}>
-                <Typography variant="h5" color="primary">XX年XX月XX日</Typography>
+                <Typography variant="h5" color="primary">找到{teamPlanningInfo.length}条记录</Typography>
                 <span>
                 <Button variant="contained" onClick={backToQyeryForm}>返回</Button>
                 </span>
+                
             </div>
-            <div style={{ width: '93%', padding: '2vh' }}>
+            {!teamPlanningInfoIsNull &&<div style={{ width: '93%', padding: '2vh' }}>
                 <DataGrid
                     sx={{ border: 'none' }}
                     rows={teamPlanningInfo}
@@ -74,7 +82,7 @@ export default function ShowTeamData() {
                     }}
                     pageSizeOptions={[7]}
                 />
-            </div>
+            </div>}
         </Box>
     )
 }

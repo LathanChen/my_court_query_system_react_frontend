@@ -2,9 +2,11 @@ import QueryForm from './components/QueryForm/QueryForm';
 import ShowQueryData from './components/ShowQueryData/ShowQueryData';
 import ShowTeamData from './components/ShowTeamData/ShowTeamData';
 import TestDiv from './components/TestDiv/TestDiv';
+import InfoListSearch from './components/InfoListSearch/InfoListSearch';
 import HomePage from './pages/HomePage/HomePage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import LoginPage from './pages/LoginPage/LoginPage';
+import AdminPageInfoShow from './pages/AdminPageInfoShow/AdminPageInfoShow';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 
 const routes = [
@@ -35,9 +37,13 @@ const routes = [
     element: <AdminPage/>,
     children: [
       {
+        path: '',
+        element: <AdminPageInfoShow/>,
+      },
+      {
         path: 'test',
         element: <TestDiv/>,
-      }]
+      },]
   },
   {
     path: '/login',

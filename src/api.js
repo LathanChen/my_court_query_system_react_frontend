@@ -8,7 +8,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   // 获取 Token，假设你已经正确获取了用户的 Token
   const token = localStorage.getItem('token');
-  console.log(token)
+  // console.log(token)
   // 如果 Token 存在，则将其添加到请求头中
   if (token) {
     config.headers['token'] = token;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-
+import { Outlet } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -36,9 +36,9 @@ export default function AdminMain(props) {
   const theme = useTheme();
 
   return (
-      <Main open={props.open}>
+      <Main open={props.open} sx={{overflow:'auto'}}>
         <DrawerHeader />
-        <Typography paragraph>
+        {/* <Typography paragraph>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
           tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
           enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
@@ -64,7 +64,8 @@ export default function AdminMain(props) {
           tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+        </Typography> */}
+        <Outlet />
       </Main>
   );
 }

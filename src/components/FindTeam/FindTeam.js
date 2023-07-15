@@ -28,10 +28,12 @@ export default function FindTeam(props) {
         setSelectedDate(formattedDate);
     };
 
-    const axiosParam = {
+    const axiosParam = (teamItemId === ''?{
+        planningDate: selectedDate
+    }:{
         teamItemId: teamItemId,
         planningDate: selectedDate
-    }
+    })
 
     // 显示查询信息方式一:
     // 通过props传递过来的方法,改变父组件中用于控制组件显示的变量值
@@ -54,12 +56,12 @@ export default function FindTeam(props) {
                         payload: response.data,
                     })
                 }
-                setTeamItemId("")
-                setSelectedDate(null)
                 // 使用{ replace: true }，使得本次路由导航不记录到history里               
                 navigate('/homepage/ShowTeamData',{ replace: true });
             })
             .catch(error => console.log(error));
+            setTeamItemId('')
+            setSelectedDate(null)
     }
 
     const clearForm = () => {

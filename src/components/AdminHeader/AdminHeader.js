@@ -46,10 +46,9 @@ export default function AdminHeader(props) {
     const fetchData = async () => {
         try {
             const response = await api.get('/user/logout');
-            console.log(response.data);
-
             // 请求成功后的操作
-            dispatch({
+            if(response.data.code === 200){
+               dispatch({
                 type: "LOGOUT",
                 payload: false,
             });
@@ -58,6 +57,10 @@ export default function AdminHeader(props) {
             // 所以这里实际存入的是"null"字符串
             localStorage.removeItem("token");
             console.log(localStorage);
+            }
+            else{
+
+            }                       
         } catch (error) {
             console.error(error);
         }

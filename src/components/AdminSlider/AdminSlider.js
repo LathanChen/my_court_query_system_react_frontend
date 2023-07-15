@@ -17,6 +17,10 @@ import StarBorder from '@mui/icons-material/StarBorder';
 import ScoreboardIcon from '@mui/icons-material/Scoreboard';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import PeopleIcon from '@mui/icons-material/People';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -36,12 +40,30 @@ export default function AdminSlider(props) {
     props.handleSliderClose()
   };
 
-  const [openInbox, setOpenInbox] = React.useState(true);
+//   控制四个一级菜单标题下的二级菜单的打开与关闭
+  const [openInfobox, setOpenInfobox] = React.useState(false);
+  const [openEventbox, setOpenEventbox] = React.useState(false);
+  const [openCourtbox, setOpenCourtInbox] = React.useState(false);
+  const [openUserbox, setOpenUserbox] = React.useState(false);
+  const navigate = useNavigate();
 
-  const handleClick = () => {
-    setOpenInbox(!openInbox);
+  const handleInfoClick = () => {
+    setOpenInfobox(!openInfobox);
+  };
+  const handleEventClick = () => {
+    setOpenEventbox(!openEventbox);
+  };
+  const handleCourtClick = () => {
+    setOpenCourtInbox(!openCourtbox);
+  };
+  const handleUserClick = () => {
+    setOpenUserbox(!openUserbox);
   };
 
+  const toTest = () =>{
+    navigate('/adminpage/test');
+  }
+  
   return (
       <Drawer
         sx={{
@@ -63,65 +85,89 @@ export default function AdminSlider(props) {
         </DrawerHeader>
         <Divider />
         <List>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handleInfoClick}>
             <ListItemIcon>
               <ListAltIcon />
             </ListItemIcon>
             <ListItemText primary="信息管理" />
-            {openInbox ? <ExpandLess /> : <ExpandMore />}
+            {openInfobox ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
-          <Collapse in={openInbox} timeout="auto" unmountOnExit>
+          <Collapse in={openInfobox} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
+              <ListItemButton sx={{ pl: 4 }} onClick={toTest}>
+                <ListItemIcon>
+                  <FormatListBulletedIcon />
+                </ListItemIcon>
+                <ListItemText primary="信息列表" />
+              </ListItemButton>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
-                  <StarBorder />
+                  <PostAddIcon />
                 </ListItemIcon>
-                <ListItemText primary="Starred" />
+                <ListItemText primary="添加信息" />
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <FormatLineSpacingIcon />
+                </ListItemIcon>
+                <ListItemText primary="信息类型" />
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handleEventClick}>
             <ListItemIcon>
               <ScoreboardIcon />
             </ListItemIcon>
             <ListItemText primary="活动管理" />
-            {openInbox ? <ExpandLess /> : <ExpandMore />}
+            {openEventbox ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
-          <Collapse in={openInbox} timeout="auto" unmountOnExit>
+          <Collapse in={openEventbox} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>
-                <ListItemText primary="Starred" />
+                <ListItemText primary="活动列表" />
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <StarBorder />
+                </ListItemIcon>
+                <ListItemText primary="添加活动" />
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handleCourtClick}>
             <ListItemIcon>
               <ApartmentIcon />
             </ListItemIcon>
             <ListItemText primary="场馆管理" />
-            {openInbox ? <ExpandLess /> : <ExpandMore />}
+            {openCourtbox ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
-          <Collapse in={openInbox} timeout="auto" unmountOnExit>
+          <Collapse in={openCourtbox} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>
-                <ListItemText primary="Starred" />
+                <ListItemText primary="场馆列表" />
+              </ListItemButton>
+              <ListItemButton sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <StarBorder />
+                </ListItemIcon>
+                <ListItemText primary="添加场馆" />
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handleUserClick}>
             <ListItemIcon>
               <PeopleIcon />
             </ListItemIcon>
             <ListItemText primary="用户管理" />
-            {openInbox ? <ExpandLess /> : <ExpandMore />}
+            {openUserbox ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
-          <Collapse in={openInbox} timeout="auto" unmountOnExit>
+          <Collapse in={openUserbox} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>

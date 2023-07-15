@@ -1,4 +1,4 @@
-// import { useState } from "react";
+import React, { useState, useEffect } from 'react';
 // import './QueryForm.css'
 import { Box, Typography, Button} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -7,6 +7,13 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export default function ShowQueryData(props) {
+    useEffect(() => {
+        if(courtInfoList.length === 0){
+            setCourtInfoListIsNull(true)
+        }
+    },[])
+
+    const [courtInfoListIsNull,setCourtInfoListIsNull] = useState(false)
 
     const columns = [
         { field: 'courtName', headerName: '场地', width: 140 },
@@ -84,7 +91,7 @@ export default function ShowQueryData(props) {
                 <Button variant="contained" onClick={backToQyeryForm}>返回</Button>
                 </span>
             </div>
-            <div style={{ width: '93%', padding: '2vh' }}>
+            {!courtInfoListIsNull && <div style={{ width: '93%', padding: '2vh' }}>
                 <DataGrid
                     sx={{ border: 'none' }}
                     rows={courtInfoList}
@@ -96,7 +103,7 @@ export default function ShowQueryData(props) {
                     }}
                     pageSizeOptions={[7]}
                 />
-            </div>
+            </div>}
         </Box>
     )
 }

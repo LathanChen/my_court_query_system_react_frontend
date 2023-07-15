@@ -54,10 +54,10 @@ export default function QueryForm(props) {
     };
 
     const params = {
-        courtOpenWeekday: courtOpenWeekday,
-        courtOpenWeekNum: courtOpenWeekNum,
-        courtOpenTimeZone: courtOpenTimeZone,
-        courtOpenItemId: courtOpenItemId,
+        courtOpenWeekday,
+        courtOpenWeekNum,
+        courtOpenTimeZone,
+        courtOpenItemId
     }
 
     // 使用 useSelector hook 来获取 Redux store 中的状态，并返回给组件使用
@@ -83,7 +83,8 @@ export default function QueryForm(props) {
     // 传递数据的方式二：
     // 发送axios请求后，将接收到的数据保存到store中，通过router导航到数据展示页面
     function sendAxiosAndGotoShowQueryData() {
-        axios.get('/courtOpenInfo/getInfo', { params })
+        console.log(params)
+        axios.get('/courtOpenInfo/getInfo', {params})
             .then(response => {
                 if (response.data.length >= 0) {
                     dispatch({
@@ -145,9 +146,9 @@ export default function QueryForm(props) {
                         label="请选择时间段"
                         onChange={handleCourtOpenTimeZoneChange}
                     >
-                        <MenuItem value={1}>上午</MenuItem>
-                        <MenuItem value={2}>下午</MenuItem>
-                        <MenuItem value={3}>晚上</MenuItem>
+                        <MenuItem value={'1'}>上午</MenuItem>
+                        <MenuItem value={'2'}>下午</MenuItem>
+                        <MenuItem value={'3'}>晚上</MenuItem>
                     </Select>
                 </FormControl>
                 <FormControl sx={{ width: '100%', marginTop: '10px' }}>
@@ -159,10 +160,10 @@ export default function QueryForm(props) {
                         label="请选择项目"
                         onChange={handleCourtOpenItemIdChange}
                     >
-                        <MenuItem value={1}>篮球</MenuItem>
-                        <MenuItem value={2}>排球</MenuItem>
-                        <MenuItem value={3}>乒乓球</MenuItem>
-                        <MenuItem value={4}>羽毛球</MenuItem>
+                        <MenuItem value={'1'}>篮球</MenuItem>
+                        <MenuItem value={'2'}>排球</MenuItem>
+                        <MenuItem value={'3'}>乒乓球</MenuItem>
+                        <MenuItem value={'4'}>羽毛球</MenuItem>
                     </Select>
                 </FormControl>
             </div>
