@@ -1,44 +1,37 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import Button from '@mui/material/Button';
 
 const columns = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
+  { field: 'courtOpenInfoId', headerName: '编号', width: 70 },
+  { field: 'itemInfoName', headerName: '项目', width: 130 },
+  { field: 'courtOpenTimeZone', headerName: '时间段', width: 200 },
+  {field: 'courtOpenTime',headerName: '起始时间',width: 200},
+  {field: 'courtName',headerName: '场地',width: 200},
   {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params) =>
-      `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    field: 'actions',
+    headerName: '操作',
+    width: 200,
+    renderCell: (params) => (
+      <div>
+      <Button variant="outlined" color="primary">
+        编辑
+      </Button>
+      <Button variant="outlined" color="error" sx={{marginLeft:'2vw'}}>
+        删除
+      </Button>
+      </div>
+    ),
   },
 ];
 
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 8, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 9, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 10, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 11, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 12, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 13, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-];
 
 export default function AdminInfoShowTable(props) {
+
+  const rows = props.quertData
+  // 使用 getRowId 属性指定自定义的行 ID：如果你无法为每行提供唯一的 id 属性，你可以使用 getRowId 属性来为每行指定自定义的 ID。getRowId 是一个回调函数，它接收行数据作为参数，并返回一个表示行 ID 的值。
+  const getRowId = (row) => row.courtOpenInfoId; 
+
   const showSelected = (data) =>{
     setSeletedDatas(data)
     props.isBatchselectionChange(data)
@@ -53,6 +46,7 @@ export default function AdminInfoShowTable(props) {
         }}>
       <DataGrid
         rows={rows}
+        getRowId={getRowId}
         columns={columns}
         initialState={{
           pagination: {
