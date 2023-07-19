@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import InfoListSearch from '../../components/InfoListSearch/InfoListSearch'
 import AddInfoBar from '../../components/AddInfoBar/AddInfoBar'
-import AdminInfoShowTable from '../../components/AdminInfoShowTable/AdminInfoShowTable'
+import AdminPageItemInfoShowTable from '../../components/AdminPageItemInfoShowTable/AdminPageItemInfoShowTable'
 
 export default function AdminPageInfoShow() {
     const [batchselection,setBatchselection] = useState([])
@@ -19,7 +19,7 @@ export default function AdminPageInfoShow() {
         <div>
            <InfoListSearch takeQuertData={takeQuertData}></InfoListSearch>
            <AddInfoBar batchselection={batchselection}></AddInfoBar>
-           <AdminInfoShowTable batchselection={batchselection} isBatchselectionChange={isBatchselectionChange} quertData={quertData}></AdminInfoShowTable>
+           <AdminPageItemInfoShowTable batchselection={batchselection} isBatchselectionChange={isBatchselectionChange} quertData={quertData}></AdminPageItemInfoShowTable>
         </div>
     )
 }

@@ -60,8 +60,11 @@ export default function AdminSlider(props) {
     setOpenUserbox(!openUserbox);
   };
 
-  const toTest = () =>{
-    navigate('/adminpage/test');
+  const toAdminPageInfoShow = () =>{
+    navigate('/adminpage');
+  }
+  const toAddInfo = () =>{
+    navigate('/adminpage/addinfo');
   }
   
   return (
@@ -94,13 +97,13 @@ export default function AdminSlider(props) {
           </ListItemButton>
           <Collapse in={openInfobox} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }} onClick={toTest}>
+              <ListItemButton sx={{ pl: 4 }} onClick={toAdminPageInfoShow}>
                 <ListItemIcon>
                   <FormatListBulletedIcon />
                 </ListItemIcon>
                 <ListItemText primary="信息列表" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }}>
+              <ListItemButton sx={{ pl: 4 }} onClick={toAddInfo}>
                 <ListItemIcon>
                   <PostAddIcon />
                 </ListItemIcon>

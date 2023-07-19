@@ -67,7 +67,7 @@ export default function InfoListSearch(props) {
                     return {
                         courtOpenInfoId:data.courtOpenInfoId,
                         itemInfoName:data.itemInfo.itemInfoName,
-                        courtOpenTimeZone:(data.courtOpenTimeZone == 1?'上午':(data.courtOpenTimeZone == 2?'下午':'晚上')),
+                        courtOpenTimeZone:(data.courtOpenTimeZone === '1'?'上午':(data.courtOpenTimeZone === '2'?'下午':'晚上')),
                         courtOpenTime:data.courtOpenTime,
                         courtName:data.courtInfo.courtName
                     }
@@ -149,7 +149,7 @@ export default function InfoListSearch(props) {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={courtOpenWeekNum}
-                                label="请选择项目"
+                                label="请选择周数"
                             // sx={{ height: '6vh' }}
                             onChange={changeCourtOpenWeekNum}
                             >
@@ -200,7 +200,7 @@ export default function InfoListSearch(props) {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={courtOpenCourtId}
-                                label="请选择项目"
+                                label="请选择场地"
                             // sx={{ height: '6vh' }}
                             onChange={changeCourtOpenCourtId}
                             >
@@ -221,7 +221,7 @@ export default function InfoListSearch(props) {
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
                                 value={courtOpenTimeZone}
-                                label="请选择项目"
+                                label="请选择时间段"
                             // sx={{ height: '6vh' }}
                             onChange={changeCourtOpenTimeZone}
                             >
