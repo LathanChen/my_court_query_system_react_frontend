@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import AdminPageInfoShow from './pages/AdminPageInfoShow/AdminPageInfoShow';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import AdminPageAddItempage from './pages/AdminPageAddItempage/AdminPageAddItempage';
+import AdminPageEditItempage from './pages/AdminPageEditItempage/AdminPageEditItempage';
 
 const routes = [
   {
@@ -45,7 +46,12 @@ const routes = [
       {
         path: 'addinfo',
         element: <AdminPageAddItempage/>,
-      },]
+      },
+      {
+        path: 'editinfo/:infoid',
+        element: <AdminPageEditItempage/>,
+      },
+    ]
   },
   {
     path: '/login',

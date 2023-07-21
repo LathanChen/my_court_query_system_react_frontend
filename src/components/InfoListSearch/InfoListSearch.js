@@ -45,7 +45,12 @@ export default function InfoListSearch(props) {
             }
         }
         fetchData()
-    }, [])
+        if (props.InfoListSearchShouldRefresh === true){
+            props.InfoListSearchRefresh(false)
+            sendInfoQuery()
+        }
+        
+    }, [props.InfoListSearchShouldRefresh])
 
     const sendInfoQuery = ()=>{
         const fetchData = async () => {

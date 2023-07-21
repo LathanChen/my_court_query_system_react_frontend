@@ -5,10 +5,10 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Alert from '@mui/material/Alert';
-import AlertTitle from '@mui/material/AlertTitle';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useParams,useNavigate } from 'react-router-dom';
 import api from '../../api';
 
 export default function AdminPageAddItempage(props) {
@@ -50,22 +50,7 @@ export default function AdminPageAddItempage(props) {
         setCourtOpenBeginTime(data);
     };
     const changeCourtOpenEndTime = (data) => {
-        console.log(data)
         setCourtOpenEndTime(data);
-    };
-
-    const clearForm = () => {
-        setCourtOpenItemId('')
-        setCourtOpenWeekNum('')
-        setCourtOpenWeekday('')
-        setCourtOpenCourtId('')
-        setCourtOpenTimeZone('')
-        setCourtOpenBeginTime(null)
-        setCourtOpenEndTime(null)
-    }
-    
-    const setTimetoString = timedata => {
-        return dayjs(timedata).format('HH:mm');
     };
 
     // 使用useNavigate回到上一页
@@ -75,6 +60,13 @@ export default function AdminPageAddItempage(props) {
     const backToLastPage = () => {
         navigate(-1)
     }
+    
+    const setTimetoString = timedata => {
+        return dayjs(timedata).format('HH:mm');
+    };
+
+        // 前一个页面传递过来的infoId
+        const { infoid } = useParams();
 
     const params = {
         courtOpenItemId,
@@ -82,7 +74,8 @@ export default function AdminPageAddItempage(props) {
         courtOpenWeekNum,
         courtOpenWeekday,
         courtOpenTimeZone,
-        courtOpenTime: `${setTimetoString(courtOpenBeginTime)}-${setTimetoString(courtOpenEndTime)}`
+        courtOpenTime: `${setTimetoString(courtOpenBeginTime)}-${setTimetoString(courtOpenEndTime)}`,
+        courtOpenInfoId:infoid
     }
 
     const checkParamsNull = (params) => {
@@ -95,8 +88,7 @@ export default function AdminPageAddItempage(props) {
         return false;
       };
 
-    const insertNewOpenInfo = () => {
-
+    const editOpenInfo = () => {       
         const fetchData = async () => {
             if (courtOpenBeginTime.isAfter(courtOpenEndTime)) {
                 // todo:出现"开始时间不能晚于结束时间"提示框
@@ -109,12 +101,14 @@ export default function AdminPageAddItempage(props) {
             else{
                 try {
                     //   console.log(setTimetoString(courtOpenBeginTime))
-                    const response = await api.post('/courtOpenInfo/setInfo', params)
+                    const response = await api.put('/courtOpenInfo/updateinfo', params)
                     // console.log(response.data)
-                    if (response.data.code === 200 && response.data.data === true) {
+                    if (response.data === true) {
                         // todo:出现“添加成功”提示框
                         console.log('成功了')
                         setShowSuccessAlert(true)
+                        
+                        // 定时器在async函数中，需要通过await等待执行完成
                         await new Promise((resolve) => {
                             setTimeout(() => {
                                 backToLastPage()
@@ -128,16 +122,40 @@ export default function AdminPageAddItempage(props) {
                 }
             }
         }
+        
         fetchData()
     }
+
+
+    // 将 "12:00" 格式的字符串转换为 dayjs 对象
+  const parseTimeStringToTimeObject = (timeString) => {
+    const [hours, minutes] = timeString.split(':');
+    const timeObject = dayjs().set('hour', parseInt(hours, 10)).set('minute', parseInt(minutes, 10));
+    return timeObject;
+  };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response1 = await api.get('/iteminfo')
-                const response2 = await api.get('/courtinfo')
-                if (response1.data.length !== 0 && response2.data.length !== 0) {
-                    setItemnames(response1.data)
-                    setCourtnames(response2.data)
+                const itemNameResponse = await api.get('/iteminfo')
+                const courtNameResponse = await api.get('/courtinfo')
+                const courtInfoResponse = await api.get(`/courtOpenInfo/getinfobyid/${infoid}`)
+                // todo:增加根据路径里的id查询信息并显示到页面的表格上的逻辑
+                // setCourtOpenTimeZone('1')
+                if (itemNameResponse.data.length !== 0 && 
+                    courtNameResponse.data.length !== 0 &&
+                    courtInfoResponse.data !== {}
+                    ) {
+                    setItemnames(itemNameResponse.data)
+                    setCourtnames(courtNameResponse.data)
+                    // console.log(courtInfoResponse.data)
+                    setCourtOpenItemId(courtInfoResponse.data.courtOpenItemId)
+                    setCourtOpenWeekNum(courtInfoResponse.data.courtOpenWeekNum)
+                    setCourtOpenWeekday(courtInfoResponse.data.courtOpenWeekday)
+                    setCourtOpenCourtId(courtInfoResponse.data.courtOpenCourtId)
+                    setCourtOpenTimeZone(courtInfoResponse.data.courtOpenTimeZone)
+                    setCourtOpenBeginTime(parseTimeStringToTimeObject(courtInfoResponse.data.courtOpenTime.split('-')[0]))
+                    setCourtOpenEndTime(parseTimeStringToTimeObject(courtInfoResponse.data.courtOpenTime.split('-')[1]))
                 }
             }
             catch (error) {
@@ -157,6 +175,7 @@ export default function AdminPageAddItempage(props) {
             return () => clearTimeout(timer);
         }
         fetchData()
+
     }, [showSuccessAlert, errorMsg])
 
     return (
@@ -179,12 +198,12 @@ export default function AdminPageAddItempage(props) {
                 overflow: 'auto'
             }}>
                 <div style={{ marginTop: '3vh' }}>
-                    <Typography variant="h5" color="primary">填写完成后点击确认即可添加信息</Typography>
+                    <Typography variant="h5" color="primary">填写完成后点击确认即可修改信息</Typography>
                 </div>
                 <div>
                     <div style={{ height:'6vh' }}>
                     {showSuccessAlert && (
-                   <Alert severity="success" sx={{opacity:'0.8'}}>添加信息成功!</Alert>
+                   <Alert severity="success" sx={{opacity:'0.8'}}>修改信息成功!</Alert>
                 )}
                 {errorMsg && (
                     <Alert severity="warning" sx={{opacity:'0.8'}}>{errorMsg}</Alert>
@@ -386,8 +405,8 @@ export default function AdminPageAddItempage(props) {
                     justifyContent: 'space-between',
                     marginTop: '2vh'
                 }}>
-                    <Button variant="contained" sx={{ marginRight: '25vh' }} onClick={insertNewOpenInfo}>确认</Button>
-                    <Button variant="outlined" onClick={clearForm}>取消</Button>
+                    <Button variant="contained" sx={{ marginRight: '25vh' }} onClick={editOpenInfo}>确认</Button>
+                    <Button variant="outlined" onClick={backToLastPage}>返回</Button>
                 </Box>
             </Box>
     )

@@ -8,12 +8,8 @@ import ErrorMsg from '../../components/ErrorMsg/ErrorMsg';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { useState, useEffect } from 'react';
 import api from '../../api';
-import { useLocation } from 'react-router-dom';
 
 export default function AdminPage() {
-
-    const location = useLocation();
-
     useEffect(() => {
         setTimeout(() => {
             const fetchData = async () => {
@@ -36,7 +32,7 @@ export default function AdminPage() {
             fetchData();
         }, 1000); // 设置停止显示的时间，这里是 1 秒
 
-    }, [location.pathname]);
+    }, []);
     const [loading, setLoading] = useState(true); // 添加加载状态
 
     const theme = useTheme();
