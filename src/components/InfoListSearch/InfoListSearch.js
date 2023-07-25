@@ -33,8 +33,8 @@ export default function InfoListSearch(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response1 = await axios.get('/iteminfo')
-                const response2 = await axios.get('/courtinfo')
+                const response1 = await api.get('/iteminfo')
+                const response2 = await api.get('/courtinfo')
                 if (response1.data.length !== 0 && response2.data.length !== 0) {
                     setItemnames(response1.data)
                     setCourtnames(response2.data)

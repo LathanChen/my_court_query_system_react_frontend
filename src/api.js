@@ -2,16 +2,20 @@ import axios from 'axios';
 
 // 创建 Axios 实例
 const api = axios.create({
+  baseURL: 'http://18.183.169.200:8081',//部署用
+  timeout: 5000, // 部署用，设置请求超时时间
 });
 
 // 添加请求拦截器
 api.interceptors.request.use((config) => {
   // 获取 Token，假设你已经正确获取了用户的 Token
+  console.log('api被调用了！')
   const token = localStorage.getItem('token');
   // console.log(token)
   // 如果 Token 存在，则将其添加到请求头中
   if (token) {
-    config.headers['token'] = token;
+    console.log('token被设置了！')
+    config.headers.token = token
   }
 
   return config;

@@ -8,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import api from '../../api';
+import axios from 'axios'; //部署用
 
 const drawerWidth = 240;
 

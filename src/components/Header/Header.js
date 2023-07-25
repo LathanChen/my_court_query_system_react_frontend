@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import api from '../../api';
+import axios from 'axios'; //部署用
 
 export default function Header(props) {
     const [mes] = useState('你好，请')

@@ -8,12 +8,17 @@ import ErrorMsg from '../../components/ErrorMsg/ErrorMsg';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { useState, useEffect } from 'react';
 import api from '../../api';
+import axios from 'axios';
 
 export default function AdminPage() {
     useEffect(() => {
+        console.log('useEffect')
         setTimeout(() => {
+            console.log('setTimeout')
             const fetchData = async () => {
+                console.log('async')
                 try {
+                    console.log('try')
                     const response = await api.get('/user/authority');
                     if (response.data.code === 200) {
                         console.log(response.data)

@@ -5,6 +5,7 @@ import StyleIcon from '@mui/icons-material/Style';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
+import axios from 'axios'; //部署用
 
 
 export default function AddInfoBar(props) {
