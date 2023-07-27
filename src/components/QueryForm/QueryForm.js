@@ -21,6 +21,8 @@ export default function QueryForm(props) {
 
     const [courtOpenWeekNum, setCourtOpenWeekNum] = useState();
 
+    const [showMes, setShowMsg] = useState(false);
+
     const handleDateChange = (dateString) => {
         const date = new Date(dateString);
         calculateWeekDayOfMonth(date)
@@ -82,21 +84,36 @@ export default function QueryForm(props) {
 
     // 传递数据的方式二：
     // 发送axios请求后，将接收到的数据保存到store中，通过router导航到数据展示页面
-    function sendAxiosAndGotoShowQueryData() {
+    const sendAxiosAndGotoShowQueryData = async() =>{
         console.log(params)
-        axios.get('/courtOpenInfo/getInfo', {params})
-            .then(response => {
-                if (response.data.length >= 0) {
-                    dispatch({
-                        type:"FINDCOURTINFOLIST",
-                        payload:response.data,
-                    })
-                }
-                // 使用{ replace: true }，使得本次路由导航不记录到history里  
-                navigate('/homepage/ShowQueryData',{ replace: true });
-            })
-            .catch(error => console.log(error));
-    }
+        if (Object.values(params).every(value =>
+            value === null ||
+            value === undefined ||
+            value === '')) {
+            setShowMsg(true)
+        }
+        else{
+            try{
+                const response = await axios.get('/courtOpenInfo/getInfo', {params})
+                    if (response.data.length >= 0) {
+                        console.log(response.data)
+                        dispatch({
+                            type:"FINDCOURTINFOLIST",
+                            payload:response.data,
+                        })
+                    }
+                    // 使用{ replace: true }，使得本次路由导航不记录到history里  
+                    navigate('/homepage/ShowQueryData',{ replace: true });
+            }
+            catch(error){
+                console.log(error)
+            }
+        }
+        await new Promise((resolve) => {
+            setTimeout(() =>
+                setShowMsg(false), 3000)
+        })
+        }
 
     const claerForm = () =>{
         setSelectedDate(null)
@@ -107,23 +124,32 @@ export default function QueryForm(props) {
     return (
         <Box sx={{
             // 开启flex布局
-            display: 'flex',
+            // display: 'flex',
             // 改变felx主轴方向
-            flexDirection: 'column',
+            // flexDirection: 'column',
             // 主轴的对齐方式
             // justifyContent: 'center',
             // 交叉轴的对齐方式
-            alignItems: 'center',
+            // alignItems: 'center',
             width: '100%',
-            height: '100%',
+            height: 'calc(100% - 2px)',
             // padding: '1vh',
             // marginLeft: '50px',
             // marginTop:'50px',
             border: '1px solid skyblue',
-            overflow: 'auto'
+            overflow: 'hidden'
         }}>
-            <div style={{ padding: '2vh', alignSelf: 'flex-start' }}>
-                <Typography variant="h5" color="primary">输入数据即可进行查询</Typography>
+            <div style={{ 
+                display:'flex',
+                justifyContent:'space-between',
+                padding: '2vh', 
+                alignSelf: 'flex-start' }}>
+                <Typography variant="h5" color="primary">查询项目</Typography>
+                {showMes && (
+                    <Typography variant="subtitle2" color="primary">
+                        请至少选择一项查找条件！
+                    </Typography>
+                )}
             </div>
             <div style={{ width: '95%', padding: '5px' }}>
                 <FormControl sx={{ width: '100%', }}>
@@ -169,14 +195,23 @@ export default function QueryForm(props) {
             </div>
             <Box sx={{
                 display: 'flex',
-                justifyContent: 'space-between',
+                justifyContent: 'space-around',
                 marginTop: '2vh'
             }}>
                 <Button onClick={sendAxiosAndGotoShowQueryData} variant="contained" sx={{ marginRight: '25vh' }}>确认</Button>
                 <Button variant="outlined" onClick={claerForm}>取消</Button>
             </Box>
-            <div style={{ height: '38%', width: '100%', backgroundColor: 'rgb(25, 118, 210)', marginTop: '5vh', }}>
-
+            <div style={{ 
+                // display:'flex',
+                // flexDirection: 'column',
+                // justifyContent:'flex-end',
+                height: '38vh', 
+                width: '100%', 
+                padding:'30px',
+                backgroundColor: 'rgb(25, 118, 210)', 
+                marginTop: '5vh', }}>
+                <Typography variant="h6" color="white" sx={{marginTop:'10vh'}}>Author:LathanChen</Typography>
+                <Typography variant="h6" color="white">E-mail:chenzhouming316@gmail.com</Typography>
             </div>
         </Box>
     )

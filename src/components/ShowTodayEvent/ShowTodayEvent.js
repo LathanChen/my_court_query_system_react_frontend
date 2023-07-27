@@ -4,16 +4,16 @@ import { Box, Typography, Button} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 // useSelector 和 useDispatch 是两个Hooks,用于连接redux store
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 
-export default function ShowQueryData(props) {
+export default function ShowTodayEvent() {
     useEffect(() => {
-        if(courtInfoList.length === 0){
-            setCourtInfoListIsNull(true)
+        if(todayEventsList.length === 0){
+            setTodayEventsListIsNull(true)
         }
     },[])
 
-    const [courtInfoListIsNull,setCourtInfoListIsNull] = useState(false)
+    const [todayEventsListIsNull,setTodayEventsListIsNull] = useState(false)
 
     const columns = [
         { field: 'courtName', headerName: '场地', width: 140 },
@@ -43,7 +43,13 @@ export default function ShowQueryData(props) {
 
     // 数据的获取方式二：
     // 使用 useSelector hook 来获取 Redux store 中的状态，并返回给组件使用
-    const courtInfoList = useSelector(state => state.courtInfoList).map((item) => {
+    const routerparam = useParams()
+    console.log(routerparam)
+
+    // 如果useSelector和useEffect都在同一个函数组件中，useSelector会在useEffect之前执行。
+    const todayEventsList = useSelector(state => state.todayEvents[routerparam.itemAndStatus]).map((item) =>{
+        console.log(item)
+        console.log(routerparam.itemAndStatus)
         const { courtOpenTime,courtOpenInfoId } = item;
         const { courtName, courtAdress } = item.courtInfo;
 
@@ -54,7 +60,20 @@ export default function ShowQueryData(props) {
             courtName,
             courtAdress    
         };
-    });
+    })
+
+    // console.log(courtInfoList)
+        // const { courtOpenTime,courtOpenInfoId } = item;
+        // const { courtName, courtAdress } = item.courtInfo;
+
+        // // 创建新的对象
+        // return {
+        //     id:courtOpenInfoId,
+        //     courtOpenTime,
+        //     courtName,
+        //     courtAdress    
+        // };
+    
     
     // 创建navigate变量,用于router跳转
     const navigate = useNavigate();
@@ -86,15 +105,14 @@ export default function ShowQueryData(props) {
                 justifyContent: 'space-between',
                 padding: '2vh',
                 textAlign:'lefy' }}>
-                <Typography variant="h5" color="primary">找到{courtInfoList.length}条记录</Typography>
                 <span>
                 <Button variant="contained" onClick={backToQyeryForm}>返回</Button>
                 </span>
             </div>
-            {!courtInfoListIsNull && <div style={{ width: '93%', padding: '2vh' }}>
+            {!todayEventsListIsNull ? (<div style={{ width: '93%', padding: '2vh' }}>
                 <DataGrid
                     sx={{ border: 'none' }}
-                    rows={courtInfoList}
+                    rows={todayEventsList}
                     columns={columns}
                     initialState={{
                         pagination: {
@@ -103,7 +121,10 @@ export default function ShowQueryData(props) {
                     }}
                     pageSizeOptions={[7]}
                 />
-            </div>}
+            </div>):
+            (<div style={{ width: '93%', padding: '2vh' }}>
+                <Typography variant="h5" color="primary">暂无数据！</Typography>
+            </div>)}
         </Box>
     )
 }

@@ -51,7 +51,7 @@ export default function ShowTeamData() {
             // 交叉轴的对齐方式
             alignItems: 'center',
             // width: '100%',
-            height: '100%',
+            height: 'calc(100% - 2px)',
             // padding: '15px',
             // marginLeft: '50px',
             // marginTop:'50px',

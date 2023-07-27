@@ -1,10 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import SportsHandballIcon from '@mui/icons-material/SportsHandball';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 export default function TodayEvent(props) {
-    const [ tadayEventCount ,setTadayEventCount ] = useState({})
+    const [ tadayEventInfos ,setTadayEventCountInfos ] = 
+    useState({basketballNotStart:[],
+        basketballEnded:[],
+        tableTennisNotStart:[],
+        tableTennisEnded:[],
+        badmintonNotStart:[],
+        badmintonEnded:[],
+        volleyballNotStart:[],
+        volleyballEnded:[]
+    })
+    
+    const dispatch = useDispatch();
+
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -13,7 +27,12 @@ export default function TodayEvent(props) {
             const params = {weekNumber:props.weekNumber,dayOfWeekInWeek:props.dayOfWeekInWeek}
             const response = await axios.get('/courtOpenInfo/getTodayinfo',{params});
             // 处理响应数据
-            setTadayEventCount(response.data);
+            setTadayEventCountInfos(response.data);
+            dispatch({
+                type:'SETTODAYEVENTS',
+                payload:response.data
+            })
+            console.log(response.data)
           } catch (error) {
             // 处理错误
             console.error(error);
@@ -84,12 +103,25 @@ export default function TodayEvent(props) {
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                未开始{tadayEventCount.basketballNotStart}
+                                未开始
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/basketballNotStart'
+                                
+                                >
+                                    {tadayEventInfos.basketballNotStart.length}
+                                    </Link>
                             </span>
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                已结束{tadayEventCount.basketballEnded}
+                                已结束
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/basketballEnded'
+                                 >
+                                    {tadayEventInfos.basketballEnded.length}
+                                    </Link>
                             </span>
                         </div>
                     </div>
@@ -108,12 +140,23 @@ export default function TodayEvent(props) {
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                未开始{tadayEventCount.tableTennisNotStart}
+                                未开始
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/tableTennisNotStart'
+                                 >
+                                 {tadayEventInfos.tableTennisNotStart.length}
+                                 </Link>
                             </span>
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                已结束{tadayEventCount.tableTennisEnded}
+                                已结束
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/tableTennisEnded'
+                                 >{tadayEventInfos.tableTennisEnded.length}
+                                 </Link>
                             </span>
                         </div>
                     </div>
@@ -132,12 +175,23 @@ export default function TodayEvent(props) {
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                未开始{tadayEventCount.badmintonNotStart}
+                                未开始
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/badmintonNotStart'
+                                 >{tadayEventInfos.badmintonNotStart.length}
+                                 </Link>
                             </span>
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                已结束{tadayEventCount.badmintonEnded}
+                                已结束
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/badmintonEnded'
+                                 >
+                                    {tadayEventInfos.badmintonEnded.length}
+                                    </Link>
                             </span>
                         </div>
                     </div>
@@ -156,12 +210,22 @@ export default function TodayEvent(props) {
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                未开始{tadayEventCount.volleyballNotStart}
+                                未开始
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/volleyballNotStart'
+                                 >{tadayEventInfos.volleyballNotStart.length}
+                                 </Link>
                             </span>
                         </div>
                         <div>
                             <span style={{ fontSize: '2vh' }}>
-                                已结束{tadayEventCount.volleyballEnded}
+                                已结束
+                                <Link
+                                 style={{fontSize:'2vh'}}
+                                 to='/homepage/ShowTodayEvent/volleyballEnded'
+                                 >{tadayEventInfos.volleyballEnded.length}
+                                 </Link>
                             </span>
                         </div>
                     </div>

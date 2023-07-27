@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState,useEffect} from "react";
 // import './QueryForm.css'
 import Slider from "react-slick";
 import {  Box, Typography } from '@mui/material';
@@ -22,15 +22,15 @@ export default function CourtInfo() {
     ];
 
     // 副作用函数，用于处理组件内图片轮播的时间间隔
-    // useEffect(() => {
-    //     const timer = setInterval(() => {
-    //         setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-    //     }, 3000);
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
+        }, 300000);
 
-    //     return () => {
-    //         clearInterval(timer);
-    //     };
-    // }, []);
+        return () => {
+            clearInterval(timer);
+        };
+    }, []);
 
     const handleSlideChange = (value) => {
         setCurrentSlide(value);

@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+const AWSADRESS = 'http://18.183.169.200:8081'
+
 // 创建 Axios 实例
 const api = axios.create({
-  baseURL: 'http://18.183.169.200:8081',//部署用
+  // baseURL: 'AWSADRESS',//部署用,如果常量不行，使用这个字符串:'http://18.183.169.200:8081'
   timeout: 5000, // 部署用，设置请求超时时间
 });
 

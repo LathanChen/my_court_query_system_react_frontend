@@ -10,14 +10,16 @@ import {HashRouter} from 'react-router-dom'
 // *****************项目部署时用HashRouter*****************
 import { Provider } from 'react-redux';
 import store from './store';
-
 // *****************项目部署时设置全局默认配置*****************
 import axios from 'axios'; // 导入 Axios，AWS部署配置
 
+const AWSADRESS = 'http://18.183.169.200:8081'//AWS的地址
+
 // *****************项目部署时设置全局默认配置*****************
 
 // *****************项目部署时设置全局默认配置*****************
-axios.defaults.baseURL = 'http://18.183.169.200:8081'; // 替换为你的后端 API 地址，AWS部署配置
+// axios.defaults.baseURL = AWSADRESS; // 替换为你的后端 API 地址，AWS部署配置↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+// axios.defaults.baseURL = 'http://18.183.169.200:8081'; // 替换为你的后端 API 地址，AWS部署配置,写成这样可以成功，常量的写法没有认证
 axios.defaults.timeout = 5000; // 设置请求超时时间，AWS部署配置
 // const token = localStorage.getItem('token');
 // console.log(token)

@@ -22,15 +22,17 @@ export default function FindTeam(props) {
     }
     const [selectedDate, setSelectedDate] = useState(null);
 
+    const [showMes, setShowMsg] = useState(false)
+
     const handleDateChange = (date) => {
         const formattedDate = dayjs(date).format('YYYYMMDD');
         console.log(formattedDate)
         setSelectedDate(formattedDate);
     };
 
-    const axiosParam = (teamItemId === ''?{
+    const axiosParam = (teamItemId === '' ? {
         planningDate: selectedDate
-    }:{
+    } : {
         teamItemId: teamItemId,
         planningDate: selectedDate
     })
@@ -46,22 +48,44 @@ export default function FindTeam(props) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     // 踩坑记录：axios发送请求时，携带参数的对象名字不能随便起，最好命名为params，如果是其他名称，需要写成如下的对象形式
-    function sendAxiosAndGotoShowTeamData() {
-        axios.get('/teamPlanningInfo/getteamplanninginfo', { params:axiosParam })
-            .then(response => {
+    // async函数如果返回的不是一个promise对象，函数的返回结果就是一个成功的promise
+    // 抛出错误，返回的结果是一个失败的promise
+    const sendAxiosAndGotoShowTeamData = async () => {
+        if (Object.values(axiosParam).every(value =>
+            value === null ||
+            value === undefined ||
+            value === '')) {
+            setShowMsg(true)
+        }
+        else {
+            try {
+                // await返回的是promise成功的值
+                // 如果promise失败就会抛出异常,可以通过try catch捕获
+                const response = await axios.get('/teamPlanningInfo/getteamplanninginfo', { params: axiosParam })
                 if (response.data.length >= 0) {
                     console.log(response.data)
                     dispatch({
-                        type: "FINDTEAMPLANNINGINFOF",
+                        type: "FINDTEAMPLANNINGINFO",
                         payload: response.data,
                     })
                 }
+                setShowMsg(false)
                 // 使用{ replace: true }，使得本次路由导航不记录到history里               
-                navigate('/homepage/ShowTeamData',{ replace: true });
-            })
-            .catch(error => console.log(error));
-            setTeamItemId('')
-            setSelectedDate(null)
+                navigate('/homepage/ShowTeamData', { replace: true });
+            }
+            catch (error) {
+                console.error(error);
+            }
+            finally {
+                setTeamItemId('')
+                setSelectedDate(null)
+            }
+
+        }
+        await new Promise((resolve) => {
+            setTimeout(() =>
+                setShowMsg(false), 3000)
+        })
     }
 
     const clearForm = () => {
@@ -79,12 +103,19 @@ export default function FindTeam(props) {
             overflow: 'hidden'
         }}>
             <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
                 padding: '1vh',
                 marginBottom: '1vh'
             }}>
                 <Typography variant="h5" color="primary">
                     寻找队伍
                 </Typography>
+                {showMes && (
+                    <Typography variant="subtitle2" color="primary">
+                        请至少选择一项查找条件！
+                    </Typography>
+                )}
             </div>
             <FormControl sx={{ width: '100%', }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>

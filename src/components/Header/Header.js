@@ -8,7 +8,9 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import api from '../../api';
-import axios from 'axios'; //部署用
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 export default function Header(props) {
     const [mes] = useState('你好，请')
@@ -38,6 +40,15 @@ export default function Header(props) {
     //     navigate('/login');
     // }
 
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
 
     const dispatch = useDispatch();
     const changeIsLogin = () => {
@@ -74,7 +85,25 @@ export default function Header(props) {
                     <span style={{ lineHeight: '8vh' }}>点击</span>
                     <span style={{ lineHeight: '8vh' }}><Link to='/homepage' onClick={changeIsLogin} style={{ color: 'white' }}>退出</Link></span>
                     <div>
-                        <SettingsIcon size="large" />
+                        <IconButton
+                            aria-label="more"
+                            aria-controls="icon-menu"
+                            aria-haspopup="true"
+                            onClick={handleMenuOpen}
+                            color="inherit"
+                        >
+                            <SettingsIcon size="large" />
+                        </IconButton>
+                        <Menu
+                            id="icon-menu"
+                            anchorEl={anchorEl}
+                            open={Boolean(anchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <MenuItem onClick={handleMenuClose}>Option 1</MenuItem>
+                            <MenuItem onClick={handleMenuClose}>Option 2</MenuItem>
+                            <MenuItem onClick={handleMenuClose}>Option 3</MenuItem>
+                        </Menu>
                     </div>
                 </div>
 
@@ -84,10 +113,7 @@ export default function Header(props) {
                     {/* <Button variant="contained" size="small" onClick={userLogin}>登录</Button> */}
                     <span style={{ lineHeight: '8vh' }}><Link to='/login' style={{ color: 'white' }}>登录</Link></span>
                     <span style={{ lineHeight: '8vh' }}>或</span>
-                    <span style={{ lineHeight: '8vh' }}><Link to='/register' style={{ color: 'white' }}>注册</Link></span>
-                    <div>
-                        <SettingsIcon size="large" />
-                    </div>
+                    <span style={{ lineHeight: '8vh',paddingRight:'10px' }}><Link to='/register' style={{ color: 'white' }}>注册</Link></span>
                 </div>
             )}
         </AppBar>

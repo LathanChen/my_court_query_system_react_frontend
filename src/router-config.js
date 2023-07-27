@@ -1,6 +1,7 @@
 import QueryForm from './components/QueryForm/QueryForm';
 import ShowQueryData from './components/ShowQueryData/ShowQueryData';
 import ShowTeamData from './components/ShowTeamData/ShowTeamData';
+import ShowTodayEvent from './components/ShowTodayEvent/ShowTodayEvent';
 import TestDiv from './components/TestDiv/TestDiv';
 import Test2 from './components/Test2/Test2';
 import InfoListSearch from './components/InfoListSearch/InfoListSearch';
@@ -28,6 +29,10 @@ const routes = [
       {
         path: 'ShowTeamData',
         element: <ShowTeamData/>,
+      },
+      {
+        path: 'ShowTodayEvent/:itemAndStatus',
+        element: <ShowTodayEvent/>,
       },
       // {
       //   path: 'TestDiv',
