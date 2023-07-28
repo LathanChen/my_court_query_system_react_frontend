@@ -3,7 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
-import axios from 'axios'; //部署用
+import ConfirmationDialog from '../../components/ConfirmationDialog/ConfirmationDialog'
 
 
 export default function AdminPageItemInfoShowTable(props) {
@@ -12,8 +12,8 @@ export default function AdminPageItemInfoShowTable(props) {
     { field: 'courtOpenInfoId', headerName: '编号', width: 70 },
     { field: 'itemInfoName', headerName: '项目', width: 130 },
     { field: 'courtOpenTimeZone', headerName: '时间段', width: 200 },
-    {field: 'courtOpenTime',headerName: '起始时间',width: 200},
-    {field: 'courtName',headerName: '场地',width: 200},
+    { field: 'courtOpenTime',headerName: '起始时间',width: 200},
+    { field: 'courtName',headerName: '场地',width: 200},
     {
       field: 'actions',
       headerName: '操作',
@@ -28,7 +28,8 @@ export default function AdminPageItemInfoShowTable(props) {
           <Button variant="outlined" color="primary" onClick={() => editInfo(params.row.courtOpenInfoId)}>
             编辑
           </Button>
-          <Button variant="outlined" color="error" sx={{ marginLeft: '2vw' }} onClick={() =>deleteInfo([params.row.courtOpenInfoId])}>
+          {/* <Button variant="outlined" color="error" sx={{ marginLeft: '2vw' }} onClick={() =>deleteInfo([params.row.courtOpenInfoId])}> */}
+          <Button variant="outlined" color="error" sx={{ marginLeft: '2vw' }} onClick={() =>openDialog([params.row.courtOpenInfoId])}>
             删除
           </Button>
         </div>
@@ -36,7 +37,22 @@ export default function AdminPageItemInfoShowTable(props) {
     },
   ];
 
+  const [shouldOpenDialog,setShouldOpenDialog] = React.useState(false)
+
+  const [wantToDeleteItemID,setWantToDeleteItemID] = React.useState([])
+
+    const openDialog = (data) => {
+        setShouldOpenDialog(true)
+        setWantToDeleteItemID(data)
+    }
+
+    const closeDialog = () => {
+        setShouldOpenDialog(false)
+    }
+
+
   const deleteInfo = (data) => {
+    console.log(data)
     const fetchData = async (data) => {
             console.log(data)
             try {
@@ -54,7 +70,7 @@ export default function AdminPageItemInfoShowTable(props) {
                 console.error(error)
                 // setErrorMsg(error)
             }
-
+            setShouldOpenDialog(false)
     }
     
     fetchData(data)
@@ -84,6 +100,11 @@ export default function AdminPageItemInfoShowTable(props) {
         height: '85vh',
         marginTop:'3vh'
         }}>
+                    <ConfirmationDialog 
+       open={shouldOpenDialog}
+       onClose={closeDialog}
+       onConfirm={() =>deleteInfo(wantToDeleteItemID)} >
+      </ConfirmationDialog>
       <DataGrid
         rows={rows}
         getRowId={getRowId}

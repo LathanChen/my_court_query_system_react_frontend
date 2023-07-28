@@ -5,7 +5,7 @@ import StyleIcon from '@mui/icons-material/Style';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
-import axios from 'axios'; //部署用
+import ConfirmationDialog from '../../components/ConfirmationDialog/ConfirmationDialog'
 
 
 export default function AddInfoBar(props) {
@@ -14,30 +14,65 @@ export default function AddInfoBar(props) {
 
     const toAddInfoPage =() => navigate('/adminpage/addinfo')
 
-    const deleteInfo = () => {
-        const fetchData = async () => {
-                const data = props.batchselection
-                // console.log(params)
-                try {
-                    //   console.log(setTimetoString(courtOpenBeginTime))
-                    const response = await api.delete('/courtOpenInfo/deleteinfo', {data})
-                    // console.log(response.data)
-                    if (response.data === true) {
-                        // todo:出现“添加成功”提示框
-                        console.log('成功了')
-                        // setShowSuccessAlert(true)
-                        props.InfoListSearchRefresh(true) 
-                    }
-                }
-                catch (error) {
-                    console.error(error)
-                    // setErrorMsg(error)
-                }
+    const [shouldOpenDialog,setShouldOpenDialog] = React.useState(false)
 
-        }
-        
-        fetchData()
+    const openDialog = () => {
+        setShouldOpenDialog(true)
     }
+
+    const closeDialog = () => {
+        setShouldOpenDialog(false)
+    }
+
+    const sendDeleteFetch = () => {
+        const fetchData = async () => {
+            const data = props.batchselection
+            // console.log(params)
+            try {
+                //   console.log(setTimetoString(courtOpenBeginTime))
+                const response = await api.delete('/courtOpenInfo/deleteinfo', {data})
+                // console.log(response.data)
+                if (response.data === true) {
+                    // todo:出现“添加成功”提示框
+                    console.log('成功了')
+                    // setShowSuccessAlert(true)
+                    props.InfoListSearchRefresh(true) 
+                }
+            }
+            catch (error) {
+                console.error(error)
+                // setErrorMsg(error)
+            }
+            setShouldOpenDialog(false)
+    }
+
+    fetchData()
+    }
+
+    // const deleteInfo = () => {
+    //     const fetchData = async () => {
+    //             const data = props.batchselection
+    //             // console.log(params)
+    //             try {
+    //                 //   console.log(setTimetoString(courtOpenBeginTime))
+    //                 const response = await api.delete('/courtOpenInfo/deleteinfo', {data})
+    //                 // console.log(response.data)
+    //                 if (response.data === true) {
+    //                     // todo:出现“添加成功”提示框
+    //                     console.log('成功了')
+    //                     // setShowSuccessAlert(true)
+    //                     props.InfoListSearchRefresh(true) 
+    //                 }
+    //             }
+    //             catch (error) {
+    //                 console.error(error)
+    //                 // setErrorMsg(error)
+    //             }
+
+    //     }
+        
+    //     fetchData()
+    // }
 
     return (
         <Box sx={{
@@ -87,6 +122,13 @@ export default function AddInfoBar(props) {
                 alignItems: 'flex-end',
                 height: '5vh'
             }}>
+                <ConfirmationDialog
+                 open={shouldOpenDialog}
+                 onClose={closeDialog}
+                 onConfirm={sendDeleteFetch}
+                 >
+
+                 </ConfirmationDialog>
                 <StyleIcon style={{ fontSize: '5vh',color:'#2196f3' }} />
                 <div style={{
                     display:'flex',
@@ -96,7 +138,7 @@ export default function AddInfoBar(props) {
                     lineHeight: '5vh'
                 }}>
                     <span>批量操作</span>
-                    <Button variant="outlined" color='error' onClick={deleteInfo}>删除</Button>
+                    <Button variant="outlined" color='error' onClick={openDialog}>删除</Button>
                 </div>
 
             </div>

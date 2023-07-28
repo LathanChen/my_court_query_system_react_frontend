@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -6,9 +6,13 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useDispatch } from 'react-redux';
 import api from '../../api';
 import axios from 'axios'; //部署用
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -38,6 +42,8 @@ const AppBar = styled(MuiAppBar, {
 
 export default function AdminHeader(props) {
 
+  const navigate = useNavigate();
+
   const handleDrawerOpen = () => {
     props.handleSliderOpen()
   };
@@ -45,30 +51,43 @@ export default function AdminHeader(props) {
   const dispatch = useDispatch();
   const changeIsLogin = () => {
     const fetchData = async () => {
-        try {
-            const response = await api.get('/user/logout');
-            // 请求成功后的操作
-            if(response.data.code === 200){
-               dispatch({
-                type: "LOGOUT",
-                payload: false,
-            });
-            // Storage 对象是用于访问浏览器的本地存储（例如 localStorage 或 sessionStorage）的接口。无论你存储的是什么类型的值，
-            // 在存储过程中都会被自动转换为字符串。当你从存储中获取值时，这些字符串会被原样返回。
-            // 所以这里实际存入的是"null"字符串
-            localStorage.removeItem("token");
-            console.log(localStorage);
-            }
-            else{
-
-            }                       
-        } catch (error) {
-            console.error(error);
+      try {
+        const response = await api.get('/user/logout');
+        // 请求成功后的操作
+        if (response.data.code === 200) {
+          dispatch({
+            type: "LOGOUT",
+            payload: false,
+          });
+          // Storage 对象是用于访问浏览器的本地存储（例如 localStorage 或 sessionStorage）的接口。无论你存储的是什么类型的值，
+          // 在存储过程中都会被自动转换为字符串。当你从存储中获取值时，这些字符串会被原样返回。
+          // 所以这里实际存入的是"null"字符串
+          localStorage.removeItem("token");
+          console.log(localStorage);
+          enterHomePage()
         }
+        else {
+
+        }
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     fetchData();
-}
+  }
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+  const enterHomePage = () => navigate('/homepage')
 
   return (
     <AppBar position="fixed" open={props.silderOpen}>
@@ -86,7 +105,28 @@ export default function AdminHeader(props) {
           Persistent drawer
         </Typography>
         <div style={{ marginLeft: 'auto' }}>
-          <Link to='/homepage' onClick={changeIsLogin} style={{ color: 'white' }}>退出</Link>
+          <IconButton
+            aria-label="more"
+            aria-controls="icon-menu"
+            aria-haspopup="true"
+            onClick={handleMenuOpen}
+            color="inherit"
+          >
+            <SettingsIcon size="large" />
+          </IconButton>
+          <Menu
+            id="icon-menu"
+            // 菜单的锚点元素，它表示菜单在哪里弹出。通常情况下，你需要在触发菜单弹出的按钮或图标上设置这个属性，以便菜单能够在按钮或图标的位置弹出。
+            anchorEl={anchorEl}
+            // 这是一个布尔值，用于控制菜单是否处于打开状态。如果 open 属性为 true，则菜单会显示在页面上；如果为 false，则菜单会隐藏。
+            open={Boolean(anchorEl)}
+            // 这是一个回调函数，用于在菜单关闭时触发。当用户点击菜单项或点击菜单以外的区域时，
+            // 菜单会自动关闭，同时会调用 onClose 函数。在 onClose 函数中，你可以执行一些操作，比如更新组件的状态以关闭菜单。
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={enterHomePage}>返回首页</MenuItem>
+            <MenuItem onClick={changeIsLogin}>退 出</MenuItem>
+          </Menu>
         </div>
       </Toolbar>
     </AppBar>

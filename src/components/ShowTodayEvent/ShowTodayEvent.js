@@ -7,14 +7,6 @@ import { useSelector } from 'react-redux';
 import { useNavigate,useParams } from 'react-router-dom';
 
 export default function ShowTodayEvent() {
-    useEffect(() => {
-        if(todayEventsList.length === 0){
-            setTodayEventsListIsNull(true)
-        }
-    },[])
-
-    const [todayEventsListIsNull,setTodayEventsListIsNull] = useState(false)
-
     const columns = [
         { field: 'courtName', headerName: '场地', width: 140 },
         { field: 'courtOpenTime', headerName: '时间段', width: 100 },
@@ -46,7 +38,7 @@ export default function ShowTodayEvent() {
     const routerparam = useParams()
     console.log(routerparam)
 
-    // 如果useSelector和useEffect都在同一个函数组件中，useSelector会在useEffect之前执行。
+    // 如果useSelector和useEffect都在同一个函数组件中，useSelector会在useEffect之前执行。 
     const todayEventsList = useSelector(state => state.todayEvents[routerparam.itemAndStatus]).map((item) =>{
         console.log(item)
         console.log(routerparam.itemAndStatus)
@@ -62,6 +54,7 @@ export default function ShowTodayEvent() {
         };
     })
 
+    console.log(todayEventsList)
     // console.log(courtInfoList)
         // const { courtOpenTime,courtOpenInfoId } = item;
         // const { courtName, courtAdress } = item.courtInfo;
@@ -109,7 +102,7 @@ export default function ShowTodayEvent() {
                 <Button variant="contained" onClick={backToQyeryForm}>返回</Button>
                 </span>
             </div>
-            {!todayEventsListIsNull ? (<div style={{ width: '93%', padding: '2vh' }}>
+            {!(todayEventsList.length === 0) ? (<div style={{ width: '93%', padding: '2vh' }}>
                 <DataGrid
                     sx={{ border: 'none' }}
                     rows={todayEventsList}

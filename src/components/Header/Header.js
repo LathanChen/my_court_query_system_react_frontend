@@ -11,6 +11,7 @@ import api from '../../api';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header(props) {
     const [mes] = useState('你好，请')
@@ -75,6 +76,9 @@ export default function Header(props) {
         fetchData();
     }
 
+    const navigate = useNavigate();
+    const enterAdminPage = () => navigate('/adminpage')
+
     return (
         <AppBar>
             {isLogin ? (
@@ -96,13 +100,17 @@ export default function Header(props) {
                         </IconButton>
                         <Menu
                             id="icon-menu"
+                            // 菜单的锚点元素，它表示菜单在哪里弹出。通常情况下，你需要在触发菜单弹出的按钮或图标上设置这个属性，以便菜单能够在按钮或图标的位置弹出。
                             anchorEl={anchorEl}
+                            // 这是一个布尔值，用于控制菜单是否处于打开状态。如果 open 属性为 true，则菜单会显示在页面上；如果为 false，则菜单会隐藏。
                             open={Boolean(anchorEl)}
+                            // 这是一个回调函数，用于在菜单关闭时触发。当用户点击菜单项或点击菜单以外的区域时，
+                            // 菜单会自动关闭，同时会调用 onClose 函数。在 onClose 函数中，你可以执行一些操作，比如更新组件的状态以关闭菜单。
                             onClose={handleMenuClose}
                         >
-                            <MenuItem onClick={handleMenuClose}>Option 1</MenuItem>
-                            <MenuItem onClick={handleMenuClose}>Option 2</MenuItem>
-                            <MenuItem onClick={handleMenuClose}>Option 3</MenuItem>
+                            <MenuItem onClick={enterAdminPage}>进入管理界面</MenuItem>
+                            <MenuItem onClick={handleMenuClose}>敬请期待！</MenuItem>
+                            <MenuItem onClick={handleMenuClose}>敬请期待！</MenuItem>
                         </Menu>
                     </div>
                 </div>
