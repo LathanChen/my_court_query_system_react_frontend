@@ -13,6 +13,7 @@ import axios from 'axios'; //部署用
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 
 const drawerWidth = 240;
 
@@ -79,31 +80,66 @@ export default function AdminHeader(props) {
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-    const handleMenuOpen = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    const handleMenuClose = () => {
-        setAnchorEl(null);
-    };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const enterHomePage = () => navigate('/homepage')
+  console.log(props.routerMes)
+  
+  // 由于获取当前路由地址的动作是在AdminPage文件的useEffect函数中进行的，
+  // 而useEffect先执行的是一个一秒的定时器（里面执行了axios请求和加载动画），
+  // 再执行获取路由地址 => 获取路由的中文名称 =>通过props传给本组件（没高兴把这些代码定时器里）
+  // 由于js是单线程，所以必须等定时器里的执行完后才能进行下面的动作
+  // 所以会造成本组件在加载时，props没有值
+  const [routerMes,setRouterMes] = useState([])
+
+  useEffect(() => {
+    if (props.routerMes){
+      const _routerMes = props.routerMes.filter((value) => value.name !== undefined);
+      setRouterMes(_routerMes)
+    }
+  },[props.routerMes])
+  
+  // console.log(routerMes[1].url)
 
   return (
-    <AppBar position="fixed" open={props.silderOpen}>
+    <AppBar position="fixed" open={props.open}>
       <Toolbar>
         <IconButton
           color="inherit"
           aria-label="open drawer"
           onClick={handleDrawerOpen}
           edge="start"
-          sx={{ mr: 2, ...(props.silderOpen && { display: 'none' }) }}
+          sx={{ mr: 2, ...(props.open && { display: 'none' }) }}
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          Persistent drawer
-        </Typography>
+        <div role="presentation">
+          {(routerMes && <Breadcrumbs aria-label="breadcrumb" sx={{ color: 'white' }}>
+            {routerMes.map((routerInfo, index) => (
+              (index === routerMes.length - 1)?(
+                <Typography key={routerInfo.url} color="white">
+                  {routerInfo.name}
+                </Typography>
+              ) : (
+                <Link
+                  key={routerInfo.url}
+                  underline="hover"
+                  color="inherit"
+                  to={`/${routerInfo.url}`}
+                  style={{ color: 'white' }}
+                >
+                  {routerInfo.name}
+                </Link>
+              ))
+            )}
+          </Breadcrumbs>)}
+        </div>
         <div style={{ marginLeft: 'auto' }}>
           <IconButton
             aria-label="more"

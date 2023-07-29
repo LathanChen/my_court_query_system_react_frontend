@@ -12,8 +12,8 @@ export default function AdminPageItemInfoShowTable(props) {
     { field: 'courtOpenInfoId', headerName: '编号', width: 70 },
     { field: 'itemInfoName', headerName: '项目', width: 130 },
     { field: 'courtOpenTimeZone', headerName: '时间段', width: 200 },
-    { field: 'courtOpenTime',headerName: '起始时间',width: 200},
-    { field: 'courtName',headerName: '场地',width: 200},
+    { field: 'courtOpenTime', headerName: '起始时间', width: 200 },
+    { field: 'courtName', headerName: '场地', width: 200 },
     {
       field: 'actions',
       headerName: '操作',
@@ -28,8 +28,15 @@ export default function AdminPageItemInfoShowTable(props) {
           <Button variant="outlined" color="primary" onClick={() => editInfo(params.row.courtOpenInfoId)}>
             编辑
           </Button>
+          {/* ConfirmationDialog不能写在这里，我的思考：renderCell会根据<DataGrid>中rows的数据逐条渲染明细，这样ConfirmationDialog等于会被渲染多次
+          而且实验下来，ConfirmationDialog只会取到params最后一条row的值 */}
+          {/* <ConfirmationDialog
+        open={shouldOpenDialog}
+        onClose={closeDialog}
+        onConfirm={() => deleteInfo(wantToDeleteItemID)} >
+      </ConfirmationDialog> */}
           {/* <Button variant="outlined" color="error" sx={{ marginLeft: '2vw' }} onClick={() =>deleteInfo([params.row.courtOpenInfoId])}> */}
-          <Button variant="outlined" color="error" sx={{ marginLeft: '2vw' }} onClick={() =>openDialog([params.row.courtOpenInfoId])}>
+          <Button variant="outlined" color="error" sx={{ marginLeft: '2vw' }} onClick={() => openDialog([params.row.courtOpenInfoId])}>
             删除
           </Button>
         </div>
@@ -37,73 +44,73 @@ export default function AdminPageItemInfoShowTable(props) {
     },
   ];
 
-  const [shouldOpenDialog,setShouldOpenDialog] = React.useState(false)
+  const [shouldOpenDialog, setShouldOpenDialog] = React.useState(false)
 
-  const [wantToDeleteItemID,setWantToDeleteItemID] = React.useState([])
+  const [wantToDeleteItemID, setWantToDeleteItemID] = React.useState([])
 
-    const openDialog = (data) => {
-        setShouldOpenDialog(true)
-        setWantToDeleteItemID(data)
-    }
+  const openDialog = (data) => {
+    setShouldOpenDialog(true)
+    setWantToDeleteItemID(data)
+  }
 
-    const closeDialog = () => {
-        setShouldOpenDialog(false)
-    }
+  const closeDialog = () => {
+    setShouldOpenDialog(false)
+  }
 
 
   const deleteInfo = (data) => {
     console.log(data)
     const fetchData = async (data) => {
-            console.log(data)
-            try {
-                //   console.log(setTimetoString(courtOpenBeginTime))
-                const response = await api.delete('/courtOpenInfo/deleteinfo', {data})
-                // console.log(response.data)
-                if (response.data === true) {
-                    // todo:出现“添加成功”提示框
-                    console.log('成功了')
-                    // setShowSuccessAlert(true)
-                    props.InfoListSearchRefresh(true) 
-                }
-            }
-            catch (error) {
-                console.error(error)
-                // setErrorMsg(error)
-            }
-            setShouldOpenDialog(false)
+      console.log(data)
+      try {
+        //   console.log(setTimetoString(courtOpenBeginTime))
+        const response = await api.delete('/courtOpenInfo/deleteinfo', { data })
+        // console.log(response.data)
+        if (response.data === true) {
+          // todo:出现“添加成功”提示框
+          console.log('成功了')
+          // setShowSuccessAlert(true)
+          props.InfoListSearchRefresh(true)
+        }
+      }
+      catch (error) {
+        console.error(error)
+        // setErrorMsg(error)
+      }
+      setShouldOpenDialog(false)
     }
-    
+
     fetchData(data)
-}
+  }
 
   const rows = props.quertData
   // 使用 getRowId 属性指定自定义的行 ID：如果你无法为每行提供唯一的 id 属性，你可以使用 getRowId 属性来为每行指定自定义的 ID。getRowId 是一个回调函数，它接收行数据作为参数，并返回一个表示行 ID 的值。
-  const getRowId = (row) => row.courtOpenInfoId; 
+  const getRowId = (row) => row.courtOpenInfoId;
 
   const navigate = useNavigate();
 
-  const editInfo = (data) =>{
+  const editInfo = (data) => {
     console.log(data)
     // 传递带变量的路由地址时，要使用模板字符串
     navigate(`/adminpage/editinfo/${data}`)
   }
-  
-  const showSelected = (data) =>{
+
+  const showSelected = (data) => {
     setSeletedDatas(data)
     props.isBatchselectionChange(data)
   }
 
-  const [seletedDatas,setSeletedDatas] = React.useState([])
+  const [seletedDatas, setSeletedDatas] = React.useState([])
 
   return (
-    <div style={{ 
-        height: '85vh',
-        marginTop:'3vh'
-        }}>
-                    <ConfirmationDialog 
-       open={shouldOpenDialog}
-       onClose={closeDialog}
-       onConfirm={() =>deleteInfo(wantToDeleteItemID)} >
+    <div style={{
+      height: '86vh',
+      marginTop: '3vh',
+    }}>
+      <ConfirmationDialog
+        open={shouldOpenDialog}
+        onClose={closeDialog}
+        onConfirm={() => deleteInfo(wantToDeleteItemID)} >
       </ConfirmationDialog>
       <DataGrid
         rows={rows}
