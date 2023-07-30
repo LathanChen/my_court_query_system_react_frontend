@@ -47,6 +47,7 @@ export default function AdminPage() {
         }, 1000); // 设置停止显示的时间，这里是 1 秒
         setRouterMes([])
         // 按'/'分割当前的路径名，
+        // (x) => x是为了去除数组中可能的空元素
         const pathnames = location.pathname.split('/').filter((x) => x);
         // console.log(pathnames)
         // _,省略之前的参数
@@ -62,7 +63,7 @@ export default function AdminPage() {
                 name: breadcrumbNameMap[url],
             };
         });
-        console.log(newBreadcrumbs)
+        // console.log(newBreadcrumbs)
         setRouterMes(newBreadcrumbs);
 
     }, [location]);

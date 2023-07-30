@@ -99,7 +99,9 @@ export default function AdminPageAddItempage(props) {
     const insertNewOpenInfo = () => {
 
         const fetchData = async () => {
-            if (courtOpenBeginTime.isAfter(courtOpenEndTime)) {
+            if (courtOpenBeginTime && 
+                courtOpenEndTime && 
+                courtOpenBeginTime.isAfter(courtOpenEndTime)) {
                 // todo:出现"开始时间不能晚于结束时间"提示框
                 setErrorMsg('开始时间不能晚于结束时间！')
             }

@@ -89,7 +89,7 @@ export default function AdminHeader(props) {
   };
 
   const enterHomePage = () => navigate('/homepage')
-  console.log(props.routerMes)
+  // console.log(props.routerMes)
   
   // 由于获取当前路由地址的动作是在AdminPage文件的useEffect函数中进行的，
   // 而useEffect先执行的是一个一秒的定时器（里面执行了axios请求和加载动画），
