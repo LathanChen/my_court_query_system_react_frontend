@@ -205,6 +205,7 @@ export default function AdminPageAddItempage(props) {
                     height: '8vh'
                 }}>
                     <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
+                    {/* <div style={{ flex:'0 0 5vw',textAlign:'right' }}> */}
                         <Typography variant="subtitle2" color="primary">项目：</Typography>
                     </div>
                     <FormControl sx={{ width: '50%' }}>

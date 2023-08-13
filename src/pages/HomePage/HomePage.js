@@ -16,7 +16,9 @@ const TodayEventComponent = MakeDateParameter(TodayEvent)
 
 export default function HomePage() {
 
-    const [showQuertFormOrNot] = useState(false)
+    const [showQueryFormOrNot] = useState(false)
+
+    const [queryFormData,setQueryFormData] = useState([])
 
     // const [showQueryData, SetShowQueryData] = useState([])
 
@@ -33,10 +35,38 @@ export default function HomePage() {
         setShouldShowLogin(showFlg)
     }
 
+    // 先计算当日是星期几和第几周，为weekNumber和dayOfWeekInWeek赋值，避免初次渲染出现weekNumber和dayOfWeekInWeek为null的情况
+    // 这样会导致TodayEvent渲染两次，且第一次渲染会报请求无参数的错误
+    const currentTime = new Date()
+    const currentFirstDayOfMonth = new Date(currentTime.getFullYear(), currentTime.getMonth(), 1);
+    const currentDayOfWeek = currentFirstDayOfMonth.getDay(); //getDay()返回一周中的某一天
+    const currentAdjustedDayOfWeek = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1; // 将星期天(0)转换为6，星期一(1)转换为0，以此类推
+    const currentDayOfMonth = currentTime.getDate() - 1;
+    const currentDaysSinceStartOfMonth = currentAdjustedDayOfWeek + currentDayOfMonth;
+    const currentWeekNumber = Math.floor(currentDaysSinceStartOfMonth / 7) + 1;
+    const currentDayOfWeekInWeek = (currentDaysSinceStartOfMonth % 7) + 1;
+
+    const [weekNumber,setWeekNumber] = useState(currentWeekNumber)
+
+    const [dayOfWeekInWeek,setDayOfWeekInWeek] = useState(currentDayOfWeekInWeek)
+
+    const handleWeekNumber = (data) => {
+        setWeekNumber(data)
+    }
+
+    const handleDayOfWeekInWeek = (data) => {
+        setDayOfWeekInWeek(data)
+    }
+
+    const handleQueryFormData = (data) => {
+        console.log(data)
+        setQueryFormData(data)
+    }
+
     return (
         <div style={{ width: '100%', height:'100vh',position: 'relative' }}>
             {/* <CssBaseline/> */}
-            <Header showLogin={changeShouldShowLogin} loginFlg={shouldShowLogin}></Header>
+            <Header></Header>
             <div style={{
                 width: '100%',
                 display: 'flex',
@@ -57,20 +87,21 @@ export default function HomePage() {
                         width: '46%',
                         // marginRight: '2%'
                     }}>
-                        <TimeShow></TimeShow>
+                        <TimeShow handleWeekNumber={handleWeekNumber} handleDayOfWeekInWeek={handleDayOfWeekInWeek}></TimeShow>
                     </div>
                     <div style={{
                         width: '46%',
                         // marginLeft: '2%'
                     }}>
-                        <FindTeam showQuertFormOrNot={showQuertFormOrNot}></FindTeam>
+                        <FindTeam showQueryFormOrNot={showQueryFormOrNot}></FindTeam>
                     </div>
                     <div style={{
                         width: '46%',
                         // marginRight: '2%',
                         // marginTop:'20px'
                     }}>
-                        <TodayEventComponent></TodayEventComponent>
+                        {/* <TodayEventComponent></TodayEventComponent> */}
+                        <TodayEvent weekNumber={weekNumber} dayOfWeekInWeek={dayOfWeekInWeek}></TodayEvent>
                     </div>
                     <div style={{
                         width: '46%',
@@ -96,7 +127,8 @@ export default function HomePage() {
                     :(<QueryForm 
                     setShowFlag={changeShowQuertFormOrNot}/>
                     )} */}
-                    <Outlet />
+                    {/* 如果context想传递多个参数,就要写成一个对象 */}
+                    <Outlet context={{handleQueryFormData,queryFormData}}/>
                 </div>
             </div>
         </div>

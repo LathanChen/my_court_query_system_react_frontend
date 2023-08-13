@@ -96,7 +96,7 @@ export default function FindTeam(props) {
     return (
         <Box sx={{
             height: '32vh',
-            padding: '1vh',
+            // padding: '1vh',
             // marginLeft: '50px',
             // marginTop: '50px',
             border: '1px solid skyblue',
@@ -105,8 +105,8 @@ export default function FindTeam(props) {
             <div style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                padding: '1vh',
-                marginBottom: '1vh'
+                padding: '2vh',
+                // marginBottom: '1vh'
             }}>
                 <Typography variant="h5" color="primary">
                     寻找队伍
@@ -117,7 +117,8 @@ export default function FindTeam(props) {
                     </Typography>
                 )}
             </div>
-            <FormControl sx={{ width: '100%', }}>
+            <div style={{ width: 'calc(100% - 10px)',padding:'5px'}}>
+            <FormControl sx={{ width: '100%' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['DatePicker']}>
                         <DatePicker
@@ -143,10 +144,11 @@ export default function FindTeam(props) {
                     <MenuItem value={4}>羽毛球</MenuItem>
                 </Select>
             </FormControl>
+            </div>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-around',
-                marginTop: '2vh'
+                marginTop: '1vh'
             }}>
                 <Button variant="contained" sx={{ marginRight: '3vh' }} onClick={sendAxiosAndGotoShowTeamData}>确认</Button>
                 <Button variant="outlined" onClick={clearForm}>取消</Button>

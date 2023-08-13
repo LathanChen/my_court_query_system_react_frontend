@@ -8,6 +8,7 @@ import ErrorMsg from '../../components/ErrorMsg/ErrorMsg';
 import CircularProgress from '@mui/material/CircularProgress';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import api from '../../api';
 
 export default function AdminPage() {
@@ -19,6 +20,9 @@ export default function AdminPage() {
         'adminpage/editinfo': '编辑信息',
     };
 
+    const dispatch = useDispatch();
+
+    const adminHasLogin = useSelector(state => state.isLogin);
     // 一旦路由链接有变化，调用useEffect函数取得url并生成新的链接名称字符串，并通过父组件传给AdminHeader
     useEffect(() => {
         // console.log('useEffect')
@@ -33,10 +37,20 @@ export default function AdminPage() {
                         console.log(response.data)
                         for (const element of response.data.data) {
                             if (element === "test") {
-                                setAdminHasLogin(true)
+                                dispatch({
+                                    type: "LOGIN",
+                                    payload: true,
+                                })
                                 break
                             }
                         }
+                    }
+                    else {
+                        dispatch({
+                            type: "LOGOUT",
+                            payload: false,
+                        })
+                        localStorage.removeItem("token");
                     }
                     setLoading(false); // 请求完成后更新加载状态
                 } catch (error) {
@@ -72,7 +86,6 @@ export default function AdminPage() {
 
     const theme = useTheme();
     const [open, setOpen] = useState(false);
-    const [adminHasLogin, setAdminHasLogin] = useState(false);
 
     const handleSliderOpen = () => {
         setOpen(true);

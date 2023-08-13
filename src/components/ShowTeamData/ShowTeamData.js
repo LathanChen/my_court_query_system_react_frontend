@@ -6,12 +6,6 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 export default function ShowTeamData() {
-
-    useEffect(() => {
-        if(teamPlanningInfo.length === 0){
-            setTeamPlanningInfoIsNull(true)
-        }
-    },[])
     const [teamPlanningInfoIsNull,setTeamPlanningInfoIsNull] = useState(false)
 
     const columns = [
@@ -35,6 +29,17 @@ export default function ShowTeamData() {
         };
     });
 
+
+    useEffect(() => {
+        if(teamPlanningInfo.length === 0){
+            setTeamPlanningInfoIsNull(true)
+        }
+        else {
+            setTeamPlanningInfoIsNull(false)
+        }
+    },[teamPlanningInfo])
+
+    
     const navigate = useNavigate()
     const backToQyeryForm =() => {
         navigate('/homepage')

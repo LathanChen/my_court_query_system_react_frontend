@@ -17,22 +17,24 @@ export default function Header(props) {
     const [mes] = useState('你好，请')
     // const [loginFlg, setLoginFlg] = useState()
     const isLogin = useSelector(state => state.isLogin);
+    console.log(isLogin)
 
-    useEffect(() => {
-        if (localStorage.getItem("token") != null) {
-            console.log(localStorage.getItem("token"))
-            dispatch({
-                type: "LOGIN",
-                payload: true,
-            })
-        }
-        else {
-            // dispatch({
-            //     type:"LOGOUT",
-            //     payload:false,
-            // })          
-        }
-    }, [isLogin])
+    // useEffect(() => {
+    //     if (isLogin && localStorage.getItem("token") != null) {
+    //         console.log(localStorage.getItem("token"))
+    //         // dispatch({
+    //         //     type: "LOGIN",
+    //         //     payload: true,
+    //         // })
+    //     }
+    //     else if (!isLogin) {
+    //         localStorage.removeItem("token");
+    //         // dispatch({
+    //         //     type:"LOGOUT",
+    //         //     payload:false,
+    //         // })          
+    //     }
+    // }, [isLogin])
 
     // 创建navigate变量,用于router跳转
     // const navigate = useNavigate();

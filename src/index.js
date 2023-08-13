@@ -13,7 +13,7 @@ import store from './store';
 // *****************项目部署时设置全局默认配置*****************
 import axios from 'axios'; // 导入 Axios，AWS部署配置
 
-const AWSADRESS = 'http://18.183.169.200:8081'//AWS的地址
+const AWSADRESS = 'http://35.78.202.21:8081'//AWS的地址
 
 // *****************项目部署时设置全局默认配置*****************
 
@@ -23,7 +23,7 @@ const AWSADRESS = 'http://18.183.169.200:8081'//AWS的地址
 axios.defaults.timeout = 5000; // 设置请求超时时间，AWS部署配置
 // const token = localStorage.getItem('token');
 // console.log(token)
-// // 踩过最大的坑，就是设置这个token，应该写成下面这种形式
+// // 踩过最大的坑，就是设置这个token，应该写成下面这种形式(现在好像不用配了，java里已经设置好了)
 // if (token){
 //   axios.defaults.headers.common['token'] = token;
 // }

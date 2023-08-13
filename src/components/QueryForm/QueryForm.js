@@ -10,6 +10,8 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 // useNavigate用于实现路由跳转
 import { useNavigate } from 'react-router-dom';
+// 用于获取父组件在Outlet中传递的参数
+import { useOutletContext } from "react-router-dom"
 
 export default function QueryForm(props) {
     // const handleChange = (event) => {
@@ -84,7 +86,14 @@ export default function QueryForm(props) {
 
     // 传递数据的方式二：
     // 发送axios请求后，将接收到的数据保存到store中，通过router导航到数据展示页面
+
+
+    // 使用useOutletContext获取父组件中通过<Outlet context={{handleQueryFormData,queryFormData}}/>传递的参数
+    // 由于传递时有多个参数,写成了对象的形式,这里也要用对象的方式来接收
+    const {handleQueryFormData} = useOutletContext()
+    
     const sendAxiosAndGotoShowQueryData = async() =>{
+        handleQueryFormData(params)
         console.log(params)
         if (Object.values(params).every(value =>
             value === null ||
@@ -92,23 +101,30 @@ export default function QueryForm(props) {
             value === '')) {
             setShowMsg(true)
         }
+        // 8月12日修正
+        // 为了配合分页功能,现在将请求的发送交给ShowQueryData组件来完成
+        // else{
+        //     try{
+        //         // ...params语法,对象的扩展运算符
+        //         const response = await axios.get('/courtOpenInfo/getInfo', {params:{...params,PageNum:1,PageSize:1}})
+        //             if (response.data.length >= 0) {
+        //                 console.log(response.data)
+        //                 dispatch({
+        //                     type:"FINDCOURTINFOLIST",
+        //                     payload:response.data,
+        //                 })
+        //             }
+        //             // 使用{ replace: true }，使得本次路由导航不记录到history里  
+        //             navigate('/homepage/ShowQueryData',{ replace: true });
+        //     }
+        //     catch(error){
+        //         console.log(error)
+        //     }
+        // }
+        // 三秒之后将showMsg设置为false
         else{
-            try{
-                const response = await axios.get('/courtOpenInfo/getInfo', {params})
-                    if (response.data.length >= 0) {
-                        console.log(response.data)
-                        dispatch({
-                            type:"FINDCOURTINFOLIST",
-                            payload:response.data,
-                        })
-                    }
-                    // 使用{ replace: true }，使得本次路由导航不记录到history里  
-                    navigate('/homepage/ShowQueryData',{ replace: true });
-            }
-            catch(error){
-                console.log(error)
-            }
-        }
+            navigate('/homepage/ShowQueryData',{ replace: true });
+        }       
         await new Promise((resolve) => {
             setTimeout(() =>
                 setShowMsg(false), 3000)
@@ -124,11 +140,11 @@ export default function QueryForm(props) {
     return (
         <Box sx={{
             // 开启flex布局
-            // display: 'flex',
+            display: 'flex',
             // 改变felx主轴方向
-            // flexDirection: 'column',
+            flexDirection: 'column',
             // 主轴的对齐方式
-            // justifyContent: 'center',
+            justifyContent: 'space-between',
             // 交叉轴的对齐方式
             // alignItems: 'center',
             width: '100%',
@@ -143,7 +159,8 @@ export default function QueryForm(props) {
                 display:'flex',
                 justifyContent:'space-between',
                 padding: '2vh', 
-                alignSelf: 'flex-start' }}>
+                alignSelf: 'flex-start',
+                width:'90%' }}>
                 <Typography variant="h5" color="primary">查询项目</Typography>
                 {showMes && (
                     <Typography variant="subtitle2" color="primary">
@@ -151,7 +168,7 @@ export default function QueryForm(props) {
                     </Typography>
                 )}
             </div>
-            <div style={{ width: '95%', padding: '5px' }}>
+            <div style={{ width: 'calc(100% - 10px)',padding:'5px' }}>
                 <FormControl sx={{ width: '100%', }}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={['DatePicker']}>
@@ -201,18 +218,18 @@ export default function QueryForm(props) {
                 <Button onClick={sendAxiosAndGotoShowQueryData} variant="contained" sx={{ marginRight: '25vh' }}>确认</Button>
                 <Button variant="outlined" onClick={claerForm}>取消</Button>
             </Box>
-            <div style={{ 
+            <Box style={{ 
                 // display:'flex',
                 // flexDirection: 'column',
                 // justifyContent:'flex-end',
-                height: '38vh', 
+                height: '18vh', 
                 width: '100%', 
                 padding:'30px',
                 backgroundColor: 'rgb(25, 118, 210)', 
-                marginTop: '5vh', }}>
-                <Typography variant="h6" color="white" sx={{marginTop:'10vh'}}>Author:LathanChen</Typography>
-                <Typography variant="h6" color="white">E-mail:chenzhouming316@gmail.com</Typography>
-            </div>
+                marginTop: 'auto' }}>
+                <Typography variant="h6" color="white" sx={{marginTop:'10vh',width:'80%'}}>Author:LathanChen</Typography>
+                <Typography variant="h6" color="white" sx={{width:'80%'}}>E-mail:chenzhouming316@gmail.com</Typography>
+            </Box>
         </Box>
     )
 }
