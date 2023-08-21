@@ -4,6 +4,8 @@ import ShowTeamData from './components/ShowTeamData/ShowTeamData';
 import ShowTodayEvent from './components/ShowTodayEvent/ShowTodayEvent';
 import TestDiv from './components/TestDiv/TestDiv';
 import Test2 from './components/Test2/Test2';
+import ImageCarousel from './components/ImageCarousel/ImageCarousel';
+import EvaluateZone from './components/EvaluateZone/EvaluateZone';
 import InfoListSearch from './components/InfoListSearch/InfoListSearch';
 import HomePage from './pages/HomePage/HomePage';
 import AdminPage from './pages/AdminPage/AdminPage';
@@ -12,6 +14,7 @@ import AdminPageInfoShow from './pages/AdminPageInfoShow/AdminPageInfoShow';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import AdminPageAddItempage from './pages/AdminPageAddItempage/AdminPageAddItempage';
 import AdminPageEditItempage from './pages/AdminPageEditItempage/AdminPageEditItempage';
+import CourtInfoPage from './pages/CourtInfoPage/CourtInfoPage';
 
 const routes = [
   {
@@ -35,8 +38,8 @@ const routes = [
         element: <ShowTodayEvent/>,
       },
       // {
-      //   path: 'TestDiv',
-      //   element: <TestDiv/>,
+      //   path: 'ImageCarousel',
+      //   element: <ImageCarousel/>,
       // },
     ],
   },
@@ -65,7 +68,11 @@ const routes = [
   {
     path: '/register',
     element: <RegisterPage/>,
-  }
+  },
+  {
+    path: 'courtInfoPage/:courtId',
+    element: <CourtInfoPage/>,
+  },
 ];
 
 export default routes;

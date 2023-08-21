@@ -95,7 +95,7 @@ export default function FindTeam(props) {
 
     return (
         <Box sx={{
-            height: '32vh',
+            height: '34vh',
             // padding: '1vh',
             // marginLeft: '50px',
             // marginTop: '50px',

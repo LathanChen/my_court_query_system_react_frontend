@@ -30,6 +30,9 @@ export default function InfoListSearch(props) {
         setCourtOpenTimeZone(event.target.value);
     };
 
+    // 检查完用户是否至少输入一项查询数据后，控制提示信息的出现和关闭
+    const [showMes, setShowMsg] = useState(false)
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -45,14 +48,16 @@ export default function InfoListSearch(props) {
             }
         }
         fetchData()
-        if (props.InfoListSearchShouldRefresh === true){
+
+        // 如果在明细界面点击了删除按钮，就向后台发送一次查询请求
+        if (props.InfoListSearchShouldRefresh === true) {
             props.InfoListSearchRefresh(false)
             sendInfoQuery()
         }
-        
+
     }, [props.InfoListSearchShouldRefresh])
 
-    const sendInfoQuery = ()=>{
+    const sendInfoQuery = () => {
         const fetchData = async () => {
             const params = {
                 courtOpenItemId,
@@ -61,37 +66,49 @@ export default function InfoListSearch(props) {
                 courtOpenCourtId,
                 courtOpenTimeZone,
             }
-            try {
-                console.log(params);
-                const response = await api.get('/courtOpenInfo/getInfoByAdmin',{params});
-                // 请求成功后的操作
-                if(response.data !== []){
-                console.log(response.data);
-
-                const queryData = response.data.map((data) =>{
-                    return {
-                        courtOpenInfoId:data.courtOpenInfoId,
-                        itemInfoName:data.itemInfo.itemInfoName,
-                        courtOpenTimeZone:(data.courtOpenTimeZone === '1'?'上午':(data.courtOpenTimeZone === '2'?'下午':'晚上')),
-                        courtOpenTime:data.courtOpenTime,
-                        courtName:data.courtInfo.courtName
-                    }
-                })
-                console.log(queryData)
-                props.takeQuertData(queryData)
-                }
-                else{
-                   
-                }                       
-            } catch (error) {
-                console.error(error);
+            if (Object.values(params).every(value =>
+                value === null ||
+                value === undefined ||
+                value === '')) {
+                setShowMsg(true)
             }
+            else {
+                try {
+                    console.log(params);
+                    const response = await api.get('/courtOpenInfo/getInfoByAdmin', { params });
+                    // 请求成功后的操作
+                    if (response.data !== []) {
+                        console.log(response.data);
+
+                        const queryData = response.data.map((data) => {
+                            return {
+                                courtOpenInfoId: data.courtOpenInfoId,
+                                itemInfoName: data.itemInfo.itemInfoName,
+                                courtOpenTimeZone: (data.courtOpenTimeZone === '1' ? '上午' : (data.courtOpenTimeZone === '2' ? '下午' : '晚上')),
+                                courtOpenTime: data.courtOpenTime,
+                                courtName: data.courtInfo.courtName
+                            }
+                        })
+                        console.log(queryData)
+                        props.takeQuertData(queryData)
+                    }
+                    else {
+
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            await new Promise((resolve) => {
+                setTimeout(() =>
+                    setShowMsg(false), 3000)
+            })
         };
-    
+
         fetchData();
     }
 
-    const clearParams = () =>{
+    const clearParams = () => {
         setCourtOpenItemId('')
         setCourtOpenWeekNum('')
         setCourtOpenWeekday('')
@@ -134,8 +151,8 @@ export default function InfoListSearch(props) {
                                 id="demo-simple-select"
                                 value={courtOpenItemId}
                                 label="请选择项目"
-                            // sx={{ height: '6vh' }}
-                            onChange={changeCourtOpenItemId}
+                                // sx={{ height: '6vh' }}
+                                onChange={changeCourtOpenItemId}
                             >
 
                                 {itemnames.map((item) =>
@@ -155,8 +172,8 @@ export default function InfoListSearch(props) {
                                 id="demo-simple-select"
                                 value={courtOpenWeekNum}
                                 label="请选择周数"
-                            // sx={{ height: '6vh' }}
-                            onChange={changeCourtOpenWeekNum}
+                                // sx={{ height: '6vh' }}
+                                onChange={changeCourtOpenWeekNum}
                             >
                                 <MenuItem value={7}>每周</MenuItem>
                                 <MenuItem value={1}>第一周</MenuItem>
@@ -180,8 +197,8 @@ export default function InfoListSearch(props) {
                                 id="demo-simple-select"
                                 value={courtOpenWeekday}
                                 label="请选择项目"
-                            // sx={{ height: '6vh' }}
-                            onChange={changeCourtOpenWeekday}
+                                // sx={{ height: '6vh' }}
+                                onChange={changeCourtOpenWeekday}
                             >
                                 <MenuItem value={1}>星期一</MenuItem>
                                 <MenuItem value={2}>星期二</MenuItem>
@@ -206,8 +223,8 @@ export default function InfoListSearch(props) {
                                 id="demo-simple-select"
                                 value={courtOpenCourtId}
                                 label="请选择场地"
-                            // sx={{ height: '6vh' }}
-                            onChange={changeCourtOpenCourtId}
+                                // sx={{ height: '6vh' }}
+                                onChange={changeCourtOpenCourtId}
                             >
                                 {courtnames.map((item) =>
                                     (<MenuItem value={item.courtId} key={item.courtId}>{item.courtName}</MenuItem>))}
@@ -227,8 +244,8 @@ export default function InfoListSearch(props) {
                                 id="demo-simple-select"
                                 value={courtOpenTimeZone}
                                 label="请选择时间段"
-                            // sx={{ height: '6vh' }}
-                            onChange={changeCourtOpenTimeZone}
+                                // sx={{ height: '6vh' }}
+                                onChange={changeCourtOpenTimeZone}
                             >
                                 <MenuItem value={1}>上午</MenuItem>
                                 <MenuItem value={2}>下午</MenuItem>
@@ -236,6 +253,11 @@ export default function InfoListSearch(props) {
                             </Select>
                         </FormControl>
                     </div>
+                    {showMes && (
+                        <Typography variant="subtitle2" color="primary" sx={{ alignSelf: 'center' }}>
+                            请至少选择一项查找条件！
+                        </Typography>
+                    )}
                     {/* <div style={{
                         width: '28%',
                         marginTop: '1vh'
@@ -256,10 +278,10 @@ export default function InfoListSearch(props) {
                     marginRight: '5vw',
                     padding: '1vh'
                 }}>
-                    <Button 
-                    variant="contained" 
-                    onClick={sendInfoQuery}
-                    sx={{ marginRight: '3vh'}}>确认</Button>
+                    <Button
+                        variant="contained"
+                        onClick={sendInfoQuery}
+                        sx={{ marginRight: '3vh' }}>确认</Button>
                     <Button variant="outlined" onClick={clearParams}>取消</Button>
                 </Box>
             </div>

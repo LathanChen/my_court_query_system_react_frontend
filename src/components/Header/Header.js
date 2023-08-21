@@ -12,12 +12,24 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
 
 export default function Header(props) {
     const [mes] = useState('你好，请')
     // const [loginFlg, setLoginFlg] = useState()
-    const isLogin = useSelector(state => state.isLogin);
-    console.log(isLogin)
+
+    // Redux中保存的值会在浏览器刷新后恢复初始状态，所以不能使用state.isLogin来判断Header的显示内容
+    // const isLogin = useSelector(state => state.isLogin);
+
+    const [isLogin,setIsLogin] = useState(false)
+    useEffect(() => {
+            if ((localStorage.getItem('token') !== null)){
+                setIsLogin(true)
+            }
+            // else {
+            //     setIsLogin(false)
+            // }
+        }, [])
 
     // useEffect(() => {
     //     if (isLogin && localStorage.getItem("token") != null) {
@@ -54,7 +66,10 @@ export default function Header(props) {
     };
 
     const dispatch = useDispatch();
+
+    const navigate = useNavigate();
     const changeIsLogin = () => {
+        
         const fetchData = async () => {
             try {
                 const response = await api.get('/user/logout');
@@ -70,15 +85,21 @@ export default function Header(props) {
                 // 所以这里实际存入的是"null"字符串
                 localStorage.removeItem("token");
                 console.log(localStorage);
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error(error);
+            }
+            finally{
+                setIsLogin(false)
+                // navigate('/homepage')
             }
         };
 
         fetchData();
     }
 
-    const navigate = useNavigate();
+    const tohomepage = () => navigate('/homepage')
+
     const enterAdminPage = () => navigate('/adminpage')
 
     return (
@@ -87,9 +108,10 @@ export default function Header(props) {
                 <div id="header">
                     {/* <span style={{ lineHeight: '8vh' }}>{mes}</span> */}
                     {/* <Button variant="contained" size="small" onClick={changeIsLogin}>退出</Button> */}
+                    <HomeIcon sx={{marginRight:'auto',marginLeft:'20px',cursor: 'pointer'}} onClick={tohomepage}/>
                     <span style={{ lineHeight: '8vh' }}>您已成功登录，</span>
                     <span style={{ lineHeight: '8vh' }}>点击</span>
-                    <span style={{ lineHeight: '8vh' }}><Link to='/homepage' onClick={changeIsLogin} style={{ color: 'white' }}>退出</Link></span>
+                    <span style={{ lineHeight: '8vh' }}><Link onClick={changeIsLogin} style={{ color: 'white'}}>退出</Link></span>
                     <div>
                         <IconButton
                             aria-label="more"
@@ -119,6 +141,7 @@ export default function Header(props) {
 
             ) : (
                 <div id="header">
+                    <HomeIcon sx={{marginRight:'auto',marginLeft:'20px',cursor: 'pointer'}} onClick={tohomepage}/>
                     <span style={{ lineHeight: '8vh' }}>{mes}</span>
                     {/* <Button variant="contained" size="small" onClick={userLogin}>登录</Button> */}
                     <span style={{ lineHeight: '8vh' }}><Link to='/login' style={{ color: 'white' }}>登录</Link></span>
