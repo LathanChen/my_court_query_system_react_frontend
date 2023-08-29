@@ -12,7 +12,7 @@ import api from '../../api';
 import axios from 'axios'; //部署用
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 
 const drawerWidth = 240;
@@ -42,6 +42,16 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function AdminHeader(props) {
+
+  // useLocation hooks =>返回包含有关当前url信息的Location 对象
+    const location = useLocation();
+
+    const breadcrumbNameMap = {
+        'adminpage': '信息列表',
+        'adminpage/addinfo': '添加信息',
+        'adminpage/editinfo': '编辑信息',
+        'adminpage/addcourtinfo': '增加场馆',
+    };
 
   const navigate = useNavigate();
 
@@ -99,11 +109,26 @@ export default function AdminHeader(props) {
   const [routerMes,setRouterMes] = useState([])
 
   useEffect(() => {
-    if (props.routerMes){
-      const _routerMes = props.routerMes.filter((value) => value.name !== undefined);
+    const pathnames = location.pathname.split('/').filter((x) => x);
+        // console.log(pathnames)
+        // _,省略之前的参数
+        const newBreadcrumbs = pathnames.map((_, index) => {
+            // slice()是JavaScript中数组的一个方法，它用于从原始数组中提取指定范围的元素，并返回一个新的数组，不会修改原始数组。
+            // 在 JavaScript 中，join() 方法是数组对象的一个方法，它用于将数组中的所有元素转换成一个字符串，并通过指定的分隔符连接起来。
+            // 这里生成了若干个对象，第一次：pathnames数组的第一个元素，然后查找breadcrumbNameMap中对应的路径名称
+            // 第二次：pathnames数组的第一个和第二个元素，通过'/'将两个元素连接，然后查找breadcrumbNameMap中对应的路径名称
+            // 以此类推，就可以获得从一级路由到当前页面的所有路由地址的名称
+            const url = `${pathnames.slice(0, index + 1).join('/')}`;
+            return {
+                url,
+                name: breadcrumbNameMap[url],
+            };
+        });
+    if (newBreadcrumbs){
+      const _routerMes = newBreadcrumbs.filter((value) => value.name !== undefined);
       setRouterMes(_routerMes)
     }
-  },[props.routerMes])
+  },[location])
   
   // console.log(routerMes[1].url)
 

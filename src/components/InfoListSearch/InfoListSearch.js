@@ -57,6 +57,9 @@ export default function InfoListSearch(props) {
 
     }, [props.InfoListSearchShouldRefresh])
 
+    const weekDayMap = ['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
+    const weekNumMap = ['第一周','第二周','第三周','第四周','第五周','第六周','每周']
+
     const sendInfoQuery = () => {
         const fetchData = async () => {
             const params = {
@@ -86,7 +89,9 @@ export default function InfoListSearch(props) {
                                 itemInfoName: data.itemInfo.itemInfoName,
                                 courtOpenTimeZone: (data.courtOpenTimeZone === '1' ? '上午' : (data.courtOpenTimeZone === '2' ? '下午' : '晚上')),
                                 courtOpenTime: data.courtOpenTime,
-                                courtName: data.courtInfo.courtName
+                                courtName: data.courtInfo.courtName,
+                                courtWeekNum:(weekNumMap[data.courtOpenWeekNum] ? weekNumMap[data.courtOpenWeekNum] : '-'),
+                                courtWeekDay:(weekDayMap[data.courtOpenWeekday] ? weekDayMap[data.courtOpenWeekday] : '-')
                             }
                         })
                         console.log(queryData)

@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { Descriptions, Rate } from 'antd';
+import { Descriptions, Skeleton } from 'antd';
 import axios from 'axios';
 
 
@@ -14,7 +14,7 @@ const EvaluateZone = (props) => {
 
   const [courtEvaluate, setCourtEvaluate] = useState({
     score: 2.5,
-    courtComment: ''
+    courtComment: null
   })
 
   // const [courtInfos,setCourtInfos] = useState({})
@@ -25,7 +25,7 @@ const EvaluateZone = (props) => {
     courtInfo: {}
   })
 
-  const [showMes,setShowMes] = useState('')
+  const [showMes, setShowMes] = useState('')
   const getAllCourtInfoById = async (courtId) => {
     const params = { courtId: courtId }
     try {
@@ -39,10 +39,17 @@ const EvaluateZone = (props) => {
   }
 
   const handleChangeUserComment = (event) => {
-    setCourtEvaluate(prevState => ({
-      ...prevState,
-      courtComment: event.target.value
-    }))
+    if (event.target.value.length < 301) {
+      setShowMes('')
+      setCourtEvaluate(prevState => ({
+        ...prevState,
+        courtComment: event.target.value
+      }))
+    }
+    else {
+      setShowMes('您最多可以输入300个字')
+    }
+
   }
 
   const handlerChangeUserScore = (event) => {
@@ -76,11 +83,23 @@ const EvaluateZone = (props) => {
     await new Promise((resolve) => {
       setTimeout(() =>
         setShowMes(false), 3000)
-  })
-  
+    })
+
   }
 
+  // 控制骨架屏的显示与关闭
+  const [skeletonShow,setSkeletonShow] = useState(true)
+
+  const handleChangeskeletonShowAfter1s = async ()=>{
+    await new Promise((resolve) => {
+        setTimeout(() => {
+        setSkeletonShow(false)
+    }, 1000);
+    })
+}
+
   useEffect(() => {
+    handleChangeskeletonShowAfter1s()
     console.log(props.courtId);
     getAllCourtInfoById(props.courtId);
   }, [props.courtId]);
@@ -88,10 +107,12 @@ const EvaluateZone = (props) => {
   const commetDiv = courtInfos.comments.map((comment, index) => (
     <div
       style={{
-        height: '10vw',
+        height: '15vw',
         width: '33vw',
         margin: '10px auto 0',
-        backgroundColor: 'rgba(128, 128, 128, 0.1)'
+        backgroundColor: 'rgba(128, 128, 128, 0.1)',
+        wordWrap: 'break-word', // 允许长单词和数组换行
+        overflow:'auto'
       }}
       key={index}>
       <Rating name="half-rating" value={comment.score} precision={0.5} size="small" readOnly />
@@ -102,6 +123,29 @@ const EvaluateZone = (props) => {
   ))
 
   return (
+    skeletonShow?(<div style={{ width: '35vw', height: '36vw', marginTop: '60px' }}>
+      <div style={{ width: '35w', height: '9vw' }}>
+        <Skeleton.Input
+          active={true}
+          size={'large'}
+          block={true}
+          style={{ width: '35w', height: '8vw' }} />
+      </div>
+      <div style={{ width: '35w', height: 'calc(7vw + 2px)' }}>
+        <Skeleton.Input
+          active={true}
+          size={'large'}
+          block={true}
+          style={{ width: '35w', height: 'calc(6vw + 2px)' }} />
+      </div>
+      <div style={{ width: '35w', height: 'calc(20vw - 2px)' }}>
+        <Skeleton.Input
+          active={true}
+          size={'large'}
+          block={true}
+          style={{ width: '35w', height: 'calc(20vw - 2px)' }} />
+      </div>
+    </div>):(
     <div style={{ marginTop: '60px' }}>
       <div>
         <Descriptions
@@ -141,7 +185,7 @@ const EvaluateZone = (props) => {
                     </Typography>
                 )}
         </div>
-        
+
         <Paper
           component="form"
           sx={{ display: 'flex', alignItems: 'center', width: '35vw' }}
@@ -164,8 +208,7 @@ const EvaluateZone = (props) => {
         {commetDiv.length > 0 ? commetDiv : '暂无数据！'}
       </div>
 
-    </div>
-
+    </div>)
   );
 };
 

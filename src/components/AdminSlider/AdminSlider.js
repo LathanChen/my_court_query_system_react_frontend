@@ -20,6 +20,8 @@ import PeopleIcon from '@mui/icons-material/People';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import FormatLineSpacingIcon from '@mui/icons-material/FormatLineSpacing';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import HolidayVillageIcon from '@mui/icons-material/HolidayVillage';
+import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -65,6 +67,9 @@ export default function AdminSlider(props) {
   }
   const toAddInfo = () =>{
     navigate('/adminpage/addinfo');
+  }
+  const toAddCourtInfo = () =>{
+    navigate('/adminpage/addcourtinfo');
   }
   
   return (
@@ -151,15 +156,15 @@ export default function AdminSlider(props) {
             <List component="div" disablePadding>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
-                  <StarBorder />
+                  <HolidayVillageIcon />
                 </ListItemIcon>
                 <ListItemText primary="场馆列表" />
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>
-                  <StarBorder />
+                  <AddBusinessIcon />
                 </ListItemIcon>
-                <ListItemText primary="添加场馆" />
+                <ListItemText primary="添加场馆" onClick={toAddCourtInfo}/>
               </ListItemButton>
             </List>
           </Collapse>

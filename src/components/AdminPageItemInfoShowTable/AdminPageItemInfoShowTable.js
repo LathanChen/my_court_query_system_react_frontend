@@ -11,8 +11,10 @@ export default function AdminPageItemInfoShowTable(props) {
   const columns = [
     { field: 'courtOpenInfoId', headerName: '编号', width: 70 },
     { field: 'itemInfoName', headerName: '项目', width: 130 },
-    { field: 'courtOpenTimeZone', headerName: '时间段', width: 200 },
-    { field: 'courtOpenTime', headerName: '起始时间', width: 200 },
+    { field: 'courtWeekNum', headerName: '周数', width: 130 },
+    { field: 'courtWeekDay', headerName: '星期数', width: 130 },
+    { field: 'courtOpenTimeZone', headerName: '时间段', width: 130 },
+    { field: 'courtOpenTime', headerName: '起始时间', width: 180 },
     { field: 'courtName', headerName: '场地', width: 200 },
     {
       field: 'actions',

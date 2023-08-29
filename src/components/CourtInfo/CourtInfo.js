@@ -1,7 +1,7 @@
-import { useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 // import './QueryForm.css'
 import Slider from "react-slick";
-import {  Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import { Pagination } from 'antd';
@@ -37,53 +37,55 @@ export default function CourtInfo() {
     //         clearInterval(timer);
     //     };
     // }, []);
-    
-    const [currentPage,setCurrentPage] = useState(1)
+
+    const [currentPage, setCurrentPage] = useState(1)
 
     const findNextPageCourtNames = (page) => setCurrentPage(page)
 
-    const [courtNameDatas,setCourtNameDatas] = useState({
-        list:[],
-        count:0,
-        pageNum:1,
-        pages:0,
-        total:0
+    const [courtNameDatas, setCourtNameDatas] = useState({
+        list: [],
+        count: 0,
+        pageNum: 1,
+        pages: 0,
+        total: 0
     })
 
 
-    const getCourtNames = async () =>{
-        const params = {PageNum:currentPage,PageSize:8}
+    const getCourtNames = async () => {
+        const params = { PageNum: currentPage, PageSize: 8 }
         try {
-            const response = await axios.get('/courtinfo/getcourtnames',{params});
+            const response = await axios.get('/courtinfo/getcourtnames', { params });
             console.log(response.data)
             setCourtNameDatas(response.data)
         }
-        catch(error) {
+        catch (error) {
             console.error(error);
         }
     }
 
-    useEffect(() =>{        
+    useEffect(() => {
         getCourtNames()
-    },[currentPage])
+    }, [currentPage])
 
     // 根据序号设定特定的样式
-    const courtNames_Col = courtNameDatas.list.map((courtInfo,index) => {
-        if  (index%2 === 0){
+    const courtNames_Col = courtNameDatas.list.map((courtInfo, index) => {
+        if (index % 2 === 0) {
             return (
-            <Col span={12} style={{ textAlign: 'left ',marginTop: '10px' }}>
-            <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline',color:'black' }}>
-            {courtInfo.courtName}
-            </Link>
-        </Col>)}
+                <Col span={12} style={{ textAlign: 'left ', marginTop: '10px' }} key={index}>
+                    <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
+                        {courtInfo.courtName}
+                    </Link>
+                </Col>)
+        }
         else {
             return (
-            <Col span={12} style={{ textAlign: 'right ',marginTop: '10px' }}>
-            <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline',color:'black' }}>
-            {courtInfo.courtName}
-            </Link>
-        </Col>)}
-})
+                <Col span={12} style={{ textAlign: 'right ', marginTop: '10px' }} key={index}>
+                    <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
+                        {courtInfo.courtName}
+                    </Link>
+                </Col>)
+        }
+    })
 
     // const handleSlideChange = (value) => {
     //     setCurrentSlide(value);
@@ -96,20 +98,23 @@ export default function CourtInfo() {
             // marginLeft: '50px',
             // marginTop: '50px',
             border: '1px solid skyblue',
-            overflow:'hidden'
+            overflow: 'hidden'
         }}>
             <div style={{
-                padding:'1vh',
+                padding: '1vh',
                 marginBottom: '1vh'
             }}>
                 <Typography variant="h5" color="primary">
                     场馆信息
                 </Typography>
             </div>
-            <div style={{height:'16vh',width:'96%',margin:'auto',padding:'10px'}}>
-                <Row>
-                    {courtNames_Col}
-                </Row>
+            <div style={{ height: '16vh', width: '96%', margin: 'auto', padding: '10px' }}>
+                {courtNames_Col.length != 0 ?
+                    (<Row>
+                        {courtNames_Col}
+                    </Row>) : (
+                    <Typography>暂无数据！</Typography>)}
+
             </div>
             {/* <div style={{height:'16vh',width:'96%',margin:'auto',padding:'10px'}}>
             <Row>
@@ -150,14 +155,14 @@ export default function CourtInfo() {
                 </Col>
             </Row>
             </div>             */}
-            <div style={{display:'flex',width:'96%',justifyContent: 'flex-end',padding:'10px',}}>
-                <Pagination 
-                defaultCurrent={1}
-                current={currentPage} 
-                total={courtNameDatas.total} 
-                pageSize={8} 
-                size="small"
-                onChange={findNextPageCourtNames}
+            <div style={{ display: 'flex', width: '96%', justifyContent: 'flex-end', padding: '10px', }}>
+                <Pagination
+                    defaultCurrent={1}
+                    current={currentPage}
+                    total={courtNameDatas.total}
+                    pageSize={8}
+                    size="small"
+                    onChange={findNextPageCourtNames}
                 />
             </div>
 

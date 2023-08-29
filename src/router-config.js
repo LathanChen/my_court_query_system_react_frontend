@@ -14,6 +14,7 @@ import AdminPageInfoShow from './pages/AdminPageInfoShow/AdminPageInfoShow';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import AdminPageAddItempage from './pages/AdminPageAddItempage/AdminPageAddItempage';
 import AdminPageEditItempage from './pages/AdminPageEditItempage/AdminPageEditItempage';
+import AdminPageAddCourtInfo from './pages/AdminPageAddCourtInfo/AdminPageAddCourtInfo';
 import CourtInfoPage from './pages/CourtInfoPage/CourtInfoPage';
 
 const routes = [
@@ -58,6 +59,10 @@ const routes = [
       {
         path: 'editinfo/:infoid',
         element: <AdminPageEditItempage/>,
+      },
+      {
+        path: 'addcourtinfo',
+        element: <AdminPageAddCourtInfo/>,
       },
     ]
   },
