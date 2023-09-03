@@ -4,7 +4,8 @@ const initialState = {
   courtInfoList:[],
   teamPlanningInfo:[],
   isLogin:false,
-  todayEvents:{}
+  todayEvents:{},
+  adminPageLoading:true,
 };
 
 // 创建store
@@ -21,6 +22,8 @@ function reducer(state = initialState, action) {
       return { ...state, isLogin: action.payload};
     case 'SETTODAYEVENTS':
       return { ...state, todayEvents: action.payload};
+    case 'ADMINPAGESTOPLOADING':
+      return { ...state, adminPageLoading: action.payload};
     default:
       return state;
   }

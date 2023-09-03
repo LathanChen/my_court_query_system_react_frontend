@@ -14,7 +14,7 @@ const EvaluateZone = (props) => {
 
   const [courtEvaluate, setCourtEvaluate] = useState({
     score: 2.5,
-    courtComment: null
+    courtComment: ''
   })
 
   // const [courtInfos,setCourtInfos] = useState({})
@@ -80,10 +80,15 @@ const EvaluateZone = (props) => {
     catch (error) {
       console.log(error)
     }
+    let timer
     await new Promise((resolve) => {
-      setTimeout(() =>
-        setShowMes(false), 3000)
+      timer = setTimeout(() =>{
+        setShowMes('')
+        resolve()
+      }, 3000)
     })
+    console.log(timer)
+    clearTimeout(timer)
 
   }
 
@@ -91,11 +96,15 @@ const EvaluateZone = (props) => {
   const [skeletonShow,setSkeletonShow] = useState(true)
 
   const handleChangeskeletonShowAfter1s = async ()=>{
+    let timer
     await new Promise((resolve) => {
-        setTimeout(() => {
+      timer = setTimeout(() => {
         setSkeletonShow(false)
+        resolve()
     }, 1000);
     })
+    console.log(timer)
+    clearTimeout(timer)
 }
 
   useEffect(() => {

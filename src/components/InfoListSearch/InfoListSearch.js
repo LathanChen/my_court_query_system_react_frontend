@@ -44,6 +44,8 @@ export default function InfoListSearch(props) {
                 }
             }
             catch (error) {
+                setItemnames([])
+                setCourtnames([])
                 console.error(error);
             }
         }
@@ -104,10 +106,15 @@ export default function InfoListSearch(props) {
                     console.error(error);
                 }
             }
+            let timer
             await new Promise((resolve) => {
-                setTimeout(() =>
-                    setShowMsg(false), 3000)
+                timer = setTimeout(() =>{
+                    setShowMsg(false)
+                    resolve()
+                }, 3000)                         
             })
+            console.log(timer)
+            clearTimeout(timer)          
         };
 
         fetchData();
@@ -160,8 +167,8 @@ export default function InfoListSearch(props) {
                                 onChange={changeCourtOpenItemId}
                             >
 
-                                {itemnames.map((item) =>
-                                    (<MenuItem value={item.itemInfoId} key={item.itemInfoId}>{item.itemInfoName}</MenuItem>))}
+                                {(Array.isArray(itemnames)) && (itemnames.map((item) =>
+                                    (<MenuItem value={item.itemInfoId} key={item.itemInfoId}>{item.itemInfoName}</MenuItem>)))}
                             </Select>
                         </FormControl>
                     </div>
@@ -231,7 +238,7 @@ export default function InfoListSearch(props) {
                                 // sx={{ height: '6vh' }}
                                 onChange={changeCourtOpenCourtId}
                             >
-                                {courtnames.map((item) =>
+                                {(Array.isArray(courtnames)) && courtnames.map((item) =>
                                     (<MenuItem value={item.courtId} key={item.courtId}>{item.courtName}</MenuItem>))}
                             </Select>
                         </FormControl>

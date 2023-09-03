@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 // import './QueryForm.css'
 import Slider from "react-slick";
 import { Box, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Link } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import { Pagination } from 'antd';
@@ -50,6 +51,7 @@ export default function CourtInfo() {
         total: 0
     })
 
+    const [isLoading,setIsLoading] = useState(true)
 
     const getCourtNames = async () => {
         const params = { PageNum: currentPage, PageSize: 8 }
@@ -64,7 +66,18 @@ export default function CourtInfo() {
     }
 
     useEffect(() => {
+        setIsLoading(true)
         getCourtNames()
+        const timer = setTimeout(() =>{           
+            setIsLoading(false)
+        },500)
+        return () => {
+            // 组件卸载时清除定时器
+            if (timer) {
+                console.log(timer)
+                clearTimeout(timer);
+            }
+        };        
     }, [currentPage])
 
     // 根据序号设定特定的样式
@@ -108,7 +121,20 @@ export default function CourtInfo() {
                     场馆信息
                 </Typography>
             </div>
-            <div style={{ height: '16vh', width: '96%', margin: 'auto', padding: '10px' }}>
+            {isLoading ? (
+                <div style={{ 
+                    height: '16vh', 
+                    width: '96%',
+                    margin: 'auto', 
+                    padding: '10px',
+                    display:'flex',
+                    justifyContent:'center',
+                    alignItems:'center'
+                    }}>
+                    <CircularProgress />
+                </div>
+            ):(
+                <div style={{ height: '16vh', width: '96%', margin: 'auto', padding: '10px' }}>
                 {courtNames_Col.length != 0 ?
                     (<Row>
                         {courtNames_Col}
@@ -116,6 +142,8 @@ export default function CourtInfo() {
                     <Typography>暂无数据！</Typography>)}
 
             </div>
+            )}
+
             {/* <div style={{height:'16vh',width:'96%',margin:'auto',padding:'10px'}}>
             <Row>
                 <Col span={12} style={{ textAlign: 'left ',marginTop: '10px' }}>

@@ -110,11 +110,15 @@ export default function AdminPageAddItempage(props) {
                         setShowSuccessAlert(true)
                         
                         // 定时器在async函数中，需要通过await等待执行完成
+                        let timer
                         await new Promise((resolve) => {
-                            setTimeout(() => {
-                                backToLastPage()
+                            timer = setTimeout(() => {
+                                resolve()
                             }, 2000);
                           });
+                            console.log(timer)
+                            clearTimeout(timer)
+                            backToLastPage()
                     }
                 }
                 catch (error) {

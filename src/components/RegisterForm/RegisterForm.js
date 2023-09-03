@@ -19,13 +19,19 @@ export default function RegisterForm() {
             setShowSuccessAlert(false);
             navigate('/login',{ replace: true })
           }, 2000); // 2秒后自动隐藏
-          return () => clearTimeout(timer);
+          return () => {
+            clearTimeout(timer)
+            console.log(timer)
+          };
         }
         if (showErrorAlert) {
           const timer = setTimeout(() => {
             setShowErrorAlert(false);
           }, 2000); // 2秒后自动隐藏
-          return () => clearTimeout(timer);
+          return () => {
+            clearTimeout(timer)
+            console.log(timer)
+          }
         }
       }, [showSuccessAlert,showErrorAlert]);
       

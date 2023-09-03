@@ -117,12 +117,16 @@ export default function AdminPageAddItempage(props) {
                     if (response.data.code === 200 && response.data.data === true) {
                         // todo:出现“添加成功”提示框
                         console.log('成功了')
-                        setShowSuccessAlert(true)
+                        setShowSuccessAlert(true)                        
+                        let timer
                         await new Promise((resolve) => {
-                            setTimeout(() => {
-                                backToLastPage()
+                            timer = setTimeout(() => {                                
+                                resolve()
                             }, 2000);
                           });
+                          console.log(timer)
+                          clearTimeout(timer)
+                          backToLastPage()
                     }
                 }
                 catch (error) {
@@ -218,8 +222,8 @@ export default function AdminPageAddItempage(props) {
                             onChange={changeCourtOpenItemId}
                             sx={{ height: '42px' }}
                         >
-                            {itemnames.map((item) =>
-                                (<MenuItem value={item.itemInfoId} key={item.itemInfoId}>{item.itemInfoName}</MenuItem>))}
+                            {(Array.isArray(itemnames)) && (itemnames.map((item) =>
+                                (<MenuItem value={item.itemInfoId} key={item.itemInfoId}>{item.itemInfoName}</MenuItem>)))}
                         </Select>
                     </FormControl>
                 </div>
@@ -244,7 +248,7 @@ export default function AdminPageAddItempage(props) {
                             onChange={changeCourtOpenCourtId}
                             sx={{ height: '42px' }}
                         >
-                            {courtnames.map((item) =>
+                            {(Array.isArray(courtnames)) && courtnames.map((item) =>
                                 (<MenuItem value={item.courtId} key={item.courtId}>{item.courtName}</MenuItem>))}
                         </Select>
                     </FormControl>

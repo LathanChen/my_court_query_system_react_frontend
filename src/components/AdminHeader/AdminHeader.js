@@ -50,7 +50,7 @@ export default function AdminHeader(props) {
         'adminpage': '信息列表',
         'adminpage/addinfo': '添加信息',
         'adminpage/editinfo': '编辑信息',
-        'adminpage/addcourtinfo': '增加场馆',
+        'adminpage/addcourtinfo': '添加场馆',
     };
 
   const navigate = useNavigate();
@@ -108,11 +108,55 @@ export default function AdminHeader(props) {
   // 所以会造成本组件在加载时，props没有值
   const [routerMes,setRouterMes] = useState([])
 
+  const authFetch = async () => {
+    try {
+        console.log('try')
+        const response = await api.get('/user/authority');
+        if (response.data.code === 200) {
+            console.log(response.data)
+            for (const element of response.data.data) {
+                if (element === "test") {
+                    dispatch({
+                        type: "LOGIN",
+                        payload: true,
+                    })
+                    break
+                }
+            }
+            let timer
+            await new Promise((resolve) => {
+              setTimeout(() => {
+                props.handleLoading(false)
+                resolve()
+              },500)
+            })
+            clearTimeout(timer)
+            return true
+        }
+        else {
+            dispatch({
+                type: "LOGOUT",
+                payload: false,
+            })
+            localStorage.removeItem("token");
+            navigate('/ErrorMsg')
+            return false
+        }
+        
+    } 
+    catch (error) {
+        console.error(error);
+    }
+};
+
   useEffect(() => {
+    let newBreadcrumbs
+    props.handleLoading(true)
+    if (authFetch()){
     const pathnames = location.pathname.split('/').filter((x) => x);
         // console.log(pathnames)
         // _,省略之前的参数
-        const newBreadcrumbs = pathnames.map((_, index) => {
+        newBreadcrumbs = pathnames.map((_, index) => {
             // slice()是JavaScript中数组的一个方法，它用于从原始数组中提取指定范围的元素，并返回一个新的数组，不会修改原始数组。
             // 在 JavaScript 中，join() 方法是数组对象的一个方法，它用于将数组中的所有元素转换成一个字符串，并通过指定的分隔符连接起来。
             // 这里生成了若干个对象，第一次：pathnames数组的第一个元素，然后查找breadcrumbNameMap中对应的路径名称
@@ -123,7 +167,7 @@ export default function AdminHeader(props) {
                 url,
                 name: breadcrumbNameMap[url],
             };
-        });
+        })}
     if (newBreadcrumbs){
       const _routerMes = newBreadcrumbs.filter((value) => value.name !== undefined);
       setRouterMes(_routerMes)

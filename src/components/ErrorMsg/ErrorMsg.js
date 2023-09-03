@@ -5,7 +5,7 @@ import Icon from '@mui/material/Icon';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useDispatch } from 'react-redux';
 
-export default function LoginForm() {
+export default function ErrorMsg() {
 
     const navigate = useNavigate()
     const backToHomepage = () => {

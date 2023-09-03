@@ -33,12 +33,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function AdminMain(props) {
-  // 存储AdminPage各路由链接的中文名称
-  const breadcrumbNameMap = {
-    '/adminpage': '信息列表',
-    '/adminpage/addinfo': '添加信息',
-    '/adminpage/editinfo': '编辑信息',
-  };
+  // // 存储AdminPage各路由链接的中文名称
+  // const breadcrumbNameMap = {
+  //   '/adminpage': '信息列表',
+  //   '/adminpage/addinfo': '添加信息',
+  //   '/adminpage/editinfo': '编辑信息',
+  // };
 
   // const location = useLocation();
 

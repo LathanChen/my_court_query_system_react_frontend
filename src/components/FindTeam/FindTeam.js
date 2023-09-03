@@ -47,6 +47,9 @@ export default function FindTeam(props) {
     // 通过路由方式跳转
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    
+
     // 踩坑记录：axios发送请求时，携带参数的对象名字不能随便起，最好命名为params，如果是其他名称，需要写成如下的对象形式
     // async函数如果返回的不是一个promise对象，函数的返回结果就是一个成功的promise
     // 抛出错误，返回的结果是一个失败的promise
@@ -82,10 +85,23 @@ export default function FindTeam(props) {
             }
 
         }
+        // 用于存储sendAxiosAndGotoShowTeamData方法中定义的定时器，方便执行销毁操作
+        let timer
+        // console.log(timer)
+        // await的返回结果是这个Promise对象的resolve(成功)方法返回的值
         await new Promise((resolve) => {
-            setTimeout(() =>
-                setShowMsg(false), 3000)
+            timer = setTimeout(() =>{
+                setShowMsg(false)
+                console.log(timer)
+                // 调用 resolve() 之后，Promise 的状态会变为 resolved
+                resolve()
+            },3000)
+                
         })
+        // console.log(a)
+        console.log(timer)
+        clearTimeout(timer)
+        // console.log(timer)
     }
 
     const clearForm = () => {

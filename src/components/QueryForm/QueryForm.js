@@ -124,11 +124,16 @@ export default function QueryForm(props) {
         // 三秒之后将showMsg设置为false
         else{
             navigate('/homepage/ShowQueryData',{ replace: true });
-        }       
+        }
+        let timer       
         await new Promise((resolve) => {
-            setTimeout(() =>
-                setShowMsg(false), 3000)
+            timer = setTimeout(() => {
+                setShowMsg(false)
+                resolve()
+            }, 3000)
         })
+        clearTimeout(timer)
+        console.log(timer)
         }
 
     const claerForm = () =>{

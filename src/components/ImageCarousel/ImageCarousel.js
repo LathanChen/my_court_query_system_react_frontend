@@ -33,11 +33,15 @@ export default function ImageCarousel(props) {
     const [skeletonShow,setSkeletonShow] = useState(true)
 
     const handleChangeskeletonShowAfter1s = async ()=>{
+        let timer
         await new Promise((resolve) => {
-            setTimeout(() => {
+            timer = setTimeout(() => {
             setSkeletonShow(false)
+            resolve()
         }, 1000);
         })
+        clearTimeout(timer)
+        console.log(timer)
     }
 
     useEffect(() => {

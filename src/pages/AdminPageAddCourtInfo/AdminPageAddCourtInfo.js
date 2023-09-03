@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import { Modal, Upload, Steps, Col, Row, Input, Checkbox } from 'antd';
+import { Modal, Upload, Steps, Col, Row, Input, Checkbox, Typography, Result } from 'antd';
+import { SmileOutlined } from '@ant-design/icons';
 import { Box, Button } from '@mui/material';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +21,8 @@ const getBase64 = (file) =>
 // 获取antd中Input组件的Search组件（有搜索按钮的输入框）
 const { Search } = Input;
 
+const { Text } = Typography;
+
 export default function AdminPageAddItempage(props) {
 
     const [previewOpen, setPreviewOpen] = useState(false);
@@ -27,57 +30,204 @@ export default function AdminPageAddItempage(props) {
     const [previewTitle, setPreviewTitle] = useState('');
     const [fileList, setFileList] = useState([]);
     // 页面上的进度步骤
-    const [stepPage,setStepPage] = useState(0)
+    const [stepPage, setStepPage] = useState(0)
 
-    const [courtInfos,setCourtInfos] = useState({
-        courtName:'',
-        courtAdress:'',
-        courtTelNum:'',
-        courtStation:'',
-        courtFromStationDistance:0,
+    const [courtInfos, setCourtInfos] = useState({
+        courtName: '',
+        courtAdress: '',
+        courtTelNum: '',
+        courtStation: '',
+        courtFromStationDistance: 0,
     })
 
     const handleChangeCourtName = (e) => {
         setCourtInfos({
             ...courtInfos,
-            courtName:e.target.value
+            courtName: e.target.value
         })
     }
+
+    const [courtNameError, setCourtNameError] = useState('')
+
+    const [courtAdressError, setCourtAdressError] = useState('')
+
+    const [courtTelNumError, setCourtTelNumError] = useState('')
+
+    const [courtFromStationDistanceError, setCourtFromStationDistanceError] = useState('')
+
     /*
     @value:画面上输入的内容的值
     @event:本次事件的对象
-        */
-    const checkSameCourtName = (value,event) => {
-        // todo:发送请求，确认当前数据库中没有同名的场地名
-        console.log(value)
-        console.log(event)
+    */
+    const checkSameCourtName = async (value, event) => {
+        setCourtNameError('')
+        checkSameCourtNameFetch(value,false)
+    }
+
+    /*
+    @value:画面上输入的courtName的值
+    @isSetTimeout:事件是否由页面上的 下一步 这个按钮触发
+    */
+    const checkSameCourtNameFetch = async (courtName, isNextPageButton) => {
+        const params = { courtName }
+        try {
+            const response = await axios.get('/courtinfo/checkSameCourtName', { params })
+            // 数据库中已经有该场地的数据
+            console.log(response.data)
+            if (response.data === true) {
+                setCourtNameError('该名称已存在！')
+            }
+            else {
+                if (isNextPageButton){
+                }
+                else {
+                    setCourtNameError('检测正常，该场地还未被收录！')
+                }
+                
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+        if (!isNextPageButton) {
+            let timer
+            await new Promise((resolve) => {
+                timer = setTimeout(() => {
+                    setCourtNameError('')
+                    // console.log(timer)
+                    // 调用 resolve() 之后，Promise 的状态会变为 resolved
+                    resolve()
+                }, 3000)
+            })
+            // 销毁定时器
+            clearTimeout(timer)
+        }
+
+    }
+
+    // 对第一页输入的数据进行检查
+    const CheckPage1Datas = () => {
+        // 恢复初始值
+        setCourtNameError('')
+        setCourtAdressError('')
+        setCourtTelNumError('')
+        setCourtFromStationDistanceError('')
+        let courtNameErrorFlg = false
+        let courtAdressErrorFlg = false
+        let courtTelNumErrorFlg = false
+        let courtFromStationDistanceErrorFlg = false
+        // 1、名称和地址不能为空
+        if (courtInfos.courtName === '') {
+            setCourtNameError('名称不能为空！')
+            courtNameErrorFlg = true
+        }
+        if (courtInfos.courtAdress === '') {
+            setCourtAdressError('地址不能为空！')
+            courtAdressErrorFlg = true
+        }
+        // 2、电话应该全部为数字
+        // 使用正则表达式判断输入的号码是否满足日本的电话格式
+        if (!(/^0\d{9}$/.test(courtInfos.courtTelNum))) {
+            setCourtTelNumError('电话号码有误！')
+            courtTelNumErrorFlg = true
+        }
+        // 3、徒歩XX分，XX应该为60以内小数
+        if (courtInfos.courtStation !== '') {
+            if (!(/^(?:[1-5]?\d|0)$/.test(courtInfos.courtFromStationDistance))) {
+                setCourtFromStationDistanceError('数字不能超过60！')
+                courtFromStationDistanceErrorFlg = true
+            }
+        }
+        else {
+            if (courtInfos.courtFromStationDistance === 0) {
+            }
+            else {
+                setCourtFromStationDistanceError('请先输入站名！')
+                courtFromStationDistanceErrorFlg = true
+            }
+        }
+        // 4、确认场地名是否已登录
+        checkSameCourtNameFetch(courtInfos.courtName,true)
+
+        if (courtNameErrorFlg ||
+            courtAdressErrorFlg ||
+            courtTelNumErrorFlg ||
+            courtFromStationDistanceErrorFlg) {
+
+            }
+        else {
+            setStepPage(1)
+        }
+    }
+
+        const [uploadImgsError,setUploadImgsError] = useState('')
+        // 对第二页输入的数据进行检查
+        const CheckPage2Datas = () => {
+            setUploadImgsError('')
+            let errorFlg = false
+            for (const imgfile of fileList){
+                if (imgfile.status === 'error'){
+                    errorFlg = true
+                    setUploadImgsError('请先删除错误的文件！')
+                    break
+                }
+            }
+            if (!errorFlg){
+                sendCourtInfoAndImgs()
+            }
+        }
+
+        // 设置参数，并向后台发送请求
+        const sendCourtInfoAndImgs = async () => {
+            let params = {}
+            if (fileList){
+                const courtNames = fileList.map((value) => {
+                    return value.response.data
+                })
+                const courtInfoUrls = fileList.map((value) => {
+                    return value.url
+                })
+                params = {
+                    courtInfos,
+                    courtNames,
+                    courtInfoUrls
+                }
+            }
+
+            const response = await api.post('/courtinfo/setCourtInfoAndImgs',params)
+        }
+
+    const checkAndToPage2 = () => {
+        CheckPage1Datas()
+        console.log(courtInfos)
     }
 
     const handleChangeCourtAdress = (e) => {
         setCourtInfos({
             ...courtInfos,
-            courtAdress:e.target.value
+            courtAdress: e.target.value
         })
     }
 
     const handleChangeCourtTelNum = (e) => {
         setCourtInfos({
             ...courtInfos,
-            courtTelNum:e.target.value
+            courtTelNum: e.target.value
         })
     }
 
     const handleChangeCourtStation = (e) => {
         setCourtInfos({
             ...courtInfos,
-            courtStation:e.target.value
+            courtStation: e.target.value
         })
     }
 
     const handleChangeCourtFromStationDistance = (e) => {
         setCourtInfos({
             ...courtInfos,
-            courtFromStationDistance:e.target.value
+            courtFromStationDistance: e.target.value
         })
     }
 
@@ -202,54 +352,82 @@ export default function AdminPageAddItempage(props) {
                     },
                 ]}
             />
-            {stepPage === 0 ?(<div style={{ width: '100%',marginTop:'50px',height:'60%' }}>
+            {stepPage === 0 ? (<div style={{ width: '100%', marginTop: '50px', height: '60%' }}>
                 <Row align="middle">
-                    <Col span={3} style={{textAlign:'center'}}>
-                        名称：
+                    <Col span={3} style={{ textAlign: 'center', height: '24px' }}>
+                    </Col>
+                    <Col span={21}>
+                        {courtNameError && <Text type="danger">{courtNameError}</Text>}
+                    </Col>
+                    <Col span={3} style={{ textAlign: 'center' }}>
+                        *名称：
                     </Col>
                     <Col span={21}>
                         <Search
                             placeholder="请输入场馆名称"
+                            value={courtInfos.courtName}
                             onChange={handleChangeCourtName}
                             onSearch={checkSameCourtName}
                         />
                     </Col>
-                    <Col span={3} style={{textAlign:'center',marginTop:'30px'}}>
-                        地址：
+                    <Col span={3} style={{ textAlign: 'center', height: '24px' }}>
                     </Col>
-                    <Col span={21} style={{marginTop:'30px'}}>
+                    <Col span={21}>
+                        {courtAdressError && <Text type="danger">{courtAdressError}</Text>}
+                    </Col>
+                    <Col span={3} style={{ textAlign: 'center' }}>
+                        *地址：
+                    </Col>
+                    <Col span={21} style={{}}>
                         <Input
                             placeholder="请输入地址"
+                            value={courtInfos.courtAdress}
                             onChange={handleChangeCourtAdress}
                         />
                     </Col>
-                    <Col span={3} style={{textAlign:'center',marginTop:'30px'}}>
+                    <Col span={3} style={{ textAlign: 'center' }}>
+                    </Col>
+                    <Col span={5} style={{}}>
+                        {courtTelNumError && <Text type="danger">{courtTelNumError}</Text>}
+                    </Col>
+                    <Col span={4} style={{ textAlign: 'center' }}>
+                    </Col>
+                    <Col span={6} style={{}}>
+
+                    </Col>
+                    <Col span={6} style={{ textAlign: 'center', height: '24px' }}>
+                        {courtFromStationDistanceError && <Text type="danger">{courtFromStationDistanceError}</Text>}
+                    </Col>
+                    <Col span={3} style={{ textAlign: 'center' }}>
                         电话：
                     </Col>
-                    <Col span={5} style={{marginTop:'30px'}}>
+                    <Col span={5} style={{}}>
                         <Input
                             placeholder="请输入电话号码"
                             onChange={handleChangeCourtTelNum}
+                            value={courtInfos.courtTelNum}
                         />
                     </Col>
-                    <Col span={4} style={{textAlign:'center',marginTop:'30px'}}>
+                    <Col span={4} style={{ textAlign: 'center' }}>
                         最寄り駅：
                     </Col>
-                    <Col span={6} style={{marginTop:'30px'}}>
+                    <Col span={6} style={{}}>
                         <Input
                             placeholder="请输入车站名"
                             onChange={handleChangeCourtStation}
+                            value={courtInfos.courtStation}
                         />
                     </Col>
-                    <Col span={3} style={{textAlign:'center',marginTop:'30px'}}>
+                    <Col span={3} style={{ textAlign: 'center', }}>
                         徒歩：
                     </Col>
-                    <Col span={2} style={{marginTop:'30px'}}>
+                    <Col span={2} style={{}}>
                         <Input
-                        onChange={handleChangeCourtFromStationDistance}
+                            onChange={handleChangeCourtFromStationDistance}
+                            value={courtInfos.courtFromStationDistance}
                         />
                     </Col>
-                    <Col span={1} style={{marginTop:'30px'}}>
+                    <Col span={1} style={{}}>
                         分
                     </Col>
                     {/* <Col span={3} style={{textAlign:'center',marginTop:'30px'}}>
@@ -298,48 +476,52 @@ export default function AdminPageAddItempage(props) {
                         </Checkbox>
                     </Col> */}
                 </Row>
-            </div>):stepPage === 1 ?(
-            <div style={{ 
-                // width: '100%', 
-                marginTop: '50px',
-                height:'60%'
-                 }}>
-                <Upload
-                    action={'/courtinfo/uploadImg'}
-                    listType="text"
-                    fileList={fileList}
-                    onPreview={handlePreview}
-                    onChange={handleChange}
-                    onError={onError}
-                    accept=".jpg, .jpeg, .png" // 指定允许上传的文件类型
-                    multiple //允许选择多个文件同时上传
-                >
-                    {fileList.length >= 8 ? null : uploadButton}
-                </Upload>
-                <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-                    <img
-                        alt="example"
-                        style={{
-                            width: '100%',
-                        }}
-                        src={previewImage}
+            </div>) : stepPage === 1 ? (
+                <div style={{
+                    // width: '100%', 
+                    marginTop: '50px',
+                    height: '60%'
+                }}>
+                    <div style={{textAlign:'center',height:'24px'}}><Text type="danger" >{uploadImgsError}</Text></div>
+                    <Upload
+                        action={'/courtinfo/uploadImg'}
+                        listType="text"
+                        fileList={fileList}
+                        onPreview={handlePreview}
+                        onChange={handleChange}
+                        onError={onError}
+                        accept=".jpg, .jpeg, .png" // 指定允许上传的文件类型
+                        multiple //允许选择多个文件同时上传
+                    >
+                        {fileList.length >= 8 ? null : uploadButton}
+                    </Upload>
+                    <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+                        <img
+                            alt="example"
+                            style={{
+                                width: '100%',
+                            }}
+                            src={previewImage}
+                        />
+                    </Modal>
+                </div>) : (
+                <div style={{
+                    // width: '100%', 
+                    marginTop: '50px',
+                    height: '60%'
+                }}>
+                    <Result
+                        icon={<SmileOutlined />}
+                        title="请点击确认完成添加"
                     />
-                </Modal>
-            </div>):(
-              <div style={{ 
-                // width: '100%', 
-                marginTop: '50px',
-                height:'60%'
-                 }}>
-                    完成信息添加的页面
-                 </div>  
+                </div>
             )}
             {stepPage === 0 ? (<Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 marginTop: '2vh'
             }}>
-                <Button variant="contained" onClick={() => setStepPage(1)}>下一步</Button>
+                <Button variant="contained" onClick={checkAndToPage2}>下一步</Button>
             </Box>) : stepPage === 1 ? (
                 <Box sx={{
                     display: 'flex',
@@ -347,17 +529,17 @@ export default function AdminPageAddItempage(props) {
                     marginTop: '2vh'
                 }}>
                     <Button variant="outlined" sx={{ marginRight: '25vh' }} onClick={() => setStepPage(0)} >上一步</Button>
-                    <Button variant="contained" onClick={() => setStepPage(2)}>下一步</Button>
+                    <Button variant="contained" onClick={CheckPage2Datas}>下一步</Button>
                 </Box>
-            ):(
+            ) : (
                 <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                marginTop: '2vh'
-            }}>
-                <Button variant="contained" sx={{ marginRight: '25vh' }} onClick={showList} >确认</Button>
-                <Button variant="outlined" >取消</Button>
-            </Box>
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    marginTop: '2vh'
+                }}>
+                    <Button variant="outlined" sx={{ marginRight: '25vh' }} onClick={() => setStepPage(0)}>取消</Button>
+                    <Button variant="contained" onClick={showList} >确认</Button>
+                </Box>
             )}
 
         </Box>

@@ -16,6 +16,7 @@ import AdminPageAddItempage from './pages/AdminPageAddItempage/AdminPageAddItemp
 import AdminPageEditItempage from './pages/AdminPageEditItempage/AdminPageEditItempage';
 import AdminPageAddCourtInfo from './pages/AdminPageAddCourtInfo/AdminPageAddCourtInfo';
 import CourtInfoPage from './pages/CourtInfoPage/CourtInfoPage';
+import ErrorMsg from './components/ErrorMsg/ErrorMsg';
 
 const routes = [
   {
@@ -78,6 +79,10 @@ const routes = [
     path: 'courtInfoPage/:courtId',
     element: <CourtInfoPage/>,
   },
+  {
+    path: '/ErrorMsg',
+    element: <ErrorMsg/>,
+  }
 ];
 
 export default routes;
