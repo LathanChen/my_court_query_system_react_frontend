@@ -286,7 +286,7 @@ export default function InfoListSearch(props) {
                 <Box sx={{
                     display: 'flex',
                     justifyContent: 'flex-end',
-                    height: '7vh',
+                    // height: '7vh',
                     marginRight: '5vw',
                     padding: '1vh'
                 }}>

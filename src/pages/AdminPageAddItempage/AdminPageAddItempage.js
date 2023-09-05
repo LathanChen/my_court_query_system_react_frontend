@@ -177,7 +177,7 @@ export default function AdminPageAddItempage(props) {
                 // 交叉轴的对齐方式
                 alignItems: 'center',
                 width: '32vw',
-                height: '85vh',
+                height: '90vh',
                 margin: 'auto',
                 // padding: '1vh',
                 // marginLeft: '50px',

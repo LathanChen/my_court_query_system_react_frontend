@@ -70,12 +70,14 @@ export default function AdminPageAddItempage(props) {
     */
     const checkSameCourtNameFetch = async (courtName, isNextPageButton) => {
         const params = { courtName }
+        let flg = false
         try {
             const response = await axios.get('/courtinfo/checkSameCourtName', { params })
             // 数据库中已经有该场地的数据
             console.log(response.data)
             if (response.data === true) {
                 setCourtNameError('该名称已存在！')
+                flg = true
             }
             else {
                 if (isNextPageButton){
@@ -89,25 +91,26 @@ export default function AdminPageAddItempage(props) {
         catch (error) {
             console.log(error)
         }
-
-        if (!isNextPageButton) {
-            let timer
-            await new Promise((resolve) => {
-                timer = setTimeout(() => {
-                    setCourtNameError('')
-                    // console.log(timer)
-                    // 调用 resolve() 之后，Promise 的状态会变为 resolved
-                    resolve()
-                }, 3000)
-            })
-            // 销毁定时器
-            clearTimeout(timer)
+        finally {            
+            if (!isNextPageButton) {
+                let timer
+                await new Promise((resolve) => {
+                    timer = setTimeout(() => {
+                        setCourtNameError('')
+                        // console.log(timer)
+                        // 调用 resolve() 之后，Promise 的状态会变为 resolved
+                        resolve()
+                    }, 3000)
+                })
+                // 销毁定时器
+                clearTimeout(timer)
+            }
         }
-
+        return flg
     }
 
     // 对第一页输入的数据进行检查
-    const CheckPage1Datas = () => {
+    const CheckPage1Datas = async () => {
         // 恢复初始值
         setCourtNameError('')
         setCourtAdressError('')
@@ -148,13 +151,19 @@ export default function AdminPageAddItempage(props) {
             }
         }
         // 4、确认场地名是否已登录
-        checkSameCourtNameFetch(courtInfos.courtName,true)
+        // checkSameCourtNameFetch是一个异步函数，所以也要先使用await来等待结果返回后再进行下面的判断
+        const sameCourtNameFlg = await checkSameCourtNameFetch(courtInfos.courtName,true)
+        console.log(courtNameErrorFlg)
+        console.log(courtAdressErrorFlg)
+        console.log(courtTelNumErrorFlg)
+        console.log(courtFromStationDistanceErrorFlg)
+        console.log(sameCourtNameFlg)
 
         if (courtNameErrorFlg ||
             courtAdressErrorFlg ||
             courtTelNumErrorFlg ||
-            courtFromStationDistanceErrorFlg) {
-
+            courtFromStationDistanceErrorFlg ||
+            sameCourtNameFlg) {
             }
         else {
             setStepPage(1)
@@ -194,8 +203,19 @@ export default function AdminPageAddItempage(props) {
                     courtInfoUrls
                 }
             }
-
-            const response = await api.post('/courtinfo/setCourtInfoAndImgs',params)
+            try {
+                const response = await api.post('/courtinfo/setCourtInfoAndImgs',params)
+                if (response.data.code === 200) {
+                    setStepPage(2)
+                }
+                else {
+                }
+            }
+            catch (error){
+                console.error(error)
+            }
+            
+            
         }
 
     const checkAndToPage2 = () => {
@@ -309,8 +329,20 @@ export default function AdminPageAddItempage(props) {
         </div>
     );
 
-    const showList = () => {
-        console.log(fileList)
+    const backToPage1 = () => {
+        setCourtInfos({
+            courtName: '',
+            courtAdress: '',
+            courtTelNum: '',
+            courtStation: '',
+            courtFromStationDistance: 0,
+        })
+        setFileList([])
+        setStepPage(0)
+        setCourtNameError('')
+        setCourtAdressError('')
+        setCourtTelNumError('')
+        setCourtFromStationDistanceError('')
     }
 
     const onError = (error) => {
@@ -512,7 +544,7 @@ export default function AdminPageAddItempage(props) {
                 }}>
                     <Result
                         icon={<SmileOutlined />}
-                        title="请点击确认完成添加"
+                        title="信息添加成功！"
                     />
                 </div>
             )}
@@ -534,11 +566,10 @@ export default function AdminPageAddItempage(props) {
             ) : (
                 <Box sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'center',
                     marginTop: '2vh'
                 }}>
-                    <Button variant="outlined" sx={{ marginRight: '25vh' }} onClick={() => setStepPage(0)}>取消</Button>
-                    <Button variant="contained" onClick={showList} >确认</Button>
+                    <Button variant="contained" onClick={backToPage1} >继续添加</Button>
                 </Box>
             )}
 
