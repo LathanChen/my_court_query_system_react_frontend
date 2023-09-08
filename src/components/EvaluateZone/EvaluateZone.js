@@ -175,7 +175,7 @@ const EvaluateZone = (props) => {
           </Descriptions.Item>
           <Descriptions.Item label="电话">{courtInfos.courtInfo.courtTelNum}</Descriptions.Item>
           <Descriptions.Item label="地址">{courtInfos.courtInfo.courtAdress}</Descriptions.Item>
-          <Descriptions.Item label="最寄り駅">{courtInfos.courtInfo.courtTramInfo}</Descriptions.Item>
+          <Descriptions.Item label="最寄り駅">{courtInfos.courtInfo.courtStation}</Descriptions.Item>
           <Descriptions.Item label="项目">{courtInfos.courtItemNames}</Descriptions.Item>
         </Descriptions>
       </div>
