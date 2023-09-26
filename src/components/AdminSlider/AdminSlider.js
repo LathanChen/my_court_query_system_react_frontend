@@ -71,6 +71,9 @@ export default function AdminSlider(props) {
   const toAddCourtInfo = () =>{
     navigate('/adminpage/addcourtinfo');
   }
+  const toCourtInfoList = () =>{
+    navigate('/adminpage/courtinfolist');
+  }
   
   return (
       <Drawer
@@ -158,7 +161,7 @@ export default function AdminSlider(props) {
                 <ListItemIcon>
                   <HolidayVillageIcon />
                 </ListItemIcon>
-                <ListItemText primary="场馆列表" />
+                <ListItemText primary="场馆列表" onClick={toCourtInfoList}/>
               </ListItemButton>
               <ListItemButton sx={{ pl: 4 }}>
                 <ListItemIcon>

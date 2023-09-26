@@ -15,6 +15,9 @@ import RegisterPage from './pages/RegisterPage/RegisterPage';
 import AdminPageAddItempage from './pages/AdminPageAddItempage/AdminPageAddItempage';
 import AdminPageEditItempage from './pages/AdminPageEditItempage/AdminPageEditItempage';
 import AdminPageAddCourtInfo from './pages/AdminPageAddCourtInfo/AdminPageAddCourtInfo';
+import AdminPageEditCourtInfoPage from './pages/AdminPageEditCourtInfoPage/AdminPageEditCourtInfoPage';
+import AdminPageCourtInfoListPage from './pages/AdminPageCourtInfoListPage/AdminPageCourtInfoListPage';
+
 import CourtInfoPage from './pages/CourtInfoPage/CourtInfoPage';
 import ErrorMsg from './components/ErrorMsg/ErrorMsg';
 
@@ -64,6 +67,14 @@ const routes = [
       {
         path: 'addcourtinfo',
         element: <AdminPageAddCourtInfo/>,
+      },
+      {
+        path: 'courtinfolist',
+        element: <AdminPageCourtInfoListPage/>,
+      },
+      {
+        path: 'editcourtinfo/:courtInfoId',
+        element: <AdminPageEditCourtInfoPage/>,
       },
     ]
   },

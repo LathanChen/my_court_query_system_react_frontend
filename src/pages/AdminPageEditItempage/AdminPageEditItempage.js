@@ -149,7 +149,7 @@ export default function AdminPageAddItempage(props) {
                 // setCourtOpenTimeZone('1')
                 if (itemNameResponse.data.length !== 0 && 
                     courtNameResponse.data.length !== 0 &&
-                    courtInfoResponse.data !== {}
+                    courtInfoResponse.data.length !== 0
                     ) {
                     setItemnames(itemNameResponse.data)
                     setCourtnames(courtNameResponse.data)

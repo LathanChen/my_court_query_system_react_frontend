@@ -37,7 +37,7 @@ export default function AdminPageAddItempage(props) {
         courtAdress: '',
         courtTelNum: '',
         courtStation: '',
-        courtFromStationDistance: 0,
+        courtFromStationDistance: null,
     })
 
     const handleChangeCourtName = (e) => {
@@ -136,7 +136,7 @@ export default function AdminPageAddItempage(props) {
             courtTelNumErrorFlg = true
         }
         // 3、徒歩XX分，XX应该为60以内小数
-        if (courtInfos.courtStation !== '') {
+        if (courtInfos.courtStation !== '' && courtInfos.courtFromStationDistance !=='') {
             if (!(/^(?:[1-5]?\d|0)$/.test(courtInfos.courtFromStationDistance))) {
                 setCourtFromStationDistanceError('数字不能超过60！')
                 courtFromStationDistanceErrorFlg = true
@@ -144,6 +144,9 @@ export default function AdminPageAddItempage(props) {
         }
         else {
             if (courtInfos.courtFromStationDistance === 0) {
+            }
+            else if (courtInfos.courtFromStationDistance ===''){
+                
             }
             else {
                 setCourtFromStationDistanceError('请先输入站名！')
@@ -223,7 +226,7 @@ export default function AdminPageAddItempage(props) {
         console.log(courtInfos)
     }
 
-    const handleChangeCourtAdress = (e) => {
+    const handleChangeCourtAddress = (e) => {
         setCourtInfos({
             ...courtInfos,
             courtAdress: e.target.value
@@ -245,6 +248,7 @@ export default function AdminPageAddItempage(props) {
     }
 
     const handleChangeCourtFromStationDistance = (e) => {
+        console.log(e.target.value === '')
         setCourtInfos({
             ...courtInfos,
             courtFromStationDistance: e.target.value
@@ -303,7 +307,7 @@ export default function AdminPageAddItempage(props) {
                 return file;
             }
         }));
-        console.log(newFileList)
+        console.log(fileList)
         // if (newFileList.status === 'done' && newFileList.response.code === 200){
         // setFileList(newFileList)
         // }
@@ -414,7 +418,7 @@ export default function AdminPageAddItempage(props) {
                         <Input
                             placeholder="请输入地址"
                             value={courtInfos.courtAdress}
-                            onChange={handleChangeCourtAdress}
+                            onChange={handleChangeCourtAddress}
                         />
                     </Col>
                     <Col span={3} style={{ textAlign: 'center' }}>
