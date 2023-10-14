@@ -3,6 +3,7 @@ import { TextField, Button, Typography, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import './LoginForm.css';
 
 export default function LoginForm() {
     const [userName, setUsername] = useState('');
@@ -53,7 +54,8 @@ export default function LoginForm() {
     }
 
     return (
-        <div style={{
+        <div id='container'
+            style={{
             height: '100vh',
             display: 'flex',
             flexDirection:'column',
@@ -66,13 +68,16 @@ export default function LoginForm() {
                     返回
                 </Button>
             </div>
-            <div style={{
-                width: '30%',
-                height: '40vh',
-                border: '1px solid skyblue',
-                backgroundColor: 'white',
-                marginBottom:'30vh'
-            }}>
+            <div id='login'
+            //     style={{
+            //     flex:'0 0 300px',
+            //     width: '500px',
+            //     // height: '40vh',
+            //     border: '1px solid skyblue',
+            //     backgroundColor: 'white',
+            //     marginBottom:'30vh'
+            // }}
+            >
                 <Container maxWidth="sm">
                     <Typography variant="h5" align="center" gutterBottom>
                         <div style={{ marginTop: '2vh' }}>

@@ -1,0 +1,44 @@
+#search {
+    height: 5rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#time {
+    flex:0 1 25%;
+}
+
+#timezone {
+    flex:0 1 25%;
+}
+
+#item {
+    flex:0 1 25%;
+}
+
+#buttondiv {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding: 1rem;
+}
+
+#buttons {
+    display: flex;
+    justify-content: space-around;
+    flex: 0 1 25%;
+}
+
+@media (max-width: 767px) {
+    #buttons {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        flex: none;
+    }
+
+    .spacearea {
+        visibility:hidden
+    }
+    }

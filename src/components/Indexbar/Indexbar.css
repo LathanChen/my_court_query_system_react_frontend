@@ -1,0 +1,85 @@
+#bar {
+    width: 100%;
+    border: 1px solid skyblue;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 3rem;
+    border-radius: 20px;
+}
+
+#label {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+#selectday {
+    width: 40%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-right: 5%;
+}
+
+#signupdiv {
+    width: 100%;
+    /* border: 1px solid skyblue; */
+    display:flex;
+    justify-content: space-between;
+    /* align-items:flex-start; */
+    flex-wrap: wrap;
+    /* height: 100vh; */
+}
+
+#signupdiv:after{
+    content: "";
+    /* border: 1px solid skyblue; */
+    width: 33%;
+}
+
+.signup {
+    /* border: 1px solid skyblue; */
+    width: 33%;
+    height: 25vh;
+    border-radius: 20px;
+    background-color: #f5f5f5;
+    margin-top: 3vh;
+}
+
+#signuptitle {
+    padding-left: 1rem;
+}
+
+.detail {
+    /* width: 80%; */
+    display: flex;
+    justify-content: space-around;
+}
+
+@media (max-width: 1200px) {
+    #selectday {
+        width: 60%;
+    }
+
+    .signup{
+        width: 49%;
+    }
+}
+
+@media (max-width: 767px) {
+    #label {
+        width: 20%;
+    }
+
+    .signup{
+        width: 100%;
+    }
+}
+
+@media (max-width: 599px) {
+    #selectday {
+        width: 80%;
+    }
+}

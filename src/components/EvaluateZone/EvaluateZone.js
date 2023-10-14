@@ -161,7 +161,7 @@ const EvaluateZone = (props) => {
           title={courtInfos.courtInfo.courtName ? courtInfos.courtInfo.courtName : ''}
           column={2}
           size='small'
-          style={{ width: '35vw', height: '9vw' }}
+          style={{ width: '35vw', height: '9rem' }}
         >
           <Descriptions.Item label="评分">
             <div style={{ display: 'flex', alignItems: 'center' }}>

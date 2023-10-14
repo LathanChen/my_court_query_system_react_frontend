@@ -41,6 +41,9 @@ export default function CourtInfo() {
 
     const [currentPage, setCurrentPage] = useState(1)
 
+    // 获取屏幕宽度
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
     const findNextPageCourtNames = (page) => setCurrentPage(page)
 
     const [courtNameDatas, setCourtNameDatas] = useState({
@@ -51,10 +54,10 @@ export default function CourtInfo() {
         total: 0
     })
 
-    const [isLoading,setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(true)
 
     const getCourtNames = async () => {
-        const params = { PageNum: currentPage, PageSize: 8 }
+        const params = { PageNum: currentPage, PageSize: 16 }
         try {
             const response = await axios.get('/courtinfo/getcourtnames', { params });
             console.log(response.data)
@@ -68,35 +71,64 @@ export default function CourtInfo() {
     useEffect(() => {
         setIsLoading(true)
         getCourtNames()
-        const timer = setTimeout(() =>{           
+        const timer = setTimeout(() => {
             setIsLoading(false)
-        },500)
+        }, 500)
+
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        };
+
+        // 监听resize事件
+        window.addEventListener('resize', handleResize);
+
         return () => {
             // 组件卸载时清除定时器
             if (timer) {
                 console.log(timer)
                 clearTimeout(timer);
             }
-        };        
+            window.removeEventListener('resize', handleResize);
+        };
     }, [currentPage])
 
     // 根据序号设定特定的样式
     const courtNames_Col = courtNameDatas.list.map((courtInfo, index) => {
-        if (index % 2 === 0) {
-            return (
-                <Col span={12} style={{ textAlign: 'left ', marginTop: '10px' }} key={index}>
-                    <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
-                        {courtInfo.courtName}
-                    </Link>
-                </Col>)
+        if (screenWidth >= 1000) {
+            if (index % 2 === 0) {
+                return (
+                    <Col span={6} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
+                            {courtInfo.courtName}
+                        </Link>
+                    </Col>)
+            }
+            else {
+                return (
+                    <Col span={6} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
+                            {courtInfo.courtName}
+                        </Link>
+                    </Col>)
+            }
         }
         else {
-            return (
-                <Col span={12} style={{ textAlign: 'right ', marginTop: '10px' }} key={index}>
-                    <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
-                        {courtInfo.courtName}
-                    </Link>
-                </Col>)
+            if (index % 2 === 0) {
+                return (
+                    <Col span={12} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
+                            {courtInfo.courtName}
+                        </Link>
+                    </Col>)
+            }
+            else {
+                return (
+                    <Col span={12} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
+                            {courtInfo.courtName}
+                        </Link>
+                    </Col>)
+            }
         }
     })
 
@@ -105,14 +137,14 @@ export default function CourtInfo() {
     // };
 
     return (
-        <Box sx={{
-            height: '32vh',
-            padding: '1vh',
-            // marginLeft: '50px',
-            // marginTop: '50px',
-            border: '1px solid skyblue',
-            overflow: 'hidden'
-        }}>
+        // homepage用样式
+        // <Box sx={{
+        //     height: '32vh',
+        //     padding: '1vh',
+        //     border: '1px solid skyblue',
+        //     overflow: 'hidden'
+        // }}>
+        <Box>
             <div style={{
                 padding: '1vh',
                 marginBottom: '1vh'
@@ -122,26 +154,31 @@ export default function CourtInfo() {
                 </Typography>
             </div>
             {isLoading ? (
-                <div style={{ 
-                    height: '16vh', 
+                <div style={{
+                    // height: '16vh', 
                     width: '96%',
-                    margin: 'auto', 
+                    margin: 'auto',
                     padding: '10px',
-                    display:'flex',
-                    justifyContent:'center',
-                    alignItems:'center'
-                    }}>
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
                     <CircularProgress />
                 </div>
-            ):(
-                <div style={{ height: '16vh', width: '96%', margin: 'auto', padding: '10px' }}>
-                {courtNames_Col.length != 0 ?
-                    (<Row>
-                        {courtNames_Col}
-                    </Row>) : (
-                    <Typography>暂无数据！</Typography>)}
+            ) : (
+                <div style={{
+                    // height: '16vh', 
+                    width: '96%',
+                    margin: 'auto',
+                    padding: '10px'
+                }}>
+                    {courtNames_Col.length != 0 ?
+                        (<Row>
+                            {courtNames_Col}
+                        </Row>) : (
+                            <Typography>暂无数据！</Typography>)}
 
-            </div>
+                </div>
             )}
 
             {/* <div style={{height:'16vh',width:'96%',margin:'auto',padding:'10px'}}>
@@ -188,7 +225,7 @@ export default function CourtInfo() {
                     defaultCurrent={1}
                     current={currentPage}
                     total={courtNameDatas.total}
-                    pageSize={8}
+                    pageSize={16}
                     size="small"
                     onChange={findNextPageCourtNames}
                 />

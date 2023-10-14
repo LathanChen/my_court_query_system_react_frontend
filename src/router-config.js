@@ -2,6 +2,7 @@ import QueryForm from './components/QueryForm/QueryForm';
 import ShowQueryData from './components/ShowQueryData/ShowQueryData';
 import ShowTeamData from './components/ShowTeamData/ShowTeamData';
 import ShowTodayEvent from './components/ShowTodayEvent/ShowTodayEvent';
+import IndexSearch from './components/IndexSearch/IndexSearch';
 import TestDiv from './components/TestDiv/TestDiv';
 import Test2 from './components/Test2/Test2';
 import ImageCarousel from './components/ImageCarousel/ImageCarousel';
@@ -17,6 +18,7 @@ import AdminPageEditItempage from './pages/AdminPageEditItempage/AdminPageEditIt
 import AdminPageAddCourtInfo from './pages/AdminPageAddCourtInfo/AdminPageAddCourtInfo';
 import AdminPageEditCourtInfoPage from './pages/AdminPageEditCourtInfoPage/AdminPageEditCourtInfoPage';
 import AdminPageCourtInfoListPage from './pages/AdminPageCourtInfoListPage/AdminPageCourtInfoListPage';
+import IndexPage from './pages/IndexPage/IndexPage';
 
 import CourtInfoPage from './pages/CourtInfoPage/CourtInfoPage';
 import ErrorMsg from './components/ErrorMsg/ErrorMsg';
@@ -93,7 +95,11 @@ const routes = [
   {
     path: '/ErrorMsg',
     element: <ErrorMsg/>,
-  }
+  },
+  {
+    path: '/IndexPage',
+    element: <IndexPage/>,
+  },
 ];
 
 export default routes;

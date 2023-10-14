@@ -1,0 +1,37 @@
+#container {
+    width: '100%';
+    display: flex;
+    justify-content: space-between;
+}
+
+#left{
+    width: 10%;
+}
+
+#right{
+    width: 10%;
+}
+
+#content {
+    width: 90%;
+}
+
+#indexsearch{
+    margin-top: 2rem;
+}
+
+#courtlist {
+    border-radius: 20px;
+    background-color: #fafafa;
+    margin-top: 3rem;
+}
+
+@media (max-width: 480px) {
+    #left{
+        width: 1%;
+    }
+    
+    #right{
+        width: 1%;
+    }
+}

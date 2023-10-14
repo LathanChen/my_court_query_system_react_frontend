@@ -1,0 +1,18 @@
+#login {
+    flex: 0 0 300px;   
+    border: 1px solid skyblue;
+    background-color: white;
+    margin-bottom: 30vh;
+}
+
+@media (max-width: 480px) {
+    #login {
+        width: 15rem; /* 或其他期望的值 */
+    }
+}
+
+@media (min-width: 481px) {
+    #login {
+        width: 30rem; /* 或其他期望的值 */
+    }
+}

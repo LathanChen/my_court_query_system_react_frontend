@@ -66,78 +66,40 @@ export default function HomePage() {
     }
 
     return (
-        <div style={{ width: '100%', height:'100vh',position: 'relative' }}>
-            {/* <CssBaseline/> */}
+        <div style={{ width: '100%', height:'100vh' }}>
             <Header></Header>
             <div id='container'
                 style={{
-                width: '100%',
-                // display: 'flex',
-                // justifyContent: 'space-around',
-                // marginTop:'5vh'
-            }}>
-                <div id='widgets' 
-                //     style={{
-                //     display: 'flex',
-                //     width: '60%',
-                //     height: '76vh',
-                //     justifyContent: 'space-between',
-                //     alignContent: 'space-between',
-                //     flexWrap: 'wrap',
-                //     marginTop: '8vh',
-                //     border: '1px solid skyblue',
-                // }}
-                >
+                width: '100%'}}>
                     <div id='timeshow' 
                         style={{
-                        // width: '46%',
-                        // marginRight: '2%'
-                    }}>
+
+                        }}>
                         <TimeShow handleWeekNumber={handleWeekNumber} handleDayOfWeekInWeek={handleDayOfWeekInWeek}></TimeShow>
                     </div>
                     <div id='findteam'
                         style={{
-                        // width: '46%',
-                        // marginLeft: '2%'
-                    }}>
+
+                        }}>
                         <FindTeam showQueryFormOrNot={showQueryFormOrNot}></FindTeam>
                     </div>
                     <div id='todayevent'
                         style={{
-                        // width: '46%',
-                        // marginRight: '2%',
-                        // marginTop:'20px'
-                    }}>
-                        {/* <TodayEventComponent></TodayEventComponent> */}
+
+                        }}>
                         <TodayEvent weekNumber={weekNumber} dayOfWeekInWeek={dayOfWeekInWeek}></TodayEvent>
                     </div>
                     <div id='courtinfo'
                         style={{
-                        // width: '46%',
-                        // marginLeft: '2%',
-                        // marginTop:'20px'
-                    }}>
+
+                        }}>
                         <CourtInfo></CourtInfo>
                     </div>
 
-                    {/* <TodayEvent></TodayEvent> */}
-                </div>
                 <div id='outlet'
                     style={{
-                    // width: '30%',
-                    // marginTop: '8vh',
-                    // height: '76vh'
-                }}>
-                    {/* {showQueryDataFlg?(
-                    <ShowQueryData 
-                    showQueryData={showQueryData} 
-                    showQueryDataFlg={showQueryDataFlg} 
-                    setShowFlag={changeShowQuertFormOrNot}/>
-                    )
-                    :(<QueryForm 
-                    setShowFlag={changeShowQuertFormOrNot}/>
-                    )} */}
-                    {/* 如果context想传递多个参数,就要写成一个对象 */}
+
+                    }}>
                     <Outlet context={{handleQueryFormData,queryFormData}}/>
                 </div>
             </div>

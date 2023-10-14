@@ -98,7 +98,7 @@ export default function Header(props) {
         fetchData();
     }
 
-    const tohomepage = () => navigate('/homepage')
+    const tohomepage = () => navigate('/IndexPage')
 
     const enterAdminPage = () => navigate('/adminpage')
 

@@ -82,7 +82,7 @@ export default function InfoListSearch(props) {
                     console.log(params);
                     const response = await api.get('/courtOpenInfo/getInfoByAdmin', { params });
                     // 请求成功后的操作
-                    if (response.data !== []) {
+                    if (response.data.length !== 0) {
                         console.log(response.data);
 
                         const queryData = response.data.map((data) => {
@@ -152,8 +152,9 @@ export default function InfoListSearch(props) {
                     width: '80%'
                 }}>
                     <div style={{
-                        width: '28%',
-                        marginRight: '3vw'
+                        // width: '28%',
+                        marginRight: '3%',
+                        flex:'0 1 28%'
                     }}>
                         <FormControl sx={{ width: '100%', marginTop: '1vh' }}>
                             {/* todo:每个选择框要有一个全项目唯一的id */}
@@ -173,8 +174,9 @@ export default function InfoListSearch(props) {
                         </FormControl>
                     </div>
                     <div style={{
-                        width: '28%',
-                        marginRight: '3vw',
+                        // width: '28%',
+                        marginRight: '3%',
+                        flex:'0 1 28%'
                     }}>
                         <FormControl sx={{ width: '100%', marginTop: '1vh' }}>
                             {/* todo:每个选择框要有一个全项目唯一的id */}
@@ -198,8 +200,9 @@ export default function InfoListSearch(props) {
                         </FormControl>
                     </div>
                     <div style={{
-                        width: '28%',
-                        marginRight: '3vw',
+                        // width: '28%',
+                        marginRight: '3%',
+                        flex:'0 1 28%'
                     }}>
                         <FormControl sx={{ width: '100%', marginTop: '1vh' }}>
                             {/* todo:每个选择框要有一个全项目唯一的id */}
@@ -223,8 +226,10 @@ export default function InfoListSearch(props) {
                         </FormControl>
                     </div>
                     <div style={{
-                        width: '28%',
-                        marginRight: '3vw',
+                        // width: '28%',
+                        // marginRight: '3%',
+                        flex:'0 1 28%',
+                        marginRight: '3%',
                         marginTop: '1vh'
                     }}>
                         <FormControl sx={{ width: '100%', marginTop: '1vh' }}>
@@ -244,8 +249,10 @@ export default function InfoListSearch(props) {
                         </FormControl>
                     </div>
                     <div style={{
-                        width: '28%',
-                        marginRight: '3vw',
+                        // width: '28%',
+                        // marginRight: '3%',
+                        flex:'0 1 28%',
+                        marginRight: '3%',
                         marginTop: '1vh'
                     }}>
                         <FormControl sx={{ width: '100%', marginTop: '1vh' }}>

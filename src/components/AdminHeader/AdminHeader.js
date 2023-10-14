@@ -98,7 +98,7 @@ export default function AdminHeader(props) {
     setAnchorEl(null);
   };
 
-  const enterHomePage = () => navigate('/homepage')
+  const enterHomePage = () => navigate('/IndexPage')
   // console.log(props.routerMes)
   
   // 由于获取当前路由地址的动作是在AdminPage文件的useEffect函数中进行的，

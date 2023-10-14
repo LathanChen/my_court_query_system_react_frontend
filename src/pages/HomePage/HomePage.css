@@ -1,0 +1,91 @@
+#container {
+    width: 100%;
+    margin-top: 3rem;
+}
+
+/* #widgets{
+
+} */
+
+/* 移动端样式 */
+@media (max-width: 480px) {
+    #container {
+        /* display: flex;
+        justify-content: space-around; */
+    }
+
+    #widgets{
+        width: 100%;
+        margin-top: 5rem;
+    }
+
+    #timeshow{
+        width: 100%;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    #findteam{
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    #todayevent{
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    #courtinfo{
+        width: 100%;
+        margin-bottom: 1rem;
+        overflow-y:auto;
+    }
+
+    #outlet{
+        width: 100%;
+    }
+}
+
+/* PC端样式 */
+@media (min-width: 481px) {
+    #container {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    #widgets{
+        width: 60%;
+        height: 76vh;
+        display: flex;
+        justify-content: space-between;
+        align-content: space-between;
+        flex-wrap: wrap;
+        margin-top: 3rem;
+    }
+
+    #timeshow{
+        width: 46%;
+        margin-bottom: 1rem;
+    }
+
+    #findteam{
+        width: 46%;
+        margin-bottom: 1rem;
+    }
+
+    #todayevent{
+        width: 46%;
+        margin-top: 20px;
+    }
+
+    #courtinfo{
+        width: 46%;
+        margin-top: 20px;
+    }
+
+    #outlet{
+        width: 30%;
+        margin-top: 3rem;
+        height: 76vh;
+    }
+}
