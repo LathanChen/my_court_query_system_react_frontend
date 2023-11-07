@@ -13,10 +13,10 @@ export default function AdminPageInfoShow() {
     }
 
     // InfoListSearch查询到的数据列表，通过共同的父元素传递给AdminPageItemInfoShowTable组件
-    const [quertData,setQuertData] = useState([])
+    const [queryData,setQueryData] = useState([])
 
     const takeQuertData = (data) =>{
-        setQuertData(data)
+        setQueryData(data)
     }
 
     const [InfoListSearchShouldRefresh,setInfoListSearchShouldRefresh] = useState(false)
@@ -33,7 +33,7 @@ useState([])
            <AdminPageItemInfoShowTable 
            batchselection={batchselection} 
            isBatchselectionChange={isBatchselectionChange} 
-           quertData={quertData} 
+           queryData={queryData} 
            InfoListSearchRefresh={InfoListSearchRefresh}
            >
            </AdminPageItemInfoShowTable>

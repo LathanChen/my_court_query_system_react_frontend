@@ -13,24 +13,22 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
+import { useVerifyTokenExpiration } from '../../common/verifyTokenexpiration';
 
 export default function Header(props) {
     const [mes] = useState('你好，请')
     // const [loginFlg, setLoginFlg] = useState()
 
     // Redux中保存的值会在浏览器刷新后恢复初始状态，所以不能使用state.isLogin来判断Header的显示内容
-    // const isLogin = useSelector(state => state.isLogin);
+    
+    // const [isLogin,setIsLogin] = useState(false)
+    const verifyTokenExpiration = useVerifyTokenExpiration();
 
-    const [isLogin,setIsLogin] = useState(false)
     useEffect(() => {
-            if ((localStorage.getItem('token') !== null)){
-                setIsLogin(true)
-            }
-            // else {
-            //     setIsLogin(false)
-            // }
-        }, [])
-
+        verifyTokenExpiration()
+    }, [])
+    
+    const isLogin = useSelector(state => state.isLogin);
     // useEffect(() => {
     //     if (isLogin && localStorage.getItem("token") != null) {
     //         console.log(localStorage.getItem("token"))
@@ -90,8 +88,8 @@ export default function Header(props) {
                 console.error(error);
             }
             finally{
-                setIsLogin(false)
-                // navigate('/homepage')
+                // setIsLogin(false)
+                navigate(0)
             }
         };
 

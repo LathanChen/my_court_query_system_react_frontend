@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { InputLabel, FormControl, Select, MenuItem, Box, Typography, Button } from '@mui/material';
+import { useSelector } from 'react-redux';
+import api from '../../api';
+import { Typography, Button, Box } from '@mui/material';
 import { Pagination } from 'antd';
 import Chip from '@mui/material/Chip';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -8,6 +10,10 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import IconButton from '@mui/material/IconButton';
 import FaceIcon from '@mui/icons-material/Face';
 import Face3Icon from '@mui/icons-material/Face3';
+import Modal from '@mui/material/Modal';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Input from '@mui/material/Input';
 import axios from 'axios';
 import './Indexbar.css'
 
@@ -17,9 +23,26 @@ export default function Indexbar(props) {
 
     const [courtInfoList, setCourtInfoList] = useState([])
 
+    const [courtInfoListForPage, setCourtInfoListForPage] = useState([])
+
+    const [startIndex,setStartIndex] = useState(0)
+
+    const [endIndex,setEndIndex] = useState(9)
+
     const [totalItems, settotalItems] = useState(null)
 
     const [isLoading, setIsLoading] = useState(false)
+
+    const [msg, setMsg] = useState('')
+    
+    // 路人报名时选择的活动id
+    const [eventId, setEventId] = useState()
+
+    // 路人报名时输入的昵称
+    const [nickName, setNickName] = useState('')
+
+    // 路人报名时输入的邮箱
+    const [mailAddress, setMailAddress] = useState('')
 
     console.log(props.searchParams)
 
@@ -29,33 +52,44 @@ export default function Indexbar(props) {
 
     const [timerId, setTimerId] = useState(null);
 
-    const findNextPageEventInfos = (page) => {
-        setCurrentPage(page)
-        if (props.searchFlg === 0) {
-            setIsLoading(true)
-            getCourtDatas(page)
-        }
-        else if (props.searchFlg === 1) {
-            setIsLoading(true)
-            getEventDatas(page)
-        }
-        const timer = setTimeout(() => {
-            setIsLoading(false)
-        }, 500)
+    // const $dateFromProps = props.selectedDate
+    const [paramsFromProps, setParamsFromProps] = useState('');
 
-        setTimerId(timer);
+    const findNextPageInfos = (page) => {
+        console.log(page)
+        setCurrentPage(page)
+        const startIndex = (page-1)*9
+        const endIndex = startIndex + 9
+        setStartIndex(startIndex)
+        setEndIndex(endIndex)
     }
 
+    const handleChangeNickName = (e) => {
+        setNickName(e.target.value)
+    }
 
-    const getCourtDatas = async (page) => {
+    const handleChangeMailAddress = (e) => {
+        setMailAddress(e.target.value)
+    }
+
+    const getCourtDatas = async (page, newParams) => {
         try {
             // ...params语法,对象的扩展运算符
-            console.log(props.searchParams)
-            const response = await axios.get('/courtOpenInfo/getInfo', { params: { ...props.searchParams, PageNum: page, PageSize: 9 } })
+            let params = {}
+            if (newParams) {
+                params = { ...newParams }
+            }
+            else {
+                params = { ...props.searchParams }
+            }
+            // console.log(params)
+            const response = await axios.get('/courtOpenInfo/getInfo',{params})
             console.log(response.data)
-            settotalItems(response.data.total)
+            const listLength = response.data.length
+            // settotalItems(response.data.total)
             // setResponseData(response.data)
-            if (response.data.list.length > 0) {
+            if (listLength > 0) {
+                settotalItems(listLength)
                 setCourtInfoListIsNull(false)
                 // response.data.list = response.data.list.map((item) => {
                 //     const { courtOpenTime, courtOpenInfoId } = item;
@@ -69,7 +103,7 @@ export default function Indexbar(props) {
                 //         courtAdress
                 //     };
                 // })
-                response.data.list = response.data.list.map((item) => {
+                response.data = response.data.map((item) => {
                     const { courtOpenTime, courtOpenInfoId, itemInfo } = item;
                     const { courtName, courtAdress } = item.courtInfo;
 
@@ -83,9 +117,9 @@ export default function Indexbar(props) {
                     };
                 })
                 console.log(response.data.list)
-                setCourtInfoList(response.data.list.map((item) => {
+                setCourtInfoList(response.data.map((item) => {
                     return (
-                        <div className='signup'>
+                        <div className='signup' key={item.id}>
                             <Typography
                                 id="signuptitle"
                                 variant="h6"
@@ -103,8 +137,10 @@ export default function Indexbar(props) {
                         </div>
                     )
                 }))
+                // findNextPageInfos(1)
             }
             else {
+                setMsg('暂无数据！')
                 setCourtInfoListIsNull(true)
             }
         }
@@ -113,20 +149,26 @@ export default function Indexbar(props) {
         }
     }
 
-    const getEventDatas = async (page) => {
+    const getEventDatas = async (page, newParams) => {
         try {
+            let params = {}
+            console.log(newParams)
+            if (newParams) {
+                params = { ...newParams }
+            }
+            else {
+                params = { ...props.searchParams, eventOpenDay: props.searchParams.selectedDate }
+            }
             // ...params语法,对象的扩展运算符
             console.log(props.searchParams)
-            const response = await axios.get('/eventInfo/getInfo', { params: { 
-                eventOpenDay:props.searchParams?.selectedDate, 
-                eventOpenTimeZone:props.searchParams?.courtOpenTimeZone,
-                eventItemId:props.searchParams?.courtOpenItemId,
-                PageNum: page, 
-                PageSize: 9 } })
+            const response = await api.get('/eventInfo/getInfo',{params})
             console.log(response.data)
-            settotalItems(response.data.total)
+            // settotalItems(response.data.total)
             // setResponseData(response.data)
-            if (response.data.list.length > 0) {
+            const listLength = response.data.length
+            if (listLength > 0) {
+                settotalItems(listLength)
+                setMsg('')
                 setCourtInfoListIsNull(false)
                 // response.data.list = response.data.list.map((item) => {
                 //     const { courtOpenTime, courtOpenInfoId } = item;
@@ -140,8 +182,8 @@ export default function Indexbar(props) {
                 //         courtAdress
                 //     };
                 // })
-                response.data.list = response.data.list.map((item) => {
-                    const { eventOpenTime, eventInfoId, itemInfo,eventEnrollment,eventMaxEnrollment,eventMaleCost,eventFemaleCost } = item;
+                response.data = response.data.map((item) => {
+                    const { eventOpenTime, eventInfoId, itemInfo, eventEnrollment, eventMaxEnrollment, eventMaleCost, eventFemaleCost, registered } = item;
                     const { courtName, courtAdress } = item.courtInfo;
 
                     // 创建新的对象
@@ -154,20 +196,21 @@ export default function Indexbar(props) {
                         eventMaxEnrollment,
                         eventMaleCost,
                         eventFemaleCost,
-                        itemName: itemInfo.itemInfoName
+                        itemName: itemInfo.itemInfoName,
+                        registered
                     };
                 })
-                console.log(response.data.list)
-                setCourtInfoList(response.data.list.map((item) => {
+                // console.log(response.data)
+                setCourtInfoList(response.data.map((item) => {
                     return (
-                        <div className='signup'>
+                        <div className='signup' key={item.id}>
                             <Typography
                                 id="signuptitle"
                                 variant="h6"
                                 color="primary">
                                 报名详情
                             </Typography>
-                            <div className='detail'>
+                            <div className='eventdetail'>
                                 <div>
                                     <Typography variant="subtitle1" color="primary">{item.courtName}</Typography>
                                     <Typography variant="subtitle2" color="primary">{item.eventOpenTime}</Typography>
@@ -183,20 +226,199 @@ export default function Indexbar(props) {
                                     </div>
                                 </div>
                                 <div>
-                                    <Button variant="contained">报名</Button>
+                                    {item.eventEnrollment === item.eventMaxEnrollment ?
+                                        <Button variant="contained" disabled={true}>
+                                            满员
+                                        </Button> :
+                                        item.registered ?
+                                            <Button variant="contained" disabled={true}>
+                                                已报
+                                            </Button> :
+                                            <Button variant="contained" onClick={() => entryEvent(item.id)}>
+                                                报名
+                                            </Button>
+                                    }
                                 </div>
                             </div>
                         </div>
                     )
                 }))
+                findNextPageInfos(1)
             }
             else {
+                setMsg('暂无数据！')
                 setCourtInfoListIsNull(true)
             }
         }
         catch (error) {
             console.log(error)
         }
+    }
+
+    function calculateWeekDayOfMonth(paramdate) {
+        const date = new Date(paramdate)
+        console.log(date)
+        // const year = date.getFullYear();
+        // const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，需要加 1，并补零
+        // const day = String(date.getDate()).padStart(2, '0'); // 补零
+        // 使用 getTime() 方法获取时间戳（以毫秒为单位）
+        // const date = paramsDate.getTime();
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const dayOfWeek = firstDayOfMonth.getDay();
+        const adjustedDayOfWeek = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // 将星期天(0)转换为6，星期一(1)转换为0，以此类推
+        const dayOfMonth = date.getDate() - 1;
+        const daysSinceStartOfMonth = adjustedDayOfWeek + dayOfMonth;
+        const weekNumber = Math.floor(daysSinceStartOfMonth / 7) + 1;
+        const dayOfWeekInWeek = (daysSinceStartOfMonth % 7) + 1;
+        console.log(`第${weekNumber}周`)
+        console.log(`周${dayOfWeekInWeek}`)
+        return { weekNumber, dayOfWeekInWeek }
+        // console.log(paramsFromProps.selectedDate)
+    }
+
+    const getInfoBeforeToday = async () => {
+        // 设置分页器页数为1
+        setCurrentPage(1)
+        setMsg('')
+
+        // 设置载入中动画
+        setIsLoading(true)
+        // 计算选择框中日期的前一天
+        const oneDayInSeconds = 24 * 60 * 60 * 1000; // 一天的秒数
+        // 转化为时间戳
+        let _dateFromProps = new Date(paramsFromProps).getTime()
+        const newSelectDate = _dateFromProps - oneDayInSeconds
+        const date = new Date(newSelectDate);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，需要加 1，并补零
+        const day = String(date.getDate()).padStart(2, '0'); // 补零
+
+        // 拼接成新的日期字符串
+        const formattedDate = `${year}-${month}-${day}`;
+        setParamsFromProps(formattedDate)
+
+        // console.log(formattedDate)
+        console.log(_dateFromProps)
+        // 计算第几周、星期几
+        const params = calculateWeekDayOfMonth(newSelectDate)
+
+        if (props.searchFlg === 0 && props.searchParams != null) {
+            // setIsLoading(true)
+            getCourtDatas(currentPage, {
+                courtOpenWeekNum: params.weekNumber,
+                courtOpenWeekday: params.dayOfWeekInWeek,
+                courtOpenTimeZone: props.searchParams.courtOpenTimeZone,
+                courtOpenItemId: props.searchParams.courtOpenItemId,
+            })
+        }
+        else if (props.searchFlg === 1 && props.searchParams != null) {
+            // setIsLoading(true)
+            getEventDatas(currentPage, {
+                eventOpenDay: formattedDate,
+                eventOpenTimeZone: props.searchParams?.courtOpenTimeZone,
+                eventItemId: props.searchParams?.courtOpenItemId,
+            })
+        }
+
+        // 设置定时器
+        let timer
+        await new Promise((resolve) => {
+            timer = setTimeout(() => {
+                setIsLoading(false)
+                resolve()
+            }, 500)
+        })
+        // 关闭定时器
+        clearTimeout(timer)
+    }
+
+    const getInfoAfterToday = async () => {
+        // 设置分页器页数为1
+        setCurrentPage(1)
+        setMsg('')
+
+        // 设置载入中动画
+        setIsLoading(true)
+        // 计算选择框中日期的前一天
+        const oneDayInSeconds = 24 * 60 * 60 * 1000; // 一天的秒数
+        // 转化为时间戳
+        let _dateFromProps = new Date(paramsFromProps).getTime()
+        const newSelectDate = _dateFromProps + oneDayInSeconds
+        const date = new Date(newSelectDate);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，需要加 1，并补零
+        const day = String(date.getDate()).padStart(2, '0'); // 补零
+
+        // 拼接成新的日期字符串
+        const formattedDate = `${year}-${month}-${day}`;
+        setParamsFromProps(formattedDate)
+
+        // console.log(formattedDate)
+        console.log(_dateFromProps)
+        // 计算第几周、星期几
+        const params = calculateWeekDayOfMonth(newSelectDate)
+
+        if (props.searchFlg === 0 && props.searchParams != null) {
+            // setIsLoading(true)
+            getCourtDatas(currentPage, {
+                courtOpenWeekNum: params.weekNumber,
+                courtOpenWeekday: params.dayOfWeekInWeek,
+                courtOpenTimeZone: props.searchParams.courtOpenTimeZone,
+                courtOpenItemId: props.searchParams.courtOpenItemId,
+            })
+        }
+        else if (props.searchFlg === 1 && props.searchParams != null) {
+            // setIsLoading(true)
+            getEventDatas(currentPage, {
+                eventOpenDay: formattedDate,
+                eventOpenTimeZone: props.searchParams?.courtOpenTimeZone,
+                eventItemId: props.searchParams?.courtOpenItemId,
+            })
+        }
+
+        // 设置定时器
+        let timer
+        await new Promise((resolve) => {
+            timer = setTimeout(() => {
+                setIsLoading(false)
+                resolve()
+            }, 500)
+        })
+        // 关闭定时器
+        clearTimeout(timer)
+    }
+
+    const isLogin = useSelector(state => state.isLogin);
+
+    const entryEvent = async (eventInfoId) => {
+        // 登录状态下
+        if (isLogin) {
+            const params = { eventInfoId }
+            const response = await api.post('/eventEntryInfo/setInfo', params)
+            // Todo 直接向后台发送请求
+            console.log(response)
+            console.log("aaaaaaaaaaa")
+            getEventDatas(1)
+            setCurrentPage(1)
+        }
+        else {
+            setOpen(true)
+            setEventId(eventInfoId)
+        }
+        console.log(eventInfoId)
+    }
+
+    const entryEventWithNotLoggedIn = async () => {
+        console.log(nickName)
+        console.log(mailAddress)
+        const params = { nickName, mailAddress,eventInfoId:eventId}
+        const response = await api.post('/eventEntryInfo/setInfo', params)
+        // Todo 直接向后台发送请求
+        console.log(response)
+        console.log("bbbbbbbbbbbb")
+        setOpen(false)
+        getEventDatas(1)
+        setCurrentPage(1)
     }
 
     // let courtInfoDetail = courtInfoList.map((item) => {
@@ -253,13 +475,18 @@ export default function Indexbar(props) {
     // })
 
     useEffect(() => {
-        if (props.searchFlg === 0 && props.searchParams != null) {
-            setIsLoading(true)
-            getCourtDatas(currentPage)
-        }
-        else if (props.searchFlg === 1 && props.searchParams != null) {
-            setIsLoading(true)
-            getEventDatas(currentPage)
+        if (props.searchParams != null) {
+            setParamsFromProps(props.searchParams.selectedDate)
+
+            // console.log(dateFromProps)
+            if (props.searchFlg === 0 && props.searchParams != null) {
+                setIsLoading(true)
+                getCourtDatas(currentPage)
+            }
+            else if (props.searchFlg === 1 && props.searchParams != null) {
+                setIsLoading(true)
+                getEventDatas(currentPage)
+            }
         }
         const timer = setTimeout(() => {
             setIsLoading(false)
@@ -277,8 +504,8 @@ export default function Indexbar(props) {
         // setIsLoading(true)
         setCourtInfoListIsNull(true)
         setCurrentPage(1)
-    },[props.searchFlg])
-    
+    }, [props.searchFlg])
+
     // 关闭分页器中使用的定时器
     useEffect(() => {
         return () => {
@@ -288,44 +515,98 @@ export default function Indexbar(props) {
         };
     }, [timerId]);
 
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    // const style = {
+    //     position: 'absolute',
+    //     top: '50%',
+    //     left: '50%',
+    //     transform: 'translate(-50%, -50%)',
+    //     width: 400,
+    //     bgcolor: 'background.paper',
+    //     border: '2px solid #000',
+    //     boxShadow: 24,
+    //     p: 4,
+    // };
     return (
         <div>
+            <Modal
+                open={open}
+                onClose={handleClose}
+            >
+                <Box id="entryModal">
+                    <Typography id="modal-modal-title" variant="subtitle1" color="primary">
+                        请输入报名信息！
+                    </Typography>
+                    <div>
+                        <FormControl>
+                            <InputLabel htmlFor="my-input">请输入昵称</InputLabel>
+                            <Input
+                                id="my-input"
+                                aria-describedby="my-helper-text"
+                                value={nickName}
+                                onChange={handleChangeNickName}
+                            />
+                        </FormControl>
+                    </div>
+                    <div>
+                        <FormControl>
+                            <InputLabel htmlFor="my-input">请输入邮箱号</InputLabel>
+                            <Input
+                                id="my-input"
+                                aria-describedby="my-helper-text"
+                                value={mailAddress}
+                                onChange={handleChangeMailAddress}
+                            />
+                        </FormControl>
+                    </div>
+                    <div id='entryButton'>
+                        <Button variant="contained" onClick={entryEventWithNotLoggedIn}>确认</Button>
+                        <Button variant="outlined" onClick={handleClose}>取消</Button>
+                    </div>
+                </Box>
+            </Modal>
             <div id='bar'>
                 <div id='label'>
                     <Chip label="全部"></Chip>
                 </div>
-                <div id='selectday'>
-                    <Typography variant="subtitle2" color="primary">前一天</Typography>
-                    <IconButton onClick={''}>
-                        <ArrowLeftIcon></ArrowLeftIcon>
-                    </IconButton>
-                    <Typography variant="subtitle2" color="primary">XX年XX月XX日</Typography>
-                    <IconButton>
-                        <ArrowRightIcon></ArrowRightIcon>
-                    </IconButton>
-                    <Typography variant="subtitle2" color="primary">后一天</Typography>
-                </div>
+                {paramsFromProps &&
+                    <div id='selectday'>
+                        <Typography variant="subtitle2" color="primary">前一天</Typography>
+                        <IconButton onClick={getInfoBeforeToday}>
+                            <ArrowLeftIcon></ArrowLeftIcon>
+                        </IconButton>
+                        <Typography variant="subtitle2" color="primary">{paramsFromProps}</Typography>
+                        <IconButton onClick={getInfoAfterToday}>
+                            <ArrowRightIcon></ArrowRightIcon>
+                        </IconButton>
+                        <Typography variant="subtitle2" color="primary" >后一天</Typography>
+                    </div>}
             </div>
-            {isLoading ? 
-            (<div id='signupdiv'>
-                <div style={{width:'100%',display:'flex',justifyContent:'center'}}>
-                    <CircularProgress/>
-                </div> 
-            </div>): 
-            (<div id='signupdiv'>
-                {!courtInfoListIsNull && courtInfoList}
-                {/* {courtInfoList} */}
-            </div>)}
-            {!courtInfoListIsNull && <div style={{ width: '93%', padding: '2vh' }}>
+            {isLoading ?
+                (<div id='signupdiv'>
+                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                        <CircularProgress />
+                    </div>
+                </div>) :
+                (<div id='signupdiv'>
+                    {!courtInfoListIsNull && courtInfoList.slice(startIndex,endIndex)}
+                    {/* {courtInfoList} */}
+                </div>)}
+            {!courtInfoListIsNull && !isLoading ? <div style={{ width: '93%', padding: '2vh' }}>
                 <Pagination
                     defaultCurrent={1}
                     current={currentPage}
                     total={totalItems}
                     pageSize={9}
+                    showSizeChanger={false}
                     size="small"
-                    onChange={findNextPageEventInfos}
+                    onChange={findNextPageInfos}
                 />
-            </div>}
+            </div> :
+                courtInfoListIsNull && !isLoading && <Typography variant="subtitle2" color="primary" >{msg}</Typography>}
         </div>
     )
 }

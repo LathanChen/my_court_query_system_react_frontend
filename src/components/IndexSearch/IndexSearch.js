@@ -1,7 +1,6 @@
 import { useState } from "react";
 // import './QueryForm.css'
 import { InputLabel, FormControl, Select, MenuItem, Box, Typography, Button } from '@mui/material';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -9,13 +8,10 @@ import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import axios from 'axios';
 // useSelector 和 useDispatch 是两个Hooks,用于连接redux store
 import { useDispatch } from 'react-redux';
 // useNavigate用于实现路由跳转
 import { useNavigate } from 'react-router-dom';
-// 用于获取父组件在Outlet中传递的参数
-import { useOutletContext } from "react-router-dom"
 import './IndexSearch.css'
 
 function TabPanel(props) {
@@ -253,6 +249,7 @@ export default function IndexSearch(props) {
                             value={courtOpenTimeZone}
                             label="请选择时间段"
                             onChange={handleCourtOpenTimeZoneChange}
+                            sx={{ width: '100%' }}
                         >
                             <MenuItem value={'1'}>上午</MenuItem>
                             <MenuItem value={'2'}>下午</MenuItem>
@@ -267,6 +264,7 @@ export default function IndexSearch(props) {
                             value={courtOpenItemId}
                             label="请选择项目"
                             onChange={handleCourtOpenItemIdChange}
+                            sx={{ width: '100%' }}
                         >
                             <MenuItem value={'1'}>篮球</MenuItem>
                             <MenuItem value={'2'}>排球</MenuItem>
@@ -328,6 +326,7 @@ export default function IndexSearch(props) {
                             value={courtOpenTimeZone}
                             label="请选择时间段"
                             onChange={handleCourtOpenTimeZoneChange}
+                            sx={{ width: '100%' }}
                         >
                             <MenuItem value={'1'}>上午</MenuItem>
                             <MenuItem value={'2'}>下午</MenuItem>
@@ -342,6 +341,7 @@ export default function IndexSearch(props) {
                             value={courtOpenItemId}
                             label="请选择项目"
                             onChange={handleCourtOpenItemIdChange}
+                            sx={{ width: '100%' }}
                         >
                             <MenuItem value={'1'}>篮球</MenuItem>
                             <MenuItem value={'2'}>排球</MenuItem>

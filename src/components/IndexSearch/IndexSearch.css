@@ -42,3 +42,27 @@
         visibility:hidden
     }
     }
+
+    @media (max-width: 420px) {
+        #search {
+            display: block;
+            height: 15rem;
+            /* margin: auto; */
+        }
+        #time {
+            display: block;
+            width: 100%;
+        }
+        
+        #timezone {
+            display: block;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        #item {
+            display: block;
+            margin-top: 1rem;
+            width: 100%;
+        }
+    }    

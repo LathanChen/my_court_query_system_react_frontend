@@ -85,7 +85,7 @@ export default function AdminPageItemInfoShowTable(props) {
     fetchData(data)
   }
 
-  const rows = props.quertData
+  const rows = props.queryData
   // 使用 getRowId 属性指定自定义的行 ID：如果你无法为每行提供唯一的 id 属性，你可以使用 getRowId 属性来为每行指定自定义的 ID。getRowId 是一个回调函数，它接收行数据作为参数，并返回一个表示行 ID 的值。
   const getRowId = (row) => row.courtOpenInfoId;
 

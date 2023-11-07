@@ -9,7 +9,7 @@ export default function ErrorMsg() {
 
     const navigate = useNavigate()
     const backToHomepage = () => {
-        navigate('/homepage')
+        navigate('/IndexPage')
     }
     // const dispatch = useDispatch();
 

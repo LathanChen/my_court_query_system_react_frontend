@@ -50,11 +50,11 @@ export default function LoginForm() {
 
     const navigate = useNavigate()
     const backToHomepage = () =>{
-        navigate('/homepage')
+        navigate('/IndexPage')
     }
 
     return (
-        <div id='container'
+        <div 
             style={{
             height: '100vh',
             display: 'flex',

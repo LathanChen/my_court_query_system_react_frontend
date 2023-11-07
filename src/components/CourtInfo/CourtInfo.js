@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Slider from "react-slick";
 import { Box, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Link } from 'react-router-dom';
 import { Col, Row } from 'antd';
 import { Pagination } from 'antd';
@@ -98,6 +99,8 @@ export default function CourtInfo() {
             if (index % 2 === 0) {
                 return (
                     <Col span={6} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <LocationOnIcon  color="primary">
+                        </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
                         </Link>
@@ -106,6 +109,8 @@ export default function CourtInfo() {
             else {
                 return (
                     <Col span={6} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <LocationOnIcon  color="primary">
+                        </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
                         </Link>
@@ -116,6 +121,8 @@ export default function CourtInfo() {
             if (index % 2 === 0) {
                 return (
                     <Col span={12} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <LocationOnIcon  color="primary">
+                        </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
                         </Link>
@@ -124,6 +131,8 @@ export default function CourtInfo() {
             else {
                 return (
                     <Col span={12} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
+                        <LocationOnIcon  color="primary">
+                        </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
                         </Link>

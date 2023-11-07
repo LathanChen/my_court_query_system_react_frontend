@@ -73,7 +73,7 @@ export default function RegisterForm() {
 
     const navigate = useNavigate()
     const backToHomepage = () =>{
-        navigate('/homepage')
+        navigate('/IndexPage')
     }
 
     return (
