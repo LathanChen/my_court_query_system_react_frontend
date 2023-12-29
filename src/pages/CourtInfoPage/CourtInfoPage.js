@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { TextField, Button, Typography, Container } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel'
 import EvaluateZone from '../../components/EvaluateZone/EvaluateZone'
 import Header from '../../components/Header/Header'
-import axios from 'axios';
-import { Skeleton } from 'antd';
+import './CourtInfoPage.css'
 
 export default function CourtInfoPage() {
 
@@ -24,11 +21,7 @@ export default function CourtInfoPage() {
     return (
         <div>
             <Header></Header>
-            <div style={{
-                marginTop: '5vh',
-                display: 'flex',
-                justifyContent: 'space-around'
-            }}>
+            <div id='imageAndEvaluate'>
                 <ImageCarousel courtId={courtId}></ImageCarousel>
                 <EvaluateZone courtId={courtId}></EvaluateZone>
             </div>

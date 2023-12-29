@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 // import './QueryForm.css'
-import Slider from "react-slick";
+// import Slider from "react-slick";
 import { Box, Typography } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -57,20 +57,21 @@ export default function CourtInfo() {
 
     const [isLoading, setIsLoading] = useState(true)
 
-    const getCourtNames = async () => {
-        const params = { PageNum: currentPage, PageSize: 16 }
-        try {
-            const response = await axios.get('/courtinfo/getcourtnames', { params });
-            console.log(response.data)
-            setCourtNameDatas(response.data)
-        }
-        catch (error) {
-            console.error(error);
-        }
-    }
-
     useEffect(() => {
         setIsLoading(true)
+
+        const getCourtNames = async () => {
+            const params = { PageNum: currentPage, PageSize: 16 }
+            try {
+                const response = await axios.get('/courtinfo/getcourtnames', { params });
+                console.log(response.data)
+                setCourtNameDatas(response.data)
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }
+
         getCourtNames()
         const timer = setTimeout(() => {
             setIsLoading(false)
@@ -99,7 +100,7 @@ export default function CourtInfo() {
             if (index % 2 === 0) {
                 return (
                     <Col span={6} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
-                        <LocationOnIcon  color="primary">
+                        <LocationOnIcon color="primary">
                         </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
@@ -109,7 +110,7 @@ export default function CourtInfo() {
             else {
                 return (
                     <Col span={6} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
-                        <LocationOnIcon  color="primary">
+                        <LocationOnIcon color="primary">
                         </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
@@ -121,7 +122,7 @@ export default function CourtInfo() {
             if (index % 2 === 0) {
                 return (
                     <Col span={12} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
-                        <LocationOnIcon  color="primary">
+                        <LocationOnIcon color="primary">
                         </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
@@ -131,7 +132,7 @@ export default function CourtInfo() {
             else {
                 return (
                     <Col span={12} style={{ textAlign: 'middle ', marginTop: '10px' }} key={index}>
-                        <LocationOnIcon  color="primary">
+                        <LocationOnIcon color="primary">
                         </LocationOnIcon>
                         <Link to={`/courtInfoPage/${courtInfo.courtId}`} style={{ textDecoration: 'underline', color: 'black' }}>
                             {courtInfo.courtName}
@@ -181,7 +182,7 @@ export default function CourtInfo() {
                     margin: 'auto',
                     padding: '10px'
                 }}>
-                    {courtNames_Col.length != 0 ?
+                    {courtNames_Col.length !== 0 ?
                         (<Row>
                             {courtNames_Col}
                         </Row>) : (

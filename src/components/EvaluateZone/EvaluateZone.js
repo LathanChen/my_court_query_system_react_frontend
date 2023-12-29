@@ -8,7 +8,7 @@ import SendIcon from '@mui/icons-material/Send';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { Descriptions, Skeleton } from 'antd';
 import axios from 'axios';
-
+import './EvaluateZone.css'
 
 const EvaluateZone = (props) => {
 
@@ -117,7 +117,7 @@ const EvaluateZone = (props) => {
     <div
       style={{
         height: '15vw',
-        width: '33vw',
+        width: 'calc(100% - 2rem)',
         margin: '10px auto 0',
         backgroundColor: 'rgba(128, 128, 128, 0.1)',
         wordWrap: 'break-word', // 允许长单词和数组换行
@@ -132,36 +132,38 @@ const EvaluateZone = (props) => {
   ))
 
   return (
-    skeletonShow?(<div style={{ width: '35vw', height: '36vw', marginTop: '60px' }}>
-      <div style={{ width: '35w', height: '9vw' }}>
-        <Skeleton.Input
+    skeletonShow?(<div style={{ marginTop: '60px',padding:'5px' }}>
+      <div className='Descriptions'>
+        <Skeleton
           active={true}
           size={'large'}
           block={true}
-          style={{ width: '35w', height: '8vw' }} />
+          paragraph={{ rows: 4 }}
+           />
       </div>
-      <div style={{ width: '35w', height: 'calc(7vw + 2px)' }}>
-        <Skeleton.Input
+      <div className='ratingAndInput'>
+        <Skeleton
           active={true}
           size={'large'}
           block={true}
-          style={{ width: '35w', height: 'calc(6vw + 2px)' }} />
+          paragraph={{ rows: 2 }}/>
       </div>
-      <div style={{ width: '35w', height: 'calc(20vw - 2px)' }}>
-        <Skeleton.Input
+      <div className='textDiv-Skeleton'>
+        <Skeleton
           active={true}
           size={'large'}
           block={true}
-          style={{ width: '35w', height: 'calc(20vw - 2px)' }} />
+          paragraph={{ rows: 8 }}/>
       </div>
     </div>):(
-    <div style={{ marginTop: '60px' }}>
+    <div style={{ marginTop: '60px',padding:'5px' }}>
       <div>
         <Descriptions
           title={courtInfos.courtInfo.courtName ? courtInfos.courtInfo.courtName : ''}
           column={2}
           size='small'
-          style={{ width: '35vw', height: '9rem' }}
+          className='Descriptions'
+          bordered={true}
         >
           <Descriptions.Item label="评分">
             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -179,7 +181,7 @@ const EvaluateZone = (props) => {
           <Descriptions.Item label="项目">{courtInfos.courtItemNames}</Descriptions.Item>
         </Descriptions>
       </div>
-      <div style={{ width: '35vw', height: '6vw' }}>
+      <div className='ratingAndInput'>
         <div style={{display:'flex',justifyContent:'space-between'}}>
         <Rating
           name="half-rating"
@@ -197,7 +199,7 @@ const EvaluateZone = (props) => {
 
         <Paper
           component="form"
-          sx={{ display: 'flex', alignItems: 'center', width: '35vw' }}
+          sx={{ display: 'flex', alignItems: 'center', width: '100%' }}
         >
           <TextareaAutosize
             minRows={5}
@@ -213,7 +215,7 @@ const EvaluateZone = (props) => {
           </IconButton>
         </Paper>
       </div>
-      <div style={{ border: '1px solid skyblue', height: 'calc(20vw - 2px)', width: 'calc(35vw - 2px)', marginTop: '1vw', overflowY: 'auto' }}>
+      <div className='textDiv'>
         {commetDiv.length > 0 ? commetDiv : '暂无数据！'}
       </div>
 

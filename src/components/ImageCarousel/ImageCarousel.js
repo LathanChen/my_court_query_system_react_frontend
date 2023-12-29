@@ -2,11 +2,12 @@ import { Carousel, Image } from 'antd';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Skeleton } from 'antd';
+import "./ImageCarousel.css"
 
 export default function ImageCarousel(props) {
     const contentStyle = {
         margin: 0,
-        height: '36vw',
+        height: '60vh',
         color: '#fff',
         lineHeight: '160px',
         textAlign: 'center',
@@ -53,7 +54,8 @@ export default function ImageCarousel(props) {
     const imgDiv = imageAdressesList.map((imgUrl,index) => (
         <div key={index}>
             <Image
-                height={'36vw'}
+                height={'60vh'}
+                width={'100%'}
                 src={`${process.env.PUBLIC_URL}${imgUrl}`}
             />
         </div>
@@ -65,7 +67,7 @@ export default function ImageCarousel(props) {
 
     return (
         !skeletonShow?(
-        <div style={{ width: '48vw', textAlign: 'center', marginTop: '60px' }}>
+        <div className='images'>
             <Carousel afterChange={onChange} dotPosition={'bottom'} autoplay={true}>
                 {/* <div>
                 <Image
@@ -97,10 +99,12 @@ export default function ImageCarousel(props) {
                 </div> */}
             </Carousel >
         </div>):(
-            <div style={{ width: '48vw', textAlign: 'center', marginTop: '60px' }}>
-                <Skeleton.Image
-                style={{ width: '48vw', height: '36vw' }}  
-                active={true} />
+            <div className='skeleton'>
+                <div className='SkeletonDiv'>
+                    <Skeleton.Image
+                    style={{ width: '50vw', height: '60vh'}}  
+                    active={true} />
+                </div>               
             </div>
         )
     )

@@ -3,7 +3,7 @@ import IndexSearch from '../../components/IndexSearch/IndexSearch'
 import Indexbar from '../../components/Indexbar/Indexbar'
 import CourtInfo from '../../components/CourtInfo/CourtInfo'
 import Header from '../../components/Header/Header'
-import axios from 'axios';
+// import axios from 'axios';
 import './IndexPage.css'
 
 export default function IndexPage() {

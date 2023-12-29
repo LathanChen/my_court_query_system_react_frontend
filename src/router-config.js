@@ -2,12 +2,12 @@ import QueryForm from './components/QueryForm/QueryForm';
 import ShowQueryData from './components/ShowQueryData/ShowQueryData';
 import ShowTeamData from './components/ShowTeamData/ShowTeamData';
 import ShowTodayEvent from './components/ShowTodayEvent/ShowTodayEvent';
-import IndexSearch from './components/IndexSearch/IndexSearch';
-import TestDiv from './components/TestDiv/TestDiv';
-import Test2 from './components/Test2/Test2';
-import ImageCarousel from './components/ImageCarousel/ImageCarousel';
-import EvaluateZone from './components/EvaluateZone/EvaluateZone';
-import InfoListSearch from './components/InfoListSearch/InfoListSearch';
+// import IndexSearch from './components/IndexSearch/IndexSearch';
+// import TestDiv from './components/TestDiv/TestDiv';
+// import Test2 from './components/Test2/Test2';
+// import ImageCarousel from './components/ImageCarousel/ImageCarousel';
+// import EvaluateZone from './components/EvaluateZone/EvaluateZone';
+// import InfoListSearch from './components/InfoListSearch/InfoListSearch';
 import HomePage from './pages/HomePage/HomePage';
 import AdminPage from './pages/AdminPage/AdminPage';
 import LoginPage from './pages/LoginPage/LoginPage';
@@ -19,6 +19,7 @@ import AdminPageAddCourtInfo from './pages/AdminPageAddCourtInfo/AdminPageAddCou
 import AdminPageEditCourtInfoPage from './pages/AdminPageEditCourtInfoPage/AdminPageEditCourtInfoPage';
 import AdminPageCourtInfoListPage from './pages/AdminPageCourtInfoListPage/AdminPageCourtInfoListPage';
 import IndexPage from './pages/IndexPage/IndexPage';
+import GeneralUserPage from './pages/GeneralUserPage/GeneralUserPage';
 
 import CourtInfoPage from './pages/CourtInfoPage/CourtInfoPage';
 import ErrorMsg from './components/ErrorMsg/ErrorMsg';
@@ -99,6 +100,10 @@ const routes = [
   {
     path: '/IndexPage',
     element: <IndexPage/>,
+  },
+  {
+    path: '/GeneralUserPage',
+    element: <GeneralUserPage/>,
   },
 ];
 

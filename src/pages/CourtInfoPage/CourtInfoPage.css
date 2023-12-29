@@ -1,0 +1,24 @@
+/* style={{
+    marginTop: '5vh',
+    display: 'flex',
+    justifyContent: 'space-around',
+    width:'100%'
+}} */
+@media (min-width: 1001px) and (max-width: 2000px) {
+    #imageAndEvaluate {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 60px;
+    }
+}
+
+@media (max-width: 1000px) {
+    #imageAndEvaluate {
+        /* display: block; */
+        margin-top: 60px;        
+        width: 100%;
+    }
+}
+
+
+

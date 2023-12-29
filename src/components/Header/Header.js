@@ -26,7 +26,7 @@ export default function Header(props) {
 
     useEffect(() => {
         verifyTokenExpiration()
-    }, [])
+    }, [verifyTokenExpiration])
     
     const isLogin = useSelector(state => state.isLogin);
     // useEffect(() => {

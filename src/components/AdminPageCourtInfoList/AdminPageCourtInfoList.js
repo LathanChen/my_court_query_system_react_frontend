@@ -11,14 +11,14 @@ import TableRow from '@mui/material/TableRow';
 import { Image } from 'antd';
 import ConfirmationDialog from '../../components/ConfirmationDialog/ConfirmationDialog'
 // import './QueryForm.css'
-import Slider from "react-slick";
-import { Box, Typography } from '@mui/material';
+// import Slider from "react-slick";
+// import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import CardMedia from '@mui/material/CardMedia';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Link } from 'react-router-dom';
-import { Col, Row } from 'antd';
-import { Pagination } from 'antd';
+// import CircularProgress from '@mui/material/CircularProgress';
+// import { Link } from 'react-router-dom';
+// import { Col, Row } from 'antd';
+// import { Pagination } from 'antd';
 import api from '../../api';
 
 export default function AdminPageCourtInfoList() {

@@ -1,0 +1,35 @@
+@media (min-width: 1001px) and (max-width: 2000px) {
+    .images {
+        width: 45%;
+        text-align: 'center';
+        margin-top: 60px;
+    }
+    
+    .skeleton {
+        width: 45%;
+        text-align: 'center';
+        margin-top: 60px;
+    }
+
+    .SkeletonDiv {
+        width: 100%;
+        margin: auto;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 1000px) {
+    .images {
+        width: 100%;
+        text-align: 'center';
+        margin: auto;
+        margin-top: 60px;
+    }
+
+    .SkeletonDiv {
+        width: 50vw;
+        height: 60vh;
+        margin: auto;
+    }
+    
+}
+
