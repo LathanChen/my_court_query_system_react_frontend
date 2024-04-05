@@ -10,6 +10,11 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
+import {
+    Form,
+    Input,
+    Radio,
+} from 'antd';
 import axios from 'axios'; //部署用
 
 export default function AdminPageAddItempage(props) {
@@ -68,6 +73,8 @@ export default function AdminPageAddItempage(props) {
     const setTimetoString = timedata => {
         return dayjs(timedata).format('HH:mm');
     };
+
+    const [form] = Form.useForm();
 
     // 使用useNavigate回到上一页
     const navigate  = useNavigate();
@@ -167,24 +174,7 @@ export default function AdminPageAddItempage(props) {
     }, [showSuccessAlert, errorMsg])
 
     return (
-            <Box sx={{
-                // 开启flex布局
-                display: 'flex',
-                // 改变felx主轴方向
-                flexDirection: 'column',
-                // 主轴的对齐方式
-                // justifyContent: 'center',
-                // 交叉轴的对齐方式
-                alignItems: 'center',
-                width: '32vw',
-                height: '90vh',
-                margin: 'auto',
-                // padding: '1vh',
-                // marginLeft: '50px',
-                // marginTop:'50px',
-                border: '1px solid skyblue',
-                overflow: 'auto'
-            }}>
+            <Box>
                 <div style={{ marginTop: '3vh' }}>
                     <Typography variant="h5" color="primary">填写完成后点击确认即可添加信息</Typography>
                 </div>
@@ -200,203 +190,83 @@ export default function AdminPageAddItempage(props) {
 
                 </div>
 
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '30vw',
-                    padding: '5px',
-                    height: '8vh'
-                }}>
-                    <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
-                    {/* <div style={{ flex:'0 0 5vw',textAlign:'right' }}> */}
-                        <Typography variant="subtitle2" color="primary">项目：</Typography>
-                    </div>
-                    <FormControl sx={{ width: '50%' }}>
-                        <InputLabel id="demo-simple-select-label1" sx={{ fontSize: "10px", textAlign: 'center' }}>请选择项目</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label1"
-                            id="demo-simple-select"
-                            value={courtOpenItemId}
-                            label="请选择项目"
-                            onChange={changeCourtOpenItemId}
-                            sx={{ height: '42px' }}
-                        >
-                            {(Array.isArray(itemnames)) && (itemnames.map((item) =>
-                                (<MenuItem value={item.itemInfoId} key={item.itemInfoId}>{item.itemInfoName}</MenuItem>)))}
-                        </Select>
-                    </FormControl>
-                </div>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '30vw',
-                    padding: '5px',
-                    height: '8vh'
-                }}>
-                    <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle2" color="primary">地点：</Typography>
-                    </div>
-                    <FormControl sx={{ width: '50%' }}>
-                        <InputLabel id="demo-simple-select-label1" sx={{ fontSize: "10px", textAlign: 'center' }}>请选择地点</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label1"
-                            id="demo-simple-select"
-                            value={courtOpenCourtId}
-                            label="请选择时间段"
-                            onChange={changeCourtOpenCourtId}
-                            sx={{ height: '42px' }}
-                        >
-                            {(Array.isArray(courtnames)) && courtnames.map((item) =>
-                                (<MenuItem value={item.courtId} key={item.courtId}>{item.courtName}</MenuItem>))}
-                        </Select>
-                    </FormControl>
-                </div>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '30vw',
-                    padding: '5px',
-                    height: '8vh'
-                }}>
-                    <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle2" color="primary">周数：</Typography>
-                    </div>
-                    <FormControl sx={{ width: '50%' }}>
-                        <InputLabel id="demo-simple-select-label1" sx={{ fontSize: "10px", textAlign: 'center' }}>请选择周数</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label1"
-                            id="demo-simple-select"
-                            value={courtOpenWeekNum}
-                            label="请选择时间段"
-                            onChange={changeCourtOpenWeekNum}
-                            sx={{ height: '42px' }}
-                        >
-                            <MenuItem value={7}>每周</MenuItem>
-                            <MenuItem value={1}>第一周</MenuItem>
-                            <MenuItem value={2}>第二周</MenuItem>
-                            <MenuItem value={3}>第三周</MenuItem>
-                            <MenuItem value={4}>第四周</MenuItem>
-                            <MenuItem value={5}>第五周</MenuItem>
-                            <MenuItem value={6}>第六周</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '30vw',
-                    padding: '5px',
-                    height: '8vh'
-                }}>
-                    <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle2" color="primary">星期：</Typography>
-                    </div>
-                    <FormControl sx={{ width: '50%' }}>
-                        <InputLabel id="demo-simple-select-label1" sx={{ fontSize: "10px", textAlign: 'center' }}>请选择星期</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label1"
-                            id="demo-simple-select"
-                            value={courtOpenWeekday}
-                            label="请选择时间段"
-                            onChange={changeCourtOpenWeekday}
-                            sx={{ height: '42px' }}
-                        >
-                            <MenuItem value={1}>星期一</MenuItem>
-                            <MenuItem value={2}>星期二</MenuItem>
-                            <MenuItem value={3}>星期三</MenuItem>
-                            <MenuItem value={4}>星期四</MenuItem>
-                            <MenuItem value={5}>星期五</MenuItem>
-                            <MenuItem value={6}>星期六</MenuItem>
-                            <MenuItem value={7}>星期日</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '30vw',
-                    padding: '5px',
-                    height: '8vh'
-                }}>
-                    <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle2" color="primary">时间段：</Typography>
-                    </div>
-                    <FormControl sx={{ width: '50%' }}>
-                        <InputLabel id="demo-simple-select-label1" sx={{ fontSize: "10px", textAlign: 'center' }}>请选择时间段</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label1"
-                            id="demo-simple-select"
-                            value={courtOpenTimeZone}
-                            label="请选择时间段"
-                            onChange={changeCourtOpenTimeZone}
-                            sx={{ height: '42px' }}
-                        >
-                            <MenuItem value={'1'}>上午</MenuItem>
-                            <MenuItem value={'2'}>下午</MenuItem>
-                            <MenuItem value={'3'}>晚上</MenuItem>
-                        </Select>
-                    </FormControl>
-                </div>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '30vw',
-                    padding: '5px',
-                    height: '8vh'
-                }}>
-                    <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle2" color="primary">开始时间：</Typography>
-                    </div>
-                    <FormControl sx={{ width: '50%', }}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DatePicker']}>
-                                <TimePicker
-                                    value={courtOpenBeginTime}
-                                    onChange={changeCourtOpenBeginTime}
-                                    label={<Typography sx={{ fontSize: '12px' }}>请选择开始时间</Typography>}
-                                    slotProps={{ textField: { size: 'small' } }} />
-                            </DemoContainer>
-                        </LocalizationProvider>
-                    </FormControl>
-                </div>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '30vw',
-                    padding: '5px',
-                    height: '8vh'
-                }}>
-                    <div style={{ width: '5vw', display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="subtitle2" color="primary">结束时间：</Typography>
-                    </div>
-                    <FormControl sx={{ width: '50%', }}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DemoContainer components={['DatePicker']}>
-                                <TimePicker
-                                    value={courtOpenEndTime}
-                                    onChange={changeCourtOpenEndTime}
-                                    label={<Typography sx={{ fontSize: '12px' }}>请选择结束时间</Typography>}
-                                    slotProps={{ textField: { size: 'small' } }} />
-                            </DemoContainer>
-                        </LocalizationProvider>
-                    </FormControl>
+                <div>
+                    <Form
+                        form={form}
+                        labelCol={{ span: 4 }}
+                        wrapperCol={{ span: 20 }}
+                        layout="horizontal"
+                        style={{ maxWidth: 1000, textAlign: "left" }}
+                    >
+                        <Form.Item label="種類" name="courtOpenItemId" 
+                        rules={[{ 
+                            required: true,
+                            message:"入力必須項目です" 
+                            }]}>
+                                <Input/>
+                        </Form.Item>
+                        <Form.Item label="ニックネーム" name="nickName" rules={[{ required: true }]}>
+                                <Input/>
+                        </Form.Item>
+                        <Form.Item label="ニックネーム" name="nickName" rules={[{ required: true }]}>
+                                <Input/>
+                        </Form.Item>
+                        <Form.Item label="ニックネーム" name="nickName" rules={[{ required: true }]}>
+                                <Input/>
+                        </Form.Item>
+                        <Form.Item label="ニックネーム" name="nickName" rules={[{ required: true }]}>
+                                <Input/>
+                        </Form.Item>
+                    </Form>
                 </div>
 
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    marginTop: '2vh'
-                }}>
-                    <Button variant="contained" sx={{ marginRight: '25vh' }} onClick={insertNewOpenInfo}>确认</Button>
-                    <Button variant="outlined" onClick={clearForm}>取消</Button>
-                </Box>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
             </Box>
     )
 }

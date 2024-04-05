@@ -7,13 +7,15 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import api from '../../api';
-import axios from 'axios'; //部署用
+// import axios from 'axios'; //部署用
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { useNavigate,useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
+import { useVerifyTokenExpiration } from '../../common/verifyTokenexpiration';
+import { breadcrumbNameMap } from '../../common/data/breadcrumbNameMap';
 
 const drawerWidth = 240;
 
@@ -43,15 +45,12 @@ const AppBar = styled(MuiAppBar, {
 
 export default function AdminHeader(props) {
 
+  const isLogin = useSelector(state => state.isLogin);
   // useLocation hooks =>返回包含有关当前url信息的Location 对象
-    const location = useLocation();
+  const location = useLocation();
 
-    const breadcrumbNameMap = {
-        'adminpage': '信息列表',
-        'adminpage/addinfo': '添加信息',
-        'adminpage/editinfo': '编辑信息',
-        'adminpage/addcourtinfo': '添加场馆',
-    };
+  // 通用函数，验证目前的登陆是否有效
+  const verifyTokenExpiration = useVerifyTokenExpiration();
 
   const navigate = useNavigate();
 
@@ -59,22 +58,16 @@ export default function AdminHeader(props) {
     props.handleSliderOpen()
   };
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+
   const changeIsLogin = () => {
     const fetchData = async () => {
       try {
         const response = await api.get('/user/logout');
         // 请求成功后的操作
         if (response.data.code === 200) {
-          dispatch({
-            type: "LOGOUT",
-            payload: false,
-          });
-          // Storage 对象是用于访问浏览器的本地存储（例如 localStorage 或 sessionStorage）的接口。无论你存储的是什么类型的值，
-          // 在存储过程中都会被自动转换为字符串。当你从存储中获取值时，这些字符串会被原样返回。
-          // 所以这里实际存入的是"null"字符串
-          localStorage.removeItem("token");
-          console.log(localStorage);
+          // localStorage.removeItem("token");
+          // console.log(localStorage);
           enterHomePage()
         }
         else {
@@ -100,80 +93,91 @@ export default function AdminHeader(props) {
 
   const enterHomePage = () => navigate('/IndexPage')
   // console.log(props.routerMes)
-  
+
   // 由于获取当前路由地址的动作是在AdminPage文件的useEffect函数中进行的，
   // 而useEffect先执行的是一个一秒的定时器（里面执行了axios请求和加载动画），
   // 再执行获取路由地址 => 获取路由的中文名称 =>通过props传给本组件（没高兴把这些代码定时器里）
   // 由于js是单线程，所以必须等定时器里的执行完后才能进行下面的动作
   // 所以会造成本组件在加载时，props没有值
-  const [routerMes,setRouterMes] = useState([])
+  const [routerMes, setRouterMes] = useState([])
 
-  const authFetch = async () => {
-    try {
-        console.log('try')
-        const response = await api.get('/user/authority');
-        if (response.data.code === 200) {
-            console.log(response.data)
-            for (const element of response.data.data) {
-                if (element === "test") {
-                    dispatch({
-                        type: "LOGIN",
-                        payload: true,
-                    })
-                    break
-                }
-            }
-            let timer
-            await new Promise((resolve) => {
-              setTimeout(() => {
-                props.handleLoading(false)
-                resolve()
-              },500)
-            })
-            clearTimeout(timer)
-            return true
-        }
-        else {
-            dispatch({
-                type: "LOGOUT",
-                payload: false,
-            })
-            localStorage.removeItem("token");
-            navigate('/ErrorMsg')
-            return false
-        }
-        
-    } 
-    catch (error) {
-        console.error(error);
-    }
-};
+  //   const authFetch = async () => {
+  //     try {
+  //         console.log('try')
+  //         const response = await api.get('/user/authority');
+  //         if (response.data.code === 200) {
+  //             console.log(response.data)
+  //             for (const element of response.data.data) {
+  //                 if (element === "test") {
+  //                     dispatch({
+  //                         type: "LOGIN",
+  //                         payload: true,
+  //                     })
+  //                     break
+  //                 }
+  //             }
+  //             let timer
+  //             await new Promise((resolve) => {
+  //               setTimeout(() => {
+  //                 props.handleLoading(false)
+  //                 resolve()
+  //               },500)
+  //             })
+  //             clearTimeout(timer)
+  //             return true
+  //         }
+  //         else {
+  //             dispatch({
+  //                 type: "LOGOUT",
+  //                 payload: false,
+  //             })
+  //             localStorage.removeItem("token");
+  //             navigate('/ErrorMsg')
+  //             return false
+  //         }
+
+  //     } 
+  //     catch (error) {
+  //         console.error(error);
+  //     }
+  // };
+
+
+  // useEffect(() => {
+  //   verifyTokenExpiration()
+  // }, [verifyTokenExpiration])
 
   useEffect(() => {
     let newBreadcrumbs
-    props.handleLoading(true)
-    if (authFetch()){
-    const pathnames = location.pathname.split('/').filter((x) => x);
-        // console.log(pathnames)
-        // _,省略之前的参数
-        newBreadcrumbs = pathnames.map((_, index) => {
-            // slice()是JavaScript中数组的一个方法，它用于从原始数组中提取指定范围的元素，并返回一个新的数组，不会修改原始数组。
-            // 在 JavaScript 中，join() 方法是数组对象的一个方法，它用于将数组中的所有元素转换成一个字符串，并通过指定的分隔符连接起来。
-            // 这里生成了若干个对象，第一次：pathnames数组的第一个元素，然后查找breadcrumbNameMap中对应的路径名称
-            // 第二次：pathnames数组的第一个和第二个元素，通过'/'将两个元素连接，然后查找breadcrumbNameMap中对应的路径名称
-            // 以此类推，就可以获得从一级路由到当前页面的所有路由地址的名称
-            const url = `${pathnames.slice(0, index + 1).join('/')}`;
-            return {
-                url,
-                name: breadcrumbNameMap[url],
-            };
-        })}
-    if (newBreadcrumbs){
-      const _routerMes = newBreadcrumbs.filter((value) => value.name !== undefined);
-      setRouterMes(_routerMes)
+    // props.handleLoading(true)
+    if (verifyTokenExpiration()) {
+      // debugger
+      // props.handleLoading(false)
+      const pathnames = location.pathname.split('/').filter((x) => x);
+      // console.log(pathnames)
+      // _,省略之前的参数
+      newBreadcrumbs = pathnames.map((_, index) => {
+        // slice()是JavaScript中数组的一个方法，它用于从原始数组中提取指定范围的元素，并返回一个新的数组，不会修改原始数组。
+        // 在 JavaScript 中，join() 方法是数组对象的一个方法，它用于将数组中的所有元素转换成一个字符串，并通过指定的分隔符连接起来。
+        // 这里生成了若干个对象，第一次：pathnames数组的第一个元素，然后查找breadcrumbNameMap中对应的路径名称
+        // 第二次：pathnames数组的第一个和第二个元素，通过'/'将两个元素连接，然后查找breadcrumbNameMap中对应的路径名称
+        // 以此类推，就可以获得从一级路由到当前页面的所有路由地址的名称
+        const url = `${pathnames.slice(0, index + 1).join('/')}`;
+        return {
+          url,
+          name: breadcrumbNameMap[url],
+        };
+      })
+      if (newBreadcrumbs) {
+        const _routerMes = newBreadcrumbs.filter((value) => value.name !== undefined);
+        setRouterMes(_routerMes)
+      }
     }
-  },[location])
-  
+    else { 
+      navigate('/ErrorMsg')
+    }
+  }, [isLogin, location.pathname, navigate,verifyTokenExpiration])
+
   // console.log(routerMes[1].url)
 
   return (
@@ -191,7 +195,7 @@ export default function AdminHeader(props) {
         <div role="presentation">
           {(routerMes && <Breadcrumbs aria-label="breadcrumb" sx={{ color: 'white' }}>
             {routerMes.map((routerInfo, index) => (
-              (index === routerMes.length - 1)?(
+              (index === routerMes.length - 1) ? (
                 <Typography key={routerInfo.url} color="white">
                   {routerInfo.name}
                 </Typography>

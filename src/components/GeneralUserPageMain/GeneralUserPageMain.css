@@ -23,6 +23,35 @@
     justify-content: space-between;
 }
 
+#Entry-History-Title {
+    text-align: center;
+}
+
+#Entry-History-Infos {
+
+}
+
+#Entry-History-Info {
+    height: 12rem;
+    width: 80%;
+    border: 1px solid skyblue;
+    margin: auto;
+}
+
+#Entry-History-Info-Title-Text {
+    line-height: 3rem;
+}
+
+#Entry-History-Info-Title {
+    height: 3rem;
+    background-color: gold;
+    padding-left: 0.5rem;
+}
+
+#Entry-History-Info-Detail {
+    padding: 1rem;
+}
+
 @media (min-width: 1000px) and (max-width: 2000px) {
     #userInfo-form {
         width: 500px;

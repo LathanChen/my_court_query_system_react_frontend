@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import api from '../../api';
 import { Typography, Button, Box } from '@mui/material';
@@ -23,7 +23,7 @@ export default function Indexbar(props) {
 
     const [courtInfoList, setCourtInfoList] = useState([])
 
-    const [courtInfoListForPage, setCourtInfoListForPage] = useState([])
+    // const [courtInfoListForPage, setCourtInfoListForPage] = useState([])
 
     const [startIndex,setStartIndex] = useState(0)
 
@@ -50,7 +50,7 @@ export default function Indexbar(props) {
     const [currentPage, setCurrentPage] = useState(1)
     // 分页器中页码被按下时
 
-    const [timerId, setTimerId] = useState(null);
+    const [timerId] = useState(null);
 
     // const $dateFromProps = props.selectedDate
     const [paramsFromProps, setParamsFromProps] = useState('');
@@ -71,17 +71,13 @@ export default function Indexbar(props) {
     const handleChangeMailAddress = (e) => {
         setMailAddress(e.target.value)
     }
+    
+    const isLogin = useSelector(state => state.isLogin);
 
-    const getCourtDatas = async (page, newParams) => {
+    const getCourtDatas = useCallback(async (newParams) => {
         try {
             // ...params语法,对象的扩展运算符
-            let params = {}
-            if (newParams) {
-                params = { ...newParams }
-            }
-            else {
-                params = { ...props.searchParams }
-            }
+            let params = newParams ? { ...newParams } : { ...props.searchParams }
             // console.log(params)
             const response = await axios.get('/courtOpenInfo/getInfo',{params})
             console.log(response.data)
@@ -147,26 +143,45 @@ export default function Indexbar(props) {
         catch (error) {
             console.log(error)
         }
-    }
+    },[props.searchParams])
 
-    const getEventDatas = async (page, newParams) => {
-        try {
-            let params = {}
-            console.log(newParams)
-            if (newParams) {
-                params = { ...newParams }
+    const getEventDatas = useCallback(async (newParams) => {
+        console.log(props.searchParams)
+        const entryEvent = async (eventInfoId) => {
+            // 登录状态下
+            if (isLogin) {
+                const params = { eventInfoId }
+                const response = await api.post('/eventEntryInfo/setInfo', params)
+                // Todo 直接向后台发送请求
+                console.log(response)
+                console.log("aaaaaaaaaaa")
+                getEventDatas()
+                // setCurrentPage(1)
             }
             else {
-                params = { ...props.searchParams, eventOpenDay: props.searchParams.selectedDate }
+                setOpen(true)
+                setEventId(eventInfoId)
             }
+            console.log(eventInfoId)
+        }
+
+        try {
+            console.log(newParams)
+            const {courtOpenItemId:eventItemId,courtOpenTimeZone:eventOpenTimeZone,selectedDate:eventOpenDay} = props.searchParams
+            let params = newParams ? { ...newParams } : { eventItemId,eventOpenTimeZone,eventOpenDay }
             // ...params语法,对象的扩展运算符
             console.log(props.searchParams)
-            const response = await api.get('/eventInfo/getInfo',{params})
-            console.log(response.data)
+            const _response = await api.get('/eventInfo/getInfo',{params})
+            console.log(_response.data)
             // settotalItems(response.data.total)
             // setResponseData(response.data)
-            const listLength = response.data.length
-            if (listLength > 0) {
+
+            let response = _response.data.data
+            const listLength = response?.length || 0
+            console.log(_response)
+            console.log(response)
+            // 后台查询到有数据
+            if (_response.data.code === 200 && listLength > 0) {
                 settotalItems(listLength)
                 setMsg('')
                 setCourtInfoListIsNull(false)
@@ -182,7 +197,7 @@ export default function Indexbar(props) {
                 //         courtAdress
                 //     };
                 // })
-                response.data = response.data.map((item) => {
+                response = response.map((item) => {
                     const { eventOpenTime, eventInfoId, itemInfo, eventEnrollment, eventMaxEnrollment, eventMaleCost, eventFemaleCost, registered } = item;
                     const { courtName, courtAdress } = item.courtInfo;
 
@@ -200,8 +215,8 @@ export default function Indexbar(props) {
                         registered
                     };
                 })
-                // console.log(response.data)
-                setCourtInfoList(response.data.map((item) => {
+                console.log(response)
+                setCourtInfoList(response.map((item) => {
                     return (
                         <div className='signup' key={item.id}>
                             <Typography
@@ -243,9 +258,9 @@ export default function Indexbar(props) {
                         </div>
                     )
                 }))
-                findNextPageInfos(1)
+                // findNextPageInfos(1)
             }
-            else {
+            else if(_response.data.code === 404){
                 setMsg('暂无数据！')
                 setCourtInfoListIsNull(true)
             }
@@ -253,7 +268,7 @@ export default function Indexbar(props) {
         catch (error) {
             console.log(error)
         }
-    }
+    },[props.searchParams,isLogin])
 
     function calculateWeekDayOfMonth(paramdate) {
         const date = new Date(paramdate)
@@ -302,19 +317,17 @@ export default function Indexbar(props) {
         // 计算第几周、星期几
         const params = calculateWeekDayOfMonth(newSelectDate)
 
-        if (props.searchFlg === 0 && props.searchParams != null) {
+        if (props.searchFlg === 0 && props.searchParams !== null) {
             // setIsLoading(true)
-            getCourtDatas(currentPage, {
-                courtOpenWeekNum: params.weekNumber,
+            getCourtDatas({courtOpenWeekNum: params.weekNumber,
                 courtOpenWeekday: params.dayOfWeekInWeek,
                 courtOpenTimeZone: props.searchParams.courtOpenTimeZone,
                 courtOpenItemId: props.searchParams.courtOpenItemId,
             })
         }
-        else if (props.searchFlg === 1 && props.searchParams != null) {
+        else if (props.searchFlg === 1 && props.searchParams !== null) {
             // setIsLoading(true)
-            getEventDatas(currentPage, {
-                eventOpenDay: formattedDate,
+            getEventDatas({eventOpenDay: formattedDate,
                 eventOpenTimeZone: props.searchParams?.courtOpenTimeZone,
                 eventItemId: props.searchParams?.courtOpenItemId,
             })
@@ -360,8 +373,7 @@ export default function Indexbar(props) {
 
         if (props.searchFlg === 0 && props.searchParams != null) {
             // setIsLoading(true)
-            getCourtDatas(currentPage, {
-                courtOpenWeekNum: params.weekNumber,
+            getCourtDatas({courtOpenWeekNum: params.weekNumber,
                 courtOpenWeekday: params.dayOfWeekInWeek,
                 courtOpenTimeZone: props.searchParams.courtOpenTimeZone,
                 courtOpenItemId: props.searchParams.courtOpenItemId,
@@ -369,8 +381,7 @@ export default function Indexbar(props) {
         }
         else if (props.searchFlg === 1 && props.searchParams != null) {
             // setIsLoading(true)
-            getEventDatas(currentPage, {
-                eventOpenDay: formattedDate,
+            getEventDatas({eventOpenDay: formattedDate,
                 eventOpenTimeZone: props.searchParams?.courtOpenTimeZone,
                 eventItemId: props.searchParams?.courtOpenItemId,
             })
@@ -388,26 +399,6 @@ export default function Indexbar(props) {
         clearTimeout(timer)
     }
 
-    const isLogin = useSelector(state => state.isLogin);
-
-    const entryEvent = async (eventInfoId) => {
-        // 登录状态下
-        if (isLogin) {
-            const params = { eventInfoId }
-            const response = await api.post('/eventEntryInfo/setInfo', params)
-            // Todo 直接向后台发送请求
-            console.log(response)
-            console.log("aaaaaaaaaaa")
-            getEventDatas(1)
-            setCurrentPage(1)
-        }
-        else {
-            setOpen(true)
-            setEventId(eventInfoId)
-        }
-        console.log(eventInfoId)
-    }
-
     const entryEventWithNotLoggedIn = async () => {
         console.log(nickName)
         console.log(mailAddress)
@@ -417,7 +408,7 @@ export default function Indexbar(props) {
         console.log(response)
         console.log("bbbbbbbbbbbb")
         setOpen(false)
-        getEventDatas(1)
+        getEventDatas()
         setCurrentPage(1)
     }
 
@@ -479,13 +470,13 @@ export default function Indexbar(props) {
             setParamsFromProps(props.searchParams.selectedDate)
 
             // console.log(dateFromProps)
-            if (props.searchFlg === 0 && props.searchParams != null) {
+            if (props.searchFlg === 0) {
                 setIsLoading(true)
-                getCourtDatas(currentPage)
+                getCourtDatas()
             }
-            else if (props.searchFlg === 1 && props.searchParams != null) {
+            else if (props.searchFlg === 1) {
                 setIsLoading(true)
-                getEventDatas(currentPage)
+                getEventDatas()
             }
         }
         const timer = setTimeout(() => {
@@ -498,7 +489,7 @@ export default function Indexbar(props) {
                 clearTimeout(timer);
             }
         };
-    }, [props.searchParams])
+    }, [props.searchParams, props.searchFlg, currentPage, getCourtDatas, getEventDatas])
 
     useEffect(() => {
         // setIsLoading(true)
@@ -516,7 +507,7 @@ export default function Indexbar(props) {
     }, [timerId]);
 
     const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
+    // const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     // const style = {
