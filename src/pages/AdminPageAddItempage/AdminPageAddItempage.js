@@ -6,7 +6,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
@@ -14,7 +13,8 @@ import {
     Form,
     Input,
     Radio,
-    Select 
+    Select,
+    TimePicker
 } from 'antd';
 import axios from 'axios'; //部署用
 
@@ -103,6 +103,13 @@ export default function AdminPageAddItempage(props) {
         }
         return false;
     };
+
+    const validateTime = (_,value) => {
+        if (value) {
+            console.log(value)
+            return Promise.resolve();
+        }
+    }
 
     const insertNewOpenInfo = () => {
 
@@ -211,10 +218,10 @@ export default function AdminPageAddItempage(props) {
                         </Select>
                     </Form.Item>
                     <Form.Item label="場所" name="courtOpenCourtId"
-                    rules={[{
-                        required: true,
-                        message: "入力必須項目です"
-                    }]}>
+                        rules={[{
+                            required: true,
+                            message: "入力必須項目です"
+                        }]}>
                         <Select>
                             {/* <Select.Option value="demo">Demo</Select.Option> */}
                             {(Array.isArray(courtnames)) && courtnames.map((item) =>
@@ -222,10 +229,10 @@ export default function AdminPageAddItempage(props) {
                         </Select>
                     </Form.Item>
                     <Form.Item label="週目" name="courtOpenWeekNum"
-                    rules={[{
-                        required: true,
-                        message: "入力必須項目です"
-                    }]}>
+                        rules={[{
+                            required: true,
+                            message: "入力必須項目です"
+                        }]}>
                         <Select>
                             <Select.Option value="7">毎週</Select.Option>
                             <Select.Option value="1">一週目</Select.Option>
@@ -236,14 +243,44 @@ export default function AdminPageAddItempage(props) {
                             <Select.Option value="6">六週目</Select.Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item label="ニックネーム" name="nickName" rules={[{ required: true }]}>
-                        <Input />
+                    <Form.Item label="曜日" name="courtOpenWeekday"
+                        rules={[{
+                            required: true,
+                            message: "入力必須項目です"
+                        }]}>
+                        <Select>
+                            <Select.Option value="1">月曜日</Select.Option>
+                            <Select.Option value="2">火曜日</Select.Option>
+                            <Select.Option value="3">水曜日</Select.Option>
+                            <Select.Option value="4">木曜日</Select.Option>
+                            <Select.Option value="5">金曜日</Select.Option>
+                            <Select.Option value="6">土曜日</Select.Option>
+                            <Select.Option value="7">日曜日</Select.Option>
+                        </Select>
                     </Form.Item>
-                    <Form.Item label="ニックネーム" name="nickName" rules={[{ required: true }]}>
-                        <Input />
+                    <Form.Item label="時間帯" name="courtOpenTimeZone"
+                        rules={[{
+                            required: true,
+                            message: "入力必須項目です"
+                        }]}>
+                        <Select>
+                            <Select.Option value="1">午前</Select.Option>
+                            <Select.Option value="2">午後</Select.Option>
+                            <Select.Option value="3">夜</Select.Option>
+                        </Select>
                     </Form.Item>
-                    <Form.Item label="ニックネーム" name="nickName" rules={[{ required: true }]}>
-                        <Input />
+                    <Form.Item 
+                    label="時間帯"
+                    rules={[{ validator: validateTime }]}
+                    validateTrigger="onBlur"
+                    >
+                        <TimePicker.RangePicker
+                        format="h:mm:ss A"
+                        onChange={(time) => console.log(time)}
+                        minuteStep="15"
+                        secondStep="60"
+                        status
+                        />
                     </Form.Item>
                 </Form>
             </div>

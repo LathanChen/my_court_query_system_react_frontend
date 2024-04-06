@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -150,7 +150,8 @@ export default function AdminHeader(props) {
   useEffect(() => {
     let newBreadcrumbs
     // props.handleLoading(true)
-    if (verifyTokenExpiration()) {
+    const getVrifyTokenExpirationResult = async() => {
+      if(await verifyTokenExpiration()) {
       // debugger
       // props.handleLoading(false)
       const pathnames = location.pathname.split('/').filter((x) => x);
@@ -172,11 +173,13 @@ export default function AdminHeader(props) {
         const _routerMes = newBreadcrumbs.filter((value) => value.name !== undefined);
         setRouterMes(_routerMes)
       }
+      }
+      else { 
+        navigate('/ErrorMsg')
+      }
     }
-    else { 
-      navigate('/ErrorMsg')
-    }
-  }, [isLogin, location.pathname, navigate,verifyTokenExpiration])
+    getVrifyTokenExpirationResult()
+  }, [location.pathname, navigate,verifyTokenExpiration])
 
   // console.log(routerMes[1].url)
 
