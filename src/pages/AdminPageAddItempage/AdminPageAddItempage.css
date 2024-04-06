@@ -1,0 +1,19 @@
+#alert-container {
+    width: 40%;
+    margin: auto;
+    height: 3rem;
+}
+
+#add-item-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 500px;
+    height: 470px;
+    margin: 3rem auto;
+}
+
+#button-container {
+    display: flex;
+    justify-content: space-around;
+}
