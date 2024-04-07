@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,7 +7,6 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { useSelector } from 'react-redux';
 import api from '../../api';
 // import axios from 'axios'; //部署用
 import Menu from '@mui/material/Menu';
@@ -45,7 +44,6 @@ const AppBar = styled(MuiAppBar, {
 
 export default function AdminHeader(props) {
 
-  const isLogin = useSelector(state => state.isLogin);
   // useLocation hooks =>返回包含有关当前url信息的Location 对象
   const location = useLocation();
 

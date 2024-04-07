@@ -16,10 +16,7 @@ export default function AdminPageCourtInfoListPage() {
     // },[])
 
     return (
-        <div style={{
-            display:'flex',
-            border: '1px solid skyblue',
-        }}>
+        <div>
             <AdminPageCourtInfoList></AdminPageCourtInfoList>
         </div>
     )

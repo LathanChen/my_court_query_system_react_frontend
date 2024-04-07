@@ -1,16 +1,8 @@
 import Box from '@mui/material/Box';
-import CssBaseline from '@mui/material/CssBaseline';
-import { styled, useTheme } from '@mui/material/styles';
 import AdminHeader from '../../components/AdminHeader/AdminHeader';
 import AdminMain from '../../components/AdminMain/AdminMain';
 import AdminSlider from '../../components/AdminSlider/AdminSlider';
-import ErrorMsg from '../../components/ErrorMsg/ErrorMsg';
-import CircularProgress from '@mui/material/CircularProgress';
-import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import api from '../../api';
-import { authFetch } from '../../authFetch';
+import React, { useState } from 'react';
 
 export default function AdminPage() {
     // // useLocation hooks =>返回包含有关当前url信息的Location 对象
@@ -22,12 +14,8 @@ export default function AdminPage() {
     //     'adminpage/editinfo': '编辑信息',
     // };
 
-    const dispatch = useDispatch();
-
     // useLocation hooks =>返回包含有关当前url信息的Location 对象
-    const location = useLocation();
-
-    const adminHasLogin = useSelector(state => state.isLogin);
+    // const location = useLocation();
 
 // -------------------------------------------------------------
     // 8月31日：将根据路由链接变化，向后台发送请求验证权限的功能移动到AdminMain组件
@@ -100,17 +88,18 @@ export default function AdminPage() {
 
     
 
-    useEffect(() => {
-        const timer = setTimeout(() => { 
-            setLoading(false)
-        },500)
-        return () => clearTimeout(timer)
-    }
-    ,[]);
+    // useEffect(() => {
+    //     setLoading(true)
+    //     new Promise((resolve) => {
+    //         setTimeout(() =>{
+    //           resolve()
+    //         }, 500)
+    //       }).then(() => setLoading(false))
+    // }
+    // ,[location.pathname]);
 
-    const [loading, setLoading] = useState(true); // 添加加载状态
+    // const [loading, setLoading] = useState(true); // 添加加载状态
 
-    const theme = useTheme();
     const [open, setOpen] = useState(true);
 
     const handleSliderOpen = () => {
@@ -121,19 +110,6 @@ export default function AdminPage() {
         setOpen(false);
     };
 
-    const handleLoading = (data) => {
-        setLoading(data);
-    };
-
-    // 用于储存AdminMain组件中，当前跳转到的路由组件的url等信息
-    const [routerMes, setRouterMes] = useState([])
-
-    // 与AdminMain组件通信，将获取到的路由组件信息存到本组件的状态中
-    const getMainRouterMes = (data) => {
-        console.log(data)
-        setRouterMes(data)
-    }
-    
     // 9月1日修改
     // -------------------------------------------------------
     // return (
@@ -177,17 +153,12 @@ export default function AdminPage() {
             // 第三、实现了面包屑功能
 
             <Box
-                sx={loading?{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100vh', // 可根据实际情况调整高度
-                }:{display: 'flex'}}
+                sx={{display: 'flex'}}
             >
-                <AdminHeader open={open} handleSliderOpen={handleSliderOpen} handleLoading={handleLoading}/>
+                <AdminHeader open={open} handleSliderOpen={handleSliderOpen}/>
                 <AdminSlider open={open} handleSliderClose={handleSliderClose} />
                 {/* 引入加载动画 */}
-                {loading?<CircularProgress />:<AdminMain open={open} getMainRouterMes={getMainRouterMes} />}
+                <AdminMain open={open} />
             </Box>
     );
 
