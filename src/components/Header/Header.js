@@ -89,7 +89,7 @@ export default function Header(props) {
             }
             finally{
                 // setIsLogin(false)
-                navigate(0)
+                tohomepage()
             }
         };
 
@@ -99,6 +99,8 @@ export default function Header(props) {
     const tohomepage = () => navigate('/IndexPage')
 
     const enterAdminPage = () => navigate('/adminpage')
+
+    const enterGeneralUserPage = () => navigate('/GeneralUserPage')
 
     return (
         <AppBar>
@@ -131,7 +133,7 @@ export default function Header(props) {
                             onClose={handleMenuClose}
                         >
                             <MenuItem onClick={enterAdminPage}>进入管理界面</MenuItem>
-                            <MenuItem onClick={handleMenuClose}>敬请期待！</MenuItem>
+                            <MenuItem onClick={enterGeneralUserPage}>マイページ</MenuItem>
                             <MenuItem onClick={handleMenuClose}>敬请期待！</MenuItem>
                         </Menu>
                     </div>

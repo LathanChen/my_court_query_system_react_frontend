@@ -96,6 +96,13 @@ export default function AdminSlider(props) {
         </DrawerHeader>
         <Divider />
         <List>
+        <ListItemButton onClick={() => navigate("/dashboard")}>
+            <ListItemIcon>
+              <ListAltIcon />
+            </ListItemIcon>
+            <ListItemText primary="ダッシュボード" />
+            {/* {openInfobox ? <ExpandLess /> : <ExpandMore />} */}
+          </ListItemButton>
           <ListItemButton onClick={handleInfoClick}>
             <ListItemIcon>
               <ListAltIcon />

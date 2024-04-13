@@ -1,18 +1,18 @@
-import React, { useState,useEffect,useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 // import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import {  Box, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import {
     Button,
     Form,
     Input,
     Radio,
+    Empty
 } from 'antd';
 // import Paper from '@mui/material/Paper';
 // import Table from '@mui/material/Table';
@@ -102,6 +102,8 @@ export default function GeneralUserPageMain() {
 
     const [notEditable, setNotEditable] = useState(true)
 
+    const [userEntryHistoryData, setUserEntryHistoryData] = useState([])
+
     // 创建表单组件的实例对象
     const [form] = Form.useForm();
 
@@ -110,18 +112,14 @@ export default function GeneralUserPageMain() {
         setNotEditable(true)
     };
 
+    const [userNickName, setUserNickName] = useState("")
 
-    // 获取store中的用户登录状态
-    const isLogin = useSelector(state => state.isLogin);
-
-    const [userNickName,setUserNickName] = useState("")
-
-    const [beforeEditUserInfo,setBeforeEditUserInfo] = useState({})
+    const [beforeEditUserInfo, setBeforeEditUserInfo] = useState({})
 
     // 取得用户信息
-    const fetchUserInfo = useCallback(async() => {
+    const fetchUserInfo = useCallback(async () => {
         try {
-            const userInfoResponse = await api.get('/user/fecthUserInfo')
+            const userInfoResponse = await api.get('/user/UserInfo')
             console.log(userInfoResponse.data.data)
             setUserNickName(userInfoResponse.data.data.nickName)
             setBeforeEditUserInfo(userInfoResponse.data.data)
@@ -130,26 +128,27 @@ export default function GeneralUserPageMain() {
         catch (error) {
             navigate('/ErrorMsg')
         }
-    },[form,navigate])
+    }, [form, navigate])
 
     // 取得参加履歴
-    const fetchEntryHistory = useCallback(async() => {
+    const fetchEntryHistory = useCallback(async () => {
         try {
-            const userInfoResponse = await api.get('/user/fecthUserInfo')
-            console.log(userInfoResponse.data.data)
-            setUserNickName(userInfoResponse.data.data.nickName)
-            setBeforeEditUserInfo(userInfoResponse.data.data)
-            form.setFieldsValue(userInfoResponse.data.data);
+            const userEntryHistoryResponse = await (await api.get('/eventEntryInfo/getEventEntryInfosByUser')).data.data
+            console.log(userEntryHistoryResponse)
+            if (userEntryHistoryResponse) {
+                setUserEntryHistoryData(userEntryHistoryResponse)
+            }
         }
         catch (error) {
             navigate('/ErrorMsg')
         }
-    },[form,navigate])
+    }, [navigate, theme.direction, value])
 
     useEffect(() => {
         fetchUserInfo()
-    },[fetchUserInfo])
-    
+        fetchEntryHistory()
+    }, [fetchUserInfo, fetchEntryHistory])
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -159,6 +158,55 @@ export default function GeneralUserPageMain() {
     const userInfoOnFinish = (inputUserInfo) => {
         console.log(inputUserInfo)
     }
+
+    const userEntryHistoryDataHTML = userEntryHistoryData.length > 0 ? userEntryHistoryData.map((item) =>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+            <div>
+                <Typography id="Entry-History-Title" variant='h6'>
+                    参加履歴一覧
+                </Typography>
+            </div>
+            <div id="Entry-History-Infos">
+                <div id="Entry-History-Info">
+                    <div id="Entry-History-Info-Title">
+                        <Typography id="Entry-History-Info-Title-Text" variant='h6'>
+                            {item?.eventInfo?.eventOpenDay > new Date() ? "参加待ち" : "参加済み"}
+                        </Typography>
+                    </div>
+                    <div id="Entry-History-Info-Detail">
+                        <Typography variant='h6'>
+                            {item?.organizer?.organizerName}
+                        </Typography>
+                        <Typography variant='subtitle2'>
+                            種　別：{item?.itemInfo?.itemInfoName}
+                        </Typography>
+                        <Typography variant='subtitle2'>
+                            申込日：{new Date(item?.entryTime).toISOString().split('T')[0]}
+                        </Typography>
+                        <Typography variant='subtitle2'>
+                            参加日：{item?.eventInfo?.eventOpenDay}
+                        </Typography>
+                        <Typography variant='subtitle2'>
+                            場　所：{item?.courtInfo?.courtName}
+                        </Typography>
+                    </div>
+                </div>
+            </div>
+        </TabPanel>) :
+        <TabPanel value={value} index={1} dir={theme.direction}>
+            <div>
+                <div id="Entry-History-Info-Detail">
+                    <Typography id="Entry-History-Title" variant='h6'>
+                        参加履歴一覧
+                    </Typography>
+                </div>
+            </div>
+            <div id="Entry-History-Infos">
+                <div>
+                    <Empty description="情報なし"/>
+                </div>
+            </div>
+        </TabPanel>;
 
     return (
         <div>
@@ -254,36 +302,7 @@ export default function GeneralUserPageMain() {
                         </Form>
                     </div>
                 </TabPanel>
-                <TabPanel value={value} index={1} dir={theme.direction}>
-                    <div>
-                        <Typography id="Entry-History-Title" variant='h6'>
-                            参加履歴一覧
-                        </Typography>
-                    </div>
-                    <div id="Entry-History-Infos">
-                        <div id="Entry-History-Info">
-                            <div id="Entry-History-Info-Title">
-                                <Typography id="Entry-History-Info-Title-Text" variant='h6'>
-                                    参加済み
-                                </Typography>
-                            </div>
-                            <div id="Entry-History-Info-Detail">
-                                <Typography variant='h6'>
-                                    XXXバス
-                                </Typography>
-                                <Typography variant='subtitle2'>
-                                    申込日：
-                                </Typography>
-                                <Typography variant='subtitle2'>
-                                    参加日：
-                                </Typography>
-                                <Typography variant='subtitle2'>
-                                    場　所：
-                                </Typography>
-                            </div>
-                        </div>
-                    </div>
-                </TabPanel>
+                {userEntryHistoryDataHTML}
             </div>
         </div>
     )

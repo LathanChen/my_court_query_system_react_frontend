@@ -18,10 +18,12 @@ import AdminPageEditItempage from './pages/AdminPageEditItempage/AdminPageEditIt
 import AdminPageAddCourtInfo from './pages/AdminPageAddCourtInfo/AdminPageAddCourtInfo';
 import AdminPageEditCourtInfoPage from './pages/AdminPageEditCourtInfoPage/AdminPageEditCourtInfoPage';
 import AdminPageCourtInfoListPage from './pages/AdminPageCourtInfoListPage/AdminPageCourtInfoListPage';
+import Dashboard from './pages/Dashboard/Dashboard';
 import IndexPage from './pages/IndexPage/IndexPage';
 import GeneralUserPage from './pages/GeneralUserPage/GeneralUserPage';
 
 import CourtInfoPage from './pages/CourtInfoPage/CourtInfoPage';
+import UnknowAddressPage from './pages/UnknowAddressPage/UnknowAddressPage';
 import ErrorMsg from './components/ErrorMsg/ErrorMsg';
 
 const routes = [
@@ -79,6 +81,10 @@ const routes = [
         path: 'editcourtinfo/:courtInfoId',
         element: <AdminPageEditCourtInfoPage/>,
       },
+      {
+        path: 'dashaboard',
+        element: <Dashboard/>,
+      },
     ]
   },
   {
@@ -105,6 +111,10 @@ const routes = [
     path: '/GeneralUserPage',
     element: <GeneralUserPage/>,
   },
+  {
+    path:'/*',
+    element:<UnknowAddressPage/>
+  }
 ];
 
 export default routes;

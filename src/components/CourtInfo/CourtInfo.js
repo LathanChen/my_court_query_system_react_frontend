@@ -230,7 +230,7 @@ export default function CourtInfo() {
                 </Col>
             </Row>
             </div>             */}
-            <div style={{ display: 'flex', width: '96%', justifyContent: 'flex-end', padding: '10px', }}>
+            {isLoading? null : <div style={{ display: 'flex', width: '96%', justifyContent: 'flex-end', padding: '10px', }}>
                 <Pagination
                     defaultCurrent={1}
                     current={currentPage}
@@ -239,7 +239,7 @@ export default function CourtInfo() {
                     size="small"
                     onChange={findNextPageCourtNames}
                 />
-            </div>
+            </div>}
 
             {/* <div>
                 <Slider
