@@ -82,7 +82,7 @@ const routes = [
         element: <AdminPageEditCourtInfoPage/>,
       },
       {
-        path: 'dashaboard',
+        path: 'dashboard',
         element: <Dashboard/>,
       },
     ]

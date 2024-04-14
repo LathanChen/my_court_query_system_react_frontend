@@ -96,7 +96,7 @@ export default function AdminSlider(props) {
         </DrawerHeader>
         <Divider />
         <List>
-        <ListItemButton onClick={() => navigate("/dashboard")}>
+        <ListItemButton onClick={() => navigate("/adminpage/dashboard")}>
             <ListItemIcon>
               <ListAltIcon />
             </ListItemIcon>
