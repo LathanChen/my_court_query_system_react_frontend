@@ -101,57 +101,20 @@ export default function Dashboard() {
 
         })
         console.log(seriesData)
-        // yAxisData.forEach((courtName) => {
-        //     responseData.forEach((item,index) => {
-        //         if(courtName === item.courtName) {
-        //             // const currentItemInfo = itemInfos.find((itemInfo) => {
-        //             //     return itemInfo.itemInfoName === item.itemInfoName
-        //             // })
 
-        //             seriesData[item.courtOpenItemId-1].data.push(item.itemCount)
-        //         }
-        //     })
-        // })
-        // console.log(seriesData)
-
-        // 创建一个空数组
-        const itemListByCourt = Array(itemInfos.length).fill(null)
         // 循环所有场地名
         yAxisData.forEach((yAxisItem, i) => {
-            // 暂存数组
-            const itemNameList = [];
+            // 循环响应中的所有数据
             responseData.forEach(responseItem => {
-                // 将同一场地名的活动名称和活动数量作为一个对象，放入暂存的数组中
+                // 当响应数组中的元素的场地名和外层循环的场地名相同时
                 if (yAxisItem === responseItem.courtName) {
-                    itemNameList.push({
-                        itemInfoName: responseItem.itemInfoName,
-                        itemCount: responseItem.itemCount
-                    });
+                    // 找出seriesData中对应运动项目的对象
+                    const findSeries = seriesData.find((series) => series.name === responseItem.itemInfoName)
+                    // 在该对象的data数组的对应位置设定活动数量
+                    findSeries.data[i] = responseItem.itemCount
                 }
             });
-            itemListByCourt[i] = itemNameList;
         });
-        console.log(itemListByCourt);
-        // const itemNamesListByCourt = itemListByCourt.map((item) => item.map(info => info.itemInfoName))
-        // console.log(itemNamesListByCourt);
-
-        // 循环场地名和场地信息的数组，每个元素也都是数组，数组元素里是对应的是每个场地开设的活动名称和数量的对象
-        itemListByCourt.forEach((itemList,i) => {
-            // 数组元素
-            itemList.forEach((item,j) => {
-                // 和seriesData数组中每个元素的活动名称比较
-                seriesData.forEach((data, k) => {
-                    // 如果相同，替换seriesData数组中对应活动的data数组中，相应下标的值
-                    if (data.name === item.itemInfoName) {
-                        data.data[i] = item.itemCount
-                    }
-                })
-            })
-            
-        })
-        // seriesData.forEach((data, i) => {
-        //     data.data.push
-        //     })
 
         console.log(seriesData)
     }, [])
