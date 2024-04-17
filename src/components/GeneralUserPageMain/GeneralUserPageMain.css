@@ -27,8 +27,12 @@
     text-align: center;
 }
 
-#Entry-History-Infos {
+/* .Entry-History-Infos{
 
+} */
+
+.Entry-History-Infos-container:nth-child(n+2) {
+    margin-top: 2rem;
 }
 
 #Entry-History-Info {
@@ -42,7 +46,7 @@
     line-height: 3rem;
 }
 
-#Entry-History-Info-Title {
+.Entry-History-Info-Title {
     height: 3rem;
     background-color: gold;
     padding-left: 0.5rem;

@@ -1,14 +1,14 @@
 
-import React, { useEffect, useCallback, useState } from 'react';
+import React from 'react';
 import ReactEcharts from "echarts-for-react"
 
-export default function PieChart({ data }) {
+export default function PieChart({ data,title }) {
 
-    // 項目ごと募集中の件数を表示
+    // 項目ごとに募集中の件数を表示
     const getOption = () => {
         let option = {
             title: {
-                text: '今開催中活動',  // 标题文本
+                text: title,  // 标题文本
                 left: 'center',                       // 标题位置：水平居中
                 top: 'top',                           // 标题位置：垂直顶部
                 textStyle: {                          // 标题文字样式
@@ -21,9 +21,9 @@ export default function PieChart({ data }) {
                 trigger: 'item'
             },
             legend: {
-                orient: 'vertical',   // 设置图例项垂直排列
-                left: 'left',         // 图例位于左边
-                top: '10%',        // 
+                orient: 'horizontal',  // 横向排列图例项
+                left: 'center',        // 图例水平居中
+                bottom: '0%'           // 图例位于底部，距离底部 5%
             },
             series: [
                 {

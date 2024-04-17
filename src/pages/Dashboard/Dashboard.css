@@ -1,0 +1,12 @@
+#dashboard-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 80vh;
+    flex-wrap: wrap;
+}
+
+.chart-container {
+    width: 25rem;
+    height: 20rem;
+}

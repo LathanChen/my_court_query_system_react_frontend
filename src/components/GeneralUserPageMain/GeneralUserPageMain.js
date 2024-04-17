@@ -134,6 +134,9 @@ export default function GeneralUserPageMain() {
     const fetchEntryHistory = useCallback(async () => {
         try {
             const userEntryHistoryResponse = await (await api.get('/eventEntryInfo/getEventEntryInfosByUser')).data.data
+            userEntryHistoryResponse.sort((a,b) => {
+                return new Date(a.eventInfo?.eventOpenDay) < new Date(b.eventInfo?.eventOpenDay) ? 1 : -1
+            })
             console.log(userEntryHistoryResponse)
             if (userEntryHistoryResponse) {
                 setUserEntryHistoryData(userEntryHistoryResponse)
@@ -142,7 +145,7 @@ export default function GeneralUserPageMain() {
         catch (error) {
             navigate('/ErrorMsg')
         }
-    }, [navigate, theme.direction, value])
+    }, [navigate])
 
     useEffect(() => {
         fetchUserInfo()
@@ -160,17 +163,14 @@ export default function GeneralUserPageMain() {
     }
 
     const userEntryHistoryDataHTML = userEntryHistoryData.length > 0 ? userEntryHistoryData.map((item) =>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-            <div>
-                <Typography id="Entry-History-Title" variant='h6'>
-                    参加履歴一覧
-                </Typography>
-            </div>
-            <div id="Entry-History-Infos">
+        <div key={item.eventInfoId} className="Entry-History-Infos-container">
+            <div className="Entry-History-Infos">
                 <div id="Entry-History-Info">
-                    <div id="Entry-History-Info-Title">
-                        <Typography id="Entry-History-Info-Title-Text" variant='h6'>
-                            {item?.eventInfo?.eventOpenDay > new Date() ? "参加待ち" : "参加済み"}
+                    <div className="Entry-History-Info-Title" style={{backgroundColor:new Date(item?.eventInfo?.eventOpenDay) > new Date() ? "gold" : "gray"}}>
+                        <Typography 
+                        id="Entry-History-Info-Title-Text" 
+                        variant='h6'>
+                            {new Date(item?.eventInfo?.eventOpenDay) > new Date() ? "参加待ち" : "参加済み"}
                         </Typography>
                     </div>
                     <div id="Entry-History-Info-Detail">
@@ -192,8 +192,8 @@ export default function GeneralUserPageMain() {
                     </div>
                 </div>
             </div>
-        </TabPanel>) :
-        <TabPanel value={value} index={1} dir={theme.direction}>
+        </div>) :
+        <div>
             <div>
                 <div id="Entry-History-Info-Detail">
                     <Typography id="Entry-History-Title" variant='h6'>
@@ -203,10 +203,10 @@ export default function GeneralUserPageMain() {
             </div>
             <div id="Entry-History-Infos">
                 <div>
-                    <Empty description="情報なし"/>
+                    <Empty description="情報なし" />
                 </div>
             </div>
-        </TabPanel>;
+        </div>
 
     return (
         <div>
@@ -302,7 +302,9 @@ export default function GeneralUserPageMain() {
                         </Form>
                     </div>
                 </TabPanel>
-                {userEntryHistoryDataHTML}
+                <TabPanel value={value} index={1} dir={theme.direction}>
+                    {userEntryHistoryDataHTML}
+                </TabPanel>
             </div>
         </div>
     )

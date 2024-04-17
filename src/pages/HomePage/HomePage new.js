@@ -6,7 +6,7 @@ import CourtInfo from '../../components/CourtInfo/CourtInfo'
 // CssBaseline 是 Material-UI 中的一个组件，它的作用是提供一个基础的 CSS 样式重置或规范，确保应用程序在不同浏览器和环境下具有一致的外观和行为。
 // import CssBaseline from '@mui/material/CssBaseline';
 // 引入高阶组件函数
-import MakeDateParameter from '../../highOrderComponent/MakeDateParameter'
+// import MakeDateParameter from '../../highOrderComponent/MakeDateParameter'
 import FindTeam from '../../components/FindTeam/FindTeam'
 import { Outlet } from 'react-router-dom';
 import { useState } from "react";
@@ -14,7 +14,7 @@ import './HomePage.css'
 
 
 // 使用高阶组件函数，实现代码复用，将高阶组件函数中生成的参数传递到TodayEvent组件中，形成新的组件
-const TodayEventComponent = MakeDateParameter(TodayEvent)
+// const TodayEventComponent = MakeDateParameter(TodayEvent)
 
 export default function HomePage() {
 
@@ -31,11 +31,11 @@ export default function HomePage() {
     //     SetShowQueryDataFlg(flg)
     // }
 
-    const [shouldShowLogin, setShouldShowLogin] = useState(false)
+    // const [shouldShowLogin, setShouldShowLogin] = useState(false)
 
-    function changeShouldShowLogin(showFlg) {
-        setShouldShowLogin(showFlg)
-    }
+    // function changeShouldShowLogin(showFlg) {
+    //     setShouldShowLogin(showFlg)
+    // }
 
     // 先计算当日是星期几和第几周，为weekNumber和dayOfWeekInWeek赋值，避免初次渲染出现weekNumber和dayOfWeekInWeek为null的情况
     // 这样会导致TodayEvent渲染两次，且第一次渲染会报请求无参数的错误
