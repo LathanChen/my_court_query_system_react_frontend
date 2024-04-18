@@ -156,8 +156,6 @@ export default function Dashboard() {
         console.log(seriesData)
     }, [])
 
-    // test
-
     useEffect(() => {
         getAvailableEventsOrganizerNameAndMemberNumsByItemId()
     }, [getAvailableEventsOrganizerNameAndMemberNumsByItemId])
