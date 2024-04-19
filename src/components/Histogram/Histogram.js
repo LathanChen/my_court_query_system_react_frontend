@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactEcharts from "echarts-for-react"
 
-export default function Histogram( ) {
+export default function Histogram({data}) {
 
     // const data = {
     //     data:[[20,21,22,23,24,25,26],[7,6,5,4,3,2,1]],
@@ -40,70 +40,15 @@ export default function Histogram( ) {
                 },
                 yAxis: {
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                series: [
-                    {
-                        name: 'Direct',
-                        type: 'bar',
-                        stack: 'total',
-                        label: {
-                            show: true
-                        },
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: [320, 302, 301, 334, 390, 330, 320]
-                    },
-                    {
-                        name: 'Mail Ad',
-                        type: 'bar',
-                        stack: 'total',
-                        label: {
-                            show: true
-                        },
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: [120, 132, 101, 134, 90, 230, 210]
-                    },
-                    {
-                        name: 'Affiliate Ad',
-                        type: 'bar',
-                        stack: 'total',
-                        label: {
-                            show: true
-                        },
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: [220, 182, 191, 234, 290, 330, 310]
-                    },
-                    {
-                        name: 'Video Ad',
-                        type: 'bar',
-                        stack: 'total',
-                        label: {
-                            show: true
-                        },
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: [150, 212, 201, 154, 190, 330, 410]
-                    },
-                    {
-                        name: 'Search Engine',
-                        type: 'bar',
-                        stack: 'total',
-                        label: {
-                            show: true
-                        },
-                        emphasis: {
-                            focus: 'series'
-                        },
-                        data: [820, 832, 901, 934, 1290, 1330, 1320]
+                    data: data.yAxisData,
+                    axisLabel: {
+                        formatter: function(value) {
+                            // 只显示前四位字符
+                            return value.slice(0, 4);
+                        }
                     }
-                ]
+                },
+                series: data.seriesData
             };
             return option;
         // }

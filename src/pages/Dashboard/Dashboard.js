@@ -12,12 +12,14 @@ export default function Dashboard() {
     const [availableEvents, setAvailableEvents] = useState([1]);
 
     const [availableEventsOrganizerNameAndMemberNumsByItemId, setAvailableEventsOrganizerNameAndMemberNumsByItemId] = useState({});
+    
+    const [histogramData, setHistogramData] = useState({});
 
     const [itemInfos, setItemInfos] = useState([]);
 
     const [selectedItemID, setSelectedItemID] = useState(1);
 
-    const PieChartTitle = "今開催中活動";
+    const PieChartTitle = "今募集中活動";
 
     const BarChartTitle = "開始予定活動の応募状況";
 
@@ -117,6 +119,7 @@ export default function Dashboard() {
         });
 
         console.log(seriesData)
+        setHistogramData({yAxisData,seriesData})
     }, [])
 
     useEffect(() => {
@@ -164,7 +167,7 @@ export default function Dashboard() {
                 <BarChart data={availableEventsOrganizerNameAndMemberNumsByItemId} title={BarChartTitle} />
             </div>
             <div className='chart-container'>
-                <Histogram></Histogram>
+                <Histogram data={histogramData}></Histogram>
             </div>
         </div>
 
