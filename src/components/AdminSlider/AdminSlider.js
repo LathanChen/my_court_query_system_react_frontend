@@ -63,16 +63,16 @@ export default function AdminSlider(props) {
   };
 
   const toAdminPageInfoShow = () =>{
-    navigate('/adminpage');
+    navigate('/adminpage/infomanagement/infolist');
   }
   const toAddInfo = () =>{
-    navigate('/adminpage/addinfo');
+    navigate('/adminpage/infomanagement/addinfo');
   }
   const toAddCourtInfo = () =>{
-    navigate('/adminpage/addcourtinfo');
+    navigate('/adminpage/courtmanagement/addcourtinfo');
   }
   const toCourtInfoList = () =>{
-    navigate('/adminpage/courtinfolist');
+    navigate('/adminpage/courtmanagement/courtinfolist');
   }
   
   return (

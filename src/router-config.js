@@ -58,24 +58,32 @@ const routes = [
     element: <AdminPage/>,
     children: [
       {
-        path: '',
+        path: 'infomanagement',
         element: <AdminPageInfoShow/>,
       },
       {
-        path: 'addinfo',
+        path: 'infomanagement/infolist',
+        element: <AdminPageInfoShow/>,
+      },
+      {
+        path: 'infomanagement/addinfo',
         element: <AdminPageAddItempage/>,
       },
       {
-        path: 'editinfo/:infoid',
+        path: 'infomanagement/editinfo/:infoid',
         element: <AdminPageEditItempage/>,
       },
       {
-        path: 'addcourtinfo',
-        element: <AdminPageAddCourtInfo/>,
+        path: 'courtmanagement',
+        element: <AdminPageCourtInfoListPage/>,
       },
       {
-        path: 'courtinfolist',
+        path: 'courtmanagement/courtinfolist',
         element: <AdminPageCourtInfoListPage/>,
+      },
+      {
+        path: 'courtmanagement/addcourtinfo',
+        element: <AdminPageAddCourtInfo/>,
       },
       {
         path: 'editcourtinfo/:courtInfoId',
