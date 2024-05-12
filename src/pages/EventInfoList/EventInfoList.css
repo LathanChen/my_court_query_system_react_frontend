@@ -58,6 +58,13 @@
     margin-top: 0.5rem;
 }
 
+.event-detail-content-noInfos {
+    height: 26rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .event-detail-content-body-timestatus {
     display: flex;
     justify-content: space-between;

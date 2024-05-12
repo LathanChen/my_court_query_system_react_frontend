@@ -253,10 +253,10 @@ export default function EventInfoList() {
                     <div className='event-detail-content-header'>
                         <Title level={4} style={{ margin: "0", color: "white" }}>情報一覧</Title>
                     </div>
-                    {eventInfoList.length > 0 ? eventInfoList.map((item) => (
+                    {eventInfoList?.length > 0 ? eventInfoList.map((item) => (
                         <div className='event-detail-content-body' key={item.eventInfoId}>
                             <div>
-                                <Title level={5} style={{ margin: "0" }}>{formatDate(item.eventOpenDay)}</Title>
+                                <Title level={5} style={{ margin: "0",textAlign:"left" }}>{formatDate(item.eventOpenDay)}</Title>
                                 <div className='event-detail-content-body-timestatus'>
                                     <Text>{item.eventOpenTime}</Text>
                                     <Text>{new Date(`${item.eventOpenDay} ${item.eventOpenTime.split("-")[0]}`) > new Date() ? "開催予定" : "開催済み"}</Text>
@@ -268,7 +268,10 @@ export default function EventInfoList() {
                             </div>
                         </div>
                     ))
-                        : <Title level={5} style={{ margin: "0" }}>情報なし</Title>}
+                        : 
+                        <div className='event-detail-content-noInfos'>
+                            <Title level={1} style={{ margin: "0",color:"gray" }}>情報なし</Title>
+                        </div>}
                 </div>
                 <div className='event-detail-content'>
                     <div className='event-detail-content-header event-detail-content-header-gray'>
