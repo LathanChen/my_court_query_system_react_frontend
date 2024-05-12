@@ -141,7 +141,7 @@ export default function AdminSlider(props) {
           </ListItemButton>
           <Collapse in={openEventbox} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/adminpage/eventmanagement/eventinfolist')}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>

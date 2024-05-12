@@ -125,8 +125,8 @@ export default function Indexbar(props) {
                             <div className='detail'>
                                 <div>
                                     <Typography variant="subtitle1" color="primary">{`名称：${item.courtName}`}</Typography>
-                                    <Typography variant="subtitle2" color="secondary">{`时间：${item.courtOpenTime}`}</Typography>
-                                    <Typography variant="subtitle2" color="primary">{`项目：${item.itemName}`}</Typography>
+                                    <Typography variant="subtitle2" color="black">{`时间：${item.courtOpenTime}`}</Typography>
+                                    <Typography variant="subtitle2" color="textPrimary">{`项目：${item.itemName}`}</Typography>
                                     <Typography variant="subtitle2" color="black">{`地址：${item.courtAdress}`}</Typography>
                                 </div>
                             </div>
@@ -200,6 +200,7 @@ export default function Indexbar(props) {
                 response = response.map((item) => {
                     const { eventOpenTime, eventInfoId, itemInfo, eventEnrollment, eventMaxEnrollment, eventMaleCost, eventFemaleCost, registered } = item;
                     const { courtName, courtAdress } = item.courtInfo;
+                    const { organizerId, organizerName} = item.organizer;
 
                     // 创建新的对象
                     return {
@@ -212,6 +213,8 @@ export default function Indexbar(props) {
                         eventMaleCost,
                         eventFemaleCost,
                         itemName: itemInfo.itemInfoName,
+                        organizerId,
+                        organizerName,
                         registered
                     };
                 })
@@ -227,12 +230,13 @@ export default function Indexbar(props) {
                             </Typography>
                             <div className='eventdetail'>
                                 <div>
-                                    <Typography variant="subtitle1" color="primary">{item.courtName}</Typography>
-                                    <Typography variant="subtitle2" color="primary">{item.eventOpenTime}</Typography>
-                                    <Typography variant="subtitle2" color="primary">{item.itemName}</Typography>
+                                    <Typography variant="subtitle1" color="textPrimary">{item.courtName}</Typography>
+                                    <Typography variant="subtitle1" color="textPrimary">{item.organizerName}</Typography>
+                                    <Typography variant="subtitle2" color="black">{item.eventOpenTime}</Typography>
+                                    <Typography variant="subtitle2" color="black">{item.itemName}</Typography>
                                 </div>
                                 <div>
-                                    <Typography variant="subtitle1" color="primary">{`${item.eventEnrollment}/${item.eventMaxEnrollment}`}</Typography>
+                                    <Typography variant="subtitle1" color={item.eventEnrollment<item.eventMaxEnrollment ? "primary" : "textSecondary"}>{`${item.eventEnrollment}/${item.eventMaxEnrollment}`}</Typography>
                                     <div>
                                         <FaceIcon></FaceIcon> {`${item.eventMaleCost}円/人`}
                                     </div>
@@ -249,7 +253,7 @@ export default function Indexbar(props) {
                                             <Button variant="contained" disabled={true}>
                                                 已报
                                             </Button> :
-                                            <Button variant="contained" onClick={() => entryEvent(item.id)}>
+                                            <Button variant="contained" onClick={() => entryEvent(item.id)} disabled={item.eventEnrollment<item.eventMaxEnrollment ? false : true}>
                                                 报名
                                             </Button>
                                     }

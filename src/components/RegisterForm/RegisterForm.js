@@ -13,6 +13,8 @@ export default function RegisterForm() {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [showErrorAlert, setShowErrorAlert] = useState(false);
 
+    const navigate = useNavigate()
+
     useEffect(() => {
         if (showSuccessAlert) {
           const timer = setTimeout(() => {
@@ -33,7 +35,7 @@ export default function RegisterForm() {
             console.log(timer)
           }
         }
-      }, [showSuccessAlert,showErrorAlert]);
+      }, [showSuccessAlert,showErrorAlert,navigate]);
       
     const handleUsernameChange = (event) => {
         setUsername(event.target.value);
@@ -71,7 +73,6 @@ export default function RegisterForm() {
           fetchData(); // 调用发送请求的函数
     };
 
-    const navigate = useNavigate()
     const backToHomepage = () =>{
         navigate('/IndexPage')
     }

@@ -19,6 +19,7 @@ import AdminPageAddCourtInfo from './pages/AdminPageAddCourtInfo/AdminPageAddCou
 import AdminPageEditCourtInfoPage from './pages/AdminPageEditCourtInfoPage/AdminPageEditCourtInfoPage';
 import AdminPageCourtInfoListPage from './pages/AdminPageCourtInfoListPage/AdminPageCourtInfoListPage';
 import Dashboard from './pages/Dashboard/Dashboard';
+import EventInfoList from './pages/EventInfoList/EventInfoList';
 import IndexPage from './pages/IndexPage/IndexPage';
 import GeneralUserPage from './pages/GeneralUserPage/GeneralUserPage';
 
@@ -92,6 +93,14 @@ const routes = [
       {
         path: 'dashboard',
         element: <Dashboard/>,
+      },
+      {
+        path: 'eventmanagement',
+        element: <EventInfoList/>,
+      },
+      {
+        path: 'eventmanagement/eventinfolist',
+        element: <EventInfoList/>,
       },
     ]
   },

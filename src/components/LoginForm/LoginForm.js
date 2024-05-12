@@ -33,7 +33,7 @@ export default function LoginForm() {
                     type: "LOGIN",
                     payload: true,
                 })
-                navigate('/adminpage',{ replace: true })
+                navigate('/adminpage/dashboard',{ replace: true })
               }
               else {
                 console.log(response.data.msg)

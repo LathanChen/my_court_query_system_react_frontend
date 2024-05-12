@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Select, Box, FormControl, InputLabel, MenuItem, Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import StyleIcon from '@mui/icons-material/Style';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -98,7 +98,7 @@ export default function AddInfoBar(props) {
                 </div>
 
             </div>
-           {props.batchselection.length == 0?( <div style={{
+           {props.batchselection.length === 0?( <div style={{
                 display: 'flex',
                 alignItems: 'flex-end',
                 height: '5vh'

@@ -1,0 +1,82 @@
+#event-select-container {
+    margin-top: 2rem;
+    display: flex;
+    height: 3rem;
+    background-color:rgba(128, 128, 128, 0.1);
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 15px; 
+}
+
+#event-select-container > div {
+    height: 3rem;
+    line-height: 3rem;
+    text-align: center;
+    width: 25%;
+}
+
+#event-select-container div:not(:last-child) {
+    border-right: 1px solid #000; 
+    /* width: 25%; */
+}
+
+#event-detail-container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-detail-content {
+    height: 30rem;
+    width: 32%;
+    background-color:rgba(128, 128, 128, 0.1);
+    border-radius: 15px; 
+    overflow: scroll;
+    text-align: center;
+}
+
+.event-detail-content::-webkit-scrollbar {
+    display: none; /* 隐藏滚动条 */
+}
+
+.event-detail-content-header {
+    display: flex;
+    align-items: center;
+    height: 4rem;
+    background-color:#1976d2;
+    border-radius: 15px 15px 0 0; 
+    padding-left: 1rem;
+    /* margin-bottom: 1rem; */
+}
+
+.event-detail-content-body {
+    height: 5rem;
+    /* background-color: yellow; */
+    padding: 1rem;
+    border-left: 5px solid #1976d2;
+    border-bottom: 1px solid gray;
+    margin-top: 0.5rem;
+}
+
+.event-detail-content-body-timestatus {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-detail-content-body-placebutton {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-detail-content-header-gray {
+    background-color:rgba(100, 100, 100, 0.1);
+}
+
+/* .event-detail-content-body :not(:first-child) {
+    margin-top: 1rem;
+} */
+
+.event-detail-content-presonnel-list {
+    display: flex;
+    justify-content: space-around;
+}

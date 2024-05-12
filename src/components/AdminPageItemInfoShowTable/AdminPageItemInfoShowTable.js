@@ -94,15 +94,15 @@ export default function AdminPageItemInfoShowTable(props) {
   const editInfo = (data) => {
     console.log(data)
     // 传递带变量的路由地址时，要使用模板字符串
-    navigate(`/adminpage/editinfo/${data}`)
+    navigate(`/adminpage/infomanagement/editinfo/${data}`)
   }
 
   const showSelected = (data) => {
-    setSeletedDatas(data)
+    // setSeletedDatas(data)
     props.isBatchselectionChange(data)
   }
 
-  const [seletedDatas, setSeletedDatas] = React.useState([])
+  // const [seletedDatas, setSeletedDatas] = React.useState([])
 
   return (
     <div style={{
