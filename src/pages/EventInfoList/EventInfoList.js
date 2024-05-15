@@ -1,4 +1,5 @@
 import { Select, Typography, Button } from 'antd';
+import CircularProgress from '@mui/material/CircularProgress';
 import "./EventInfoList.css"
 import Item from 'antd/es/list/Item';
 import Alert from '@mui/material/Alert';
@@ -7,21 +8,25 @@ import Snackbar from '@mui/material/Snackbar';
 import { useState, useCallback, useEffect } from 'react';
 import axios from 'axios';
 import api from '../../api';
-import { OtherHouses } from '@mui/icons-material';
-
 const { Title, Text } = Typography;
 
 export default function EventInfoList() {
 
-    const [memberNum, setMemberNum] = useState(null);
-
-    const [teamNum, setTeamNum] = useState(null);
+    const [teamNum, setTeamNum] = useState(0);
 
     const [errorMsg, setErrorMsg] = useState("");
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const [eventInfoList, setEventInfoList] = useState([]);
+
+    const [memberNicknameList, setMemberNicknameList] = useState([]);
+
+    const [teamInfoList, setTeamInfoList] = useState([]);
+
+    const [currentEventInfoId, setCurrentEventInfoId] = useState(0);
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const getEventInfoList = useCallback(async () => {
         const response = await api.get('/eventInfo/getEventInfosByUserId');
@@ -41,12 +46,18 @@ export default function EventInfoList() {
         setOpenSnackbar(false);
     };
 
-    const hangdleMemberNumChange = (value) => {
-        setMemberNum(value);
-    }
-
     const hangdleTeamNumChange = (value) => {
         setTeamNum(value);
+    }
+
+    const handleDetailButtonClick = (eventInfoId) => {
+        if (eventInfoId === currentEventInfoId) {
+            return;
+        }
+        setIsLoading(true);
+        setCurrentEventInfoId(eventInfoId);
+        setTeamInfoList([]);
+        setMemberNicknameList([]);
     }
 
     const formatDate = (dateString) => {
@@ -62,102 +73,25 @@ export default function EventInfoList() {
         return `${year}年${month}月${day}日`;
     }
 
+    const getEventMemberNicknames = useCallback(async () => {
+        if (currentEventInfoId === 0) {
+            return;
+        }
+        const params = { eventInfoId: currentEventInfoId };
+        const response = await axios.get("/eventEntryInfo/getMemberNicknamesByEventID", { params });
+        console.log(response.data.data);
+        setMemberNicknameList(response.data.data);
+        setIsLoading(false);
+    }, [currentEventInfoId])
+
+    useEffect(() => {
+        getEventMemberNicknames();
+    }, [getEventMemberNicknames])
+
     const makeTeams = () => {
-        const nameList = [
-            "AAA",
-            "BBB",
-            "CCC",
-            "DDD",
-            "EEE",
-            "FFF",
-            "GGG",
-            "HHH",
-            "III",
-            "JJJ",
-            "KKK",
-            "LLL",
-            "MMM",
-            "NNN",
-            "OOO",
-            "PPP",
-            "QQQ",
-            "RRR",
-            "SSS",
-            "TTT",
-        ];
+        const nameList = memberNicknameList.map(item => item.nickName);
 
-        let aTeam = Array(5).fill("")
-        let bTeam = Array(5).fill("")
-        let cTeam = Array(5).fill("")
-        let dTeam = Array(5).fill("")
-
-        aTeam = aTeam.map((item) => {
-            let index = Math.floor(Math.random() * nameList.length);
-            const newItem = nameList[index];
-            nameList.splice(index, 1);
-            return newItem;
-        })
-
-        bTeam = bTeam.map((item) => {
-            let index = Math.floor(Math.random() * nameList.length);
-            const newItem = nameList[index];
-            nameList.splice(index, 1);
-            return newItem;
-        })
-
-        cTeam = cTeam.map((item) => {
-            let index = Math.floor(Math.random() * nameList.length);
-            const newItem = nameList[index];
-            nameList.splice(index, 1);
-            return newItem;
-        })
-
-        dTeam = dTeam.map((item) => {
-            let index = Math.floor(Math.random() * nameList.length);
-            const newItem = nameList[index];
-            nameList.splice(index, 1);
-            return newItem;
-        })
-
-
-        console.log(aTeam);
-        console.log(bTeam);
-        console.log(cTeam);
-        console.log(dTeam);
-    }
-
-    const makeTeams2 = () => {
-        getEventInfoList();
-        const nameList = [
-            "AAA",
-            "BBB",
-            "CCC",
-            "DDD",
-            "EEE",
-            "FFF",
-            "GGG",
-            "HHH",
-            "III",
-            "JJJ",
-            "KKK",
-            "LLL",
-            "MMM",
-            "NNN",
-            "OOO",
-            "PPP",
-            "QQQ",
-            "RRR",
-            "SSS",
-            "TTT",
-            "UUU",
-            "VVV",
-            "WWW",
-            "XXX",
-            "YYY",
-        ];
-
-        console.log(memberNum);
-        console.log(nameList.length);
+        const memberNum = nameList.length;
 
         // 取模得出按照队伍平均分配后多余的人数
         const extraNum = memberNum % teamNum;
@@ -166,6 +100,11 @@ export default function EventInfoList() {
         // 每个队伍分配的基准人数
         if (memberNum && teamNum) {
             ereryTeamMemberNum = Math.floor(memberNum / teamNum);
+        }
+        else if (!memberNum){
+            setErrorMsg("本次活动暂无人员参加！");
+            setOpenSnackbar(true);
+            return;
         }
         else {
             setErrorMsg("请选择队伍数量！");
@@ -210,6 +149,7 @@ export default function EventInfoList() {
             }
 
             console.log(teamList);
+            setTeamInfoList(teamList);
         }
     }
 
@@ -256,91 +196,74 @@ export default function EventInfoList() {
                     {eventInfoList?.length > 0 ? eventInfoList.map((item) => (
                         <div className='event-detail-content-body' key={item.eventInfoId}>
                             <div>
-                                <Title level={5} style={{ margin: "0",textAlign:"left" }}>{formatDate(item.eventOpenDay)}</Title>
+                                <Title level={5} style={{ margin: "0", textAlign: "left" }}>{formatDate(item.eventOpenDay)}</Title>
                                 <div className='event-detail-content-body-timestatus'>
                                     <Text>{item.eventOpenTime}</Text>
                                     <Text>{new Date(`${item.eventOpenDay} ${item.eventOpenTime.split("-")[0]}`) > new Date() ? "開催予定" : "開催済み"}</Text>
                                 </div>
                                 <div className='event-detail-content-body-placebutton'>
                                     <Text>{item.courtInfo.courtName}</Text>
-                                    <Button>詳細</Button>
+                                    <Button onClick={() => handleDetailButtonClick(item.eventInfoId)} type={currentEventInfoId === item.eventInfoId ? "primary" : "default"}>詳細</Button>
                                 </div>
                             </div>
                         </div>
                     ))
-                        : 
+                        :
                         <div className='event-detail-content-noInfos'>
-                            <Title level={1} style={{ margin: "0",color:"gray" }}>情報なし</Title>
+                            <Title level={1} style={{ margin: "0", color: "gray" }}>情報なし</Title>
                         </div>}
                 </div>
                 <div className='event-detail-content'>
                     <div className='event-detail-content-header event-detail-content-header-gray'>
                         <Title level={4} style={{ margin: "0" }}>人员名单</Title>
                     </div>
-                    <div className="event-detail-content-presonnel-list">
-                        <Text style={{ flex: "0 1 25%" }}>AAA</Text>
-                        <Text style={{ flex: "0 1 25%" }}>BBB</Text>
-                        <Text style={{ flex: "0 1 25%" }}>CCC</Text>
-                        <Text style={{ flex: "0 1 25%" }}>DDD</Text>
+                    {isLoading ?
+                        <div className='event-detail-content-loading'>
+                            <CircularProgress></CircularProgress>
+                        </div> :
+                        teamInfoList?.length > 0 ?
+                            teamInfoList.map((teamInfo, index) => (
+                                <div key={teamInfo[0]}>
+                                    <Title level={5} style={{ margin: "0", marginLeft: '1rem', textAlign: "left" }} >{`チーム${index + 1}`}</Title>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                        {teamInfo.map((info, index) => (
+                                            <Text style={{ flex: "0 0 20%" }} key={info}>{info}</Text>
+                                        ))}
+                                    </div>
+                                </div>
+                            )) : memberNicknameList?.length > 0 ?
+                                <div className="event-detail-content-presonnel-list">
+                                    {memberNicknameList.map((item) => (
+                                        <Text style={{ flex: "0 0 23%", border: "1px solid skyblue", margin: '1%' }} key={item.infoId}>{item.nickName}</Text>
+                                    ))}
+                                </div> :
+                                <div className='event-detail-content-noMemberInfo'>
+                                    <Title level={1} style={{ color: "gray" }}>参加者なし</Title>
+                                </div>
+                    }
+                    <div className='event-detail-content-makeTeamDiv'>
+                        <Select
+                            style={{ width: 100 }}
+                            options={[
+                                { value: 0, label: 'チーム数' },
+                                { value: 4, label: '4' },
+                                { value: 5, label: '5' },
+                            ]}
+                            value={teamNum}
+                            onChange={hangdleTeamNumChange}
+                        />
+                        <Button onClick={makeTeams}>チーム分け</Button>
                     </div>
-                    <div className="event-detail-content-presonnel-list">
-                        <Text style={{ flex: "0 1 25%" }}>EEE</Text>
-                        <Text style={{ flex: "0 1 25%" }}>FFF</Text>
-                        <Text style={{ flex: "0 1 25%" }}>GGG</Text>
-                        <Text style={{ flex: "0 1 25%" }}>HHH</Text>
-                    </div>
-                    <div className="event-detail-content-presonnel-list">
-                        <Text style={{ flex: "0 1 25%" }}>III</Text>
-                        <Text style={{ flex: "0 1 25%" }}>JJJ</Text>
-                        <Text style={{ flex: "0 1 25%" }}>KKK</Text>
-                        <Text style={{ flex: "0 1 25%" }}>LLL</Text>
-                    </div>
-                    <div className="event-detail-content-presonnel-list">
-                        <Text style={{ flex: "0 1 25%" }}>MMM</Text>
-                        <Text style={{ flex: "0 1 25%" }}>NNN</Text>
-                        <Text style={{ flex: "0 1 25%" }}>OOO</Text>
-                        <Text style={{ flex: "0 1 25%" }}>PPP</Text>
-                    </div>
-                    <div className="event-detail-content-presonnel-list">
-                        <Text style={{ flex: "0 1 25%" }}>QQQ</Text>
-                        <Text style={{ flex: "0 1 25%" }}>RRR</Text>
-                        <Text style={{ flex: "0 1 25%" }}>SSS</Text>
-                        <Text style={{ flex: "0 1 25%" }}>TTT</Text>
-                    </div>
-                    <Button onClick={makeTeams}>チーム分け</Button>
-                    <Select
-                        style={{ width: 100 }}
-                        options={[
-                            { value: '4', label: '4' },
-                            { value: '5', label: '5' },
-                        ]}
-                        value={teamNum}
-                        onChange={hangdleTeamNumChange}
-                    />
                 </div>
                 <div className='event-detail-content'>
                     <div className='event-detail-content-header event-detail-content-header-gray'>
                         <Title level={4} style={{ margin: "0" }}>比赛助手</Title>
                     </div>
+
                     计时区
                     <br />
-                    组队表
+
                     <br />
-                    開催済み
-                    <br />
-                    <Select
-                        style={{ width: 200 }}
-                        options={[
-                            { value: '21', label: '21' },
-                            { value: '22', label: '22' },
-                            { value: '23', label: '23' },
-                            { value: '24', label: '24' },
-                            { value: '25', label: '25' },
-                        ]}
-                        value={memberNum}
-                        onChange={hangdleMemberNumChange}
-                    />
-                    <Button onClick={makeTeams2}>test</Button>
                 </div>
             </div>
 
