@@ -134,7 +134,7 @@ export default function GeneralUserPageMain() {
     const fetchEntryHistory = useCallback(async () => {
         try {
             const userEntryHistoryResponse = await (await api.get('/eventEntryInfo/getEventEntryInfosByUser')).data.data
-            userEntryHistoryResponse.sort((a,b) => {
+            userEntryHistoryResponse?.sort((a,b) => {
                 return new Date(a.eventInfo?.eventOpenDay) < new Date(b.eventInfo?.eventOpenDay) ? 1 : -1
             })
             console.log(userEntryHistoryResponse)
@@ -143,6 +143,7 @@ export default function GeneralUserPageMain() {
             }
         }
         catch (error) {
+            console.log(error);
             navigate('/ErrorMsg')
         }
     }, [navigate])

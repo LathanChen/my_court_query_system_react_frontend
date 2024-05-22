@@ -28,7 +28,7 @@
 
 .event-detail-content {
     height: 30rem;
-    width: 32%;
+    width: 33%;
     background-color:rgba(128, 128, 128, 0.1);
     border-radius: 15px; 
     overflow: scroll;
@@ -111,4 +111,34 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+.countdown-div {
+    margin: 0.5rem;
+    padding: 0.5rem;
+    /* background-color: rgba(100, 100, 100, 0.1); */
+    /* border: 1px solid rgba(100, 100, 100, 0.5); */
+    border-radius: 15px; 
+}
+
+.scoreboard-div {
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+    padding: 0.5rem;
+    height: 8rem;
+    display: flex;
+    justify-content: space-around;
+    /* border-top: 1px solid skyblue; */
+}
+
+.scoreboard-hometeam-score-div {
+    margin-top: 0.5rem;
+    background-color: OrangeRed;
+    border-radius: 15px; 
+}
+
+.scoreboard-visitorteam-score-div {
+    margin-top: 0.5rem;
+    background-color: skyblue;
+    border-radius: 15px; 
 }

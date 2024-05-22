@@ -1,7 +1,7 @@
 import { Select, Typography, Button } from 'antd';
 import CircularProgress from '@mui/material/CircularProgress';
+import CountdownTimer from "../../components/CountdownTimer/CountdownTimer.js"
 import "./EventInfoList.css"
-import Item from 'antd/es/list/Item';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Snackbar from '@mui/material/Snackbar';
@@ -20,6 +20,8 @@ export default function EventInfoList() {
 
     const [eventInfoList, setEventInfoList] = useState([]);
 
+    const [selectedEventInfoList, setSelectedEventInfoList] = useState([]);
+
     const [memberNicknameList, setMemberNicknameList] = useState([]);
 
     const [teamInfoList, setTeamInfoList] = useState([]);
@@ -28,11 +30,41 @@ export default function EventInfoList() {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const [homeTeamScore, setHomeTeamScore] = useState(0);
+
+    const [visitorTeamScore, setVisitorTeamScore] = useState(0);
+
+    const [itemInfos,setItemInfos] = useState([]);
+
+    let itemSelectOptions = itemInfos.map(itemInfo => ({
+        value:itemInfo.itemInfoId,
+        label:itemInfo.itemInfoName
+    }))
+
+    itemSelectOptions = [{
+        value: -1,
+        label:"ALL"
+    },...itemSelectOptions]
+
     const getEventInfoList = useCallback(async () => {
         const response = await api.get('/eventInfo/getEventInfosByUserId');
         console.log(response.data.data);
-        setEventInfoList(response.data.data);;
+        setEventInfoList(response.data.data);
+        if(response.data.data[0]) {
+            setCurrentEventInfoId(response.data.data[0].eventInfoId)
+        }
+        setSelectedEventInfoList(response.data.data);
     }, [])
+
+    const getItemInfoList = useCallback(async() => {
+        const response = await api.get('/iteminfo');
+        console.log(response.data);
+        setItemInfos(response.data);
+    },[])
+
+    useEffect(() => {
+        getItemInfoList();
+    },[getItemInfoList])
 
     useEffect(() => {
         getEventInfoList();
@@ -50,6 +82,24 @@ export default function EventInfoList() {
         setTeamNum(value);
     }
 
+    const hangdleItemChange = (value) => {
+
+        console.log(eventInfoList);
+        console.log(typeof value);
+        if (value === -1) {
+            setSelectedEventInfoList(eventInfoList);
+            return;
+        }
+        const _selectedEventInfoList = eventInfoList.filter(eventInfo => {
+            return eventInfo.eventItemId === value;
+        })
+        setSelectedEventInfoList(_selectedEventInfoList);
+        console.log(_selectedEventInfoList[0]?.eventInfoId);
+        if (_selectedEventInfoList.length >  0) {
+            setCurrentEventInfoId(_selectedEventInfoList[0]?.eventInfoId);
+        }
+    }
+
     const handleDetailButtonClick = (eventInfoId) => {
         if (eventInfoId === currentEventInfoId) {
             return;
@@ -58,6 +108,11 @@ export default function EventInfoList() {
         setCurrentEventInfoId(eventInfoId);
         setTeamInfoList([]);
         setMemberNicknameList([]);
+    }
+
+    const resetScores  = () => {
+        setHomeTeamScore(0);
+        setVisitorTeamScore(0);
     }
 
     const formatDate = (dateString) => {
@@ -74,6 +129,8 @@ export default function EventInfoList() {
     }
 
     const getEventMemberNicknames = useCallback(async () => {
+        setIsLoading(true);
+        console.log(currentEventInfoId);
         if (currentEventInfoId === 0) {
             return;
         }
@@ -101,7 +158,7 @@ export default function EventInfoList() {
         if (memberNum && teamNum) {
             ereryTeamMemberNum = Math.floor(memberNum / teamNum);
         }
-        else if (!memberNum){
+        else if (!memberNum) {
             setErrorMsg("本次活动暂无人员参加！");
             setOpenSnackbar(true);
             return;
@@ -175,14 +232,10 @@ export default function EventInfoList() {
                 <div>
                     <div>
                         <Select
-                            defaultValue="lucy"
+                            defaultValue={-1}
                             style={{ width: 200 }}
-                            options={[
-                                { value: 'jack', label: 'Jack' },
-                                { value: 'lucy', label: 'Lucy' },
-                                { value: 'Yiminghe', label: 'yiminghe' },
-                                { value: 'disabled', label: 'Disabled', disabled: true },
-                            ]}
+                            options={itemSelectOptions}
+                            onChange={hangdleItemChange}
                         />
                     </div>
 
@@ -193,7 +246,7 @@ export default function EventInfoList() {
                     <div className='event-detail-content-header'>
                         <Title level={4} style={{ margin: "0", color: "white" }}>情報一覧</Title>
                     </div>
-                    {eventInfoList?.length > 0 ? eventInfoList.map((item) => (
+                    {selectedEventInfoList?.length > 0 ? selectedEventInfoList.map((item) => (
                         <div className='event-detail-content-body' key={item.eventInfoId}>
                             <div>
                                 <Title level={5} style={{ margin: "0", textAlign: "left" }}>{formatDate(item.eventOpenDay)}</Title>
@@ -224,9 +277,9 @@ export default function EventInfoList() {
                         teamInfoList?.length > 0 ?
                             teamInfoList.map((teamInfo, index) => (
                                 <div key={teamInfo[0]}>
-                                    <Title level={5} style={{ margin: "0", marginLeft: '1rem', textAlign: "left" }} >{`チーム${index + 1}`}</Title>
-                                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                        {teamInfo.map((info, index) => (
+                                    <Title level={5} style={{ margin: "0", marginLeft: '1rem', textAlign: "left", color: "#1976d2" }} >{`チーム${index + 1}`}</Title>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', borderBottom: "2px solid rgba(100, 100, 100, 0.1)" }}>
+                                        {teamInfo.map((info) => (
                                             <Text style={{ flex: "0 0 20%" }} key={info}>{info}</Text>
                                         ))}
                                     </div>
@@ -259,11 +312,34 @@ export default function EventInfoList() {
                     <div className='event-detail-content-header event-detail-content-header-gray'>
                         <Title level={4} style={{ margin: "0" }}>比赛助手</Title>
                     </div>
-
-                    计时区
-                    <br />
-
-                    <br />
+                    <div className='countdown-div'>
+                        {/* <Title level={5} style={{ margin: "0", marginLeft: '1rem', textAlign: "left", color: "#1976d2" }} >计时区</Title> */}
+                        <CountdownTimer minutes={1}></CountdownTimer>
+                    </div>
+                    <div className='scoreboard-div'>
+                        <div>
+                            <div>
+                                <Button onClick={() => setHomeTeamScore(homeTeamScore + 1)}>+1</Button>
+                                <Button onClick={() => setHomeTeamScore(homeTeamScore + 2)}>+2</Button>
+                                <Button onClick={() => setHomeTeamScore(homeTeamScore + 3)}>+3</Button>
+                            </div>
+                            <div className='scoreboard-hometeam-score-div'>
+                                <Text style={{ fontSize: '4rem' }}>{homeTeamScore}</Text>
+                            </div>
+                        </div>
+                        <Text style={{ fontSize: '5rem' }}>:</Text>
+                        <div>
+                            <div>
+                                <Button onClick={() => setVisitorTeamScore(visitorTeamScore + 1)}>+1</Button>
+                                <Button onClick={() => setVisitorTeamScore(visitorTeamScore + 2)}>+2</Button>
+                                <Button onClick={() => setVisitorTeamScore(visitorTeamScore + 3)}>+3</Button>
+                            </div>
+                            <div className='scoreboard-visitorteam-score-div'>
+                                <Text style={{ fontSize: '4rem' }}>{visitorTeamScore}</Text>
+                            </div>
+                        </div>
+                    </div>
+                    <Button onClick={resetScores}>清零</Button>
                 </div>
             </div>
 
