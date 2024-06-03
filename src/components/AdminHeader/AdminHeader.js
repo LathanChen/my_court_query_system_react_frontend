@@ -12,6 +12,7 @@ import api from '../../api';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { useVerifyTokenExpiration } from '../../common/verifyTokenexpiration';
 import { breadcrumbNameMap } from '../../common/data/breadcrumbNameMap';
@@ -56,7 +57,7 @@ export default function AdminHeader(props) {
     props.handleSliderOpen()
   };
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const changeIsLogin = () => {
     const fetchData = async () => {
@@ -66,6 +67,16 @@ export default function AdminHeader(props) {
         if (response.data.code === 200) {
           // localStorage.removeItem("token");
           // console.log(localStorage);
+          // 请求成功后的操作
+          dispatch({
+            type: "LOGOUT",
+            payload: false,
+        });
+        // Storage 对象是用于访问浏览器的本地存储（例如 localStorage 或 sessionStorage）的接口。无论你存储的是什么类型的值，
+        // 在存储过程中都会被自动转换为字符串。当你从存储中获取值时，这些字符串会被原样返回。
+        // 所以这里实际存入的是"null"字符串
+        localStorage.removeItem("token");
+        console.log(localStorage);
           enterHomePage()
         }
         else {

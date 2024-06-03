@@ -7,6 +7,6 @@ export const breadcrumbNameMap = {
     'adminpage/courtmanagement': '场馆管理',
     'adminpage/courtmanagement/courtinfolist': '场馆列表',
     'adminpage/courtmanagement/addcourtinfo': '添加场馆',
-    'adminpage/eventmanagement': '场馆管理',
-    'adminpage/eventmanagement/eventinfolist': '场馆列表',
+    'adminpage/eventmanagement': '活动管理',
+    'adminpage/eventmanagement/eventinfolist': '活动列表',
 };

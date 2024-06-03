@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Select, Button, Typography } from 'antd';
 import './CountdownTimer.css';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const CountdownTimer = () => {
   const [minutes, setMinutes] = useState(0); // 初始化为秒数

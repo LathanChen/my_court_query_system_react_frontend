@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../../api';
 // import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { Box, Typography } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Snackbar from '@mui/material/Snackbar';
 import { useTheme } from '@mui/material/styles';
 import {
     Button,
@@ -104,6 +107,22 @@ export default function GeneralUserPageMain() {
 
     const [userEntryHistoryData, setUserEntryHistoryData] = useState([])
 
+    // 控制提示信息组件的打开与关闭
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+
+    const [alertMsg, setAlertMsg] = useState({
+        type: "info",
+        text: ""
+    })
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenSnackbar(false);
+    };
+
     // 创建表单组件的实例对象
     const [form] = Form.useForm();
 
@@ -134,7 +153,7 @@ export default function GeneralUserPageMain() {
     const fetchEntryHistory = useCallback(async () => {
         try {
             const userEntryHistoryResponse = await (await api.get('/eventEntryInfo/getEventEntryInfosByUser')).data.data
-            userEntryHistoryResponse?.sort((a,b) => {
+            userEntryHistoryResponse?.sort((a, b) => {
                 return new Date(a.eventInfo?.eventOpenDay) < new Date(b.eventInfo?.eventOpenDay) ? 1 : -1
             })
             console.log(userEntryHistoryResponse)
@@ -159,18 +178,30 @@ export default function GeneralUserPageMain() {
     };
 
     // 修改信息并点击确定按钮后触发的事件
-    const userInfoOnFinish = (inputUserInfo) => {
+    const userInfoOnFinish = async (inputUserInfo) => {
         console.log(inputUserInfo)
+        const response = await api.put("/user/userinfo", inputUserInfo)
+        console.log(response)
+        if (response.data.code === 200) {
+            setOpenSnackbar(true);
+            setAlertMsg({
+                type: "success",
+                text: "信息更新成功"
+            });
+            fetchUserInfo();
+        }
+        setNotEditable(true);
+
     }
 
     const userEntryHistoryDataHTML = userEntryHistoryData.length > 0 ? userEntryHistoryData.map((item) =>
         <div key={item.eventInfoId} className="Entry-History-Infos-container">
             <div className="Entry-History-Infos">
                 <div id="Entry-History-Info">
-                    <div className="Entry-History-Info-Title" style={{backgroundColor:new Date(item?.eventInfo?.eventOpenDay) > new Date() ? "gold" : "gray"}}>
-                        <Typography 
-                        id="Entry-History-Info-Title-Text" 
-                        variant='h6'>
+                    <div className="Entry-History-Info-Title" style={{ backgroundColor: new Date(item?.eventInfo?.eventOpenDay) > new Date() ? "gold" : "gray" }}>
+                        <Typography
+                            id="Entry-History-Info-Title-Text"
+                            variant='h6'>
                             {new Date(item?.eventInfo?.eventOpenDay) > new Date() ? "参加待ち" : "参加済み"}
                         </Typography>
                     </div>
@@ -188,7 +219,10 @@ export default function GeneralUserPageMain() {
                             参加日：{item?.eventInfo?.eventOpenDay}
                         </Typography>
                         <Typography variant='subtitle2'>
-                            場　所：{item?.courtInfo?.courtName}
+                            場　所：
+                            <Link to={`/courtInfoPage/${item?.courtInfo?.courtId}`} style={{ textDecoration: 'underline', color: '#1976d2' }}>
+                                {item?.courtInfo?.courtName}
+                            </Link>
                         </Typography>
                     </div>
                 </div>
@@ -211,6 +245,13 @@ export default function GeneralUserPageMain() {
 
     return (
         <div>
+            <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+                <Alert severity={alertMsg.type}>
+                    <AlertTitle>{alertMsg.text}</AlertTitle>
+
+                </Alert>
+            </Snackbar>
             <div id="Avatar-And-Username">
                 <div id="Avatar">
                     <Avatar {...stringAvatar(userNickName)} />
@@ -239,7 +280,7 @@ export default function GeneralUserPageMain() {
                 <TabPanel value={value} index={0} dir={theme.direction}>
                     <div id='infoMes'>
                         <Typography variant='h6'>
-                            一些系统提示信息
+                            修改您的个人资料
                         </Typography>
                     </div>
                     <div id='userInfo-form'>
@@ -286,16 +327,18 @@ export default function GeneralUserPageMain() {
                             </Form.Item>
                             <div id='formButton'>
                                 <div style={{ width: "40%" }}>
-                                    {notEditable ? <Button block={true} size='large' type="primary" onClick={() => setNotEditable(false)}>
-                                        編集
-                                    </Button>
+                                    {notEditable ?
+                                        // e.preventDefault()是阻止按钮的默认提交行为，如果不阻止会导致按下編集按钮时表单提交一次
+                                        <Button block={true} size='large' type="primary" onClick={(e) => { e.preventDefault(); setNotEditable(false); }}>
+                                            編集
+                                        </Button>
                                         :
                                         <Button block={true} size='large' type="primary" htmlType="submit">
                                             確定
                                         </Button>}
                                 </div>
                                 <div style={{ width: "40%" }}>
-                                    <Button block={true} size='large' onClick={onReset}>
+                                    <Button block={true} size='large' onClick={onReset} disabled={notEditable}>
                                         キャンセル
                                     </Button>
                                 </div>

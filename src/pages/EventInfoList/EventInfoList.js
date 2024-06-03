@@ -34,37 +34,42 @@ export default function EventInfoList() {
 
     const [visitorTeamScore, setVisitorTeamScore] = useState(0);
 
-    const [itemInfos,setItemInfos] = useState([]);
+    const [itemInfos, setItemInfos] = useState([]);
+
+    const [selectedItemId, setSelectedItemId] = useState(-1);
+
+    const [selectedEventStatus, setSelectedEventStatus] = useState("all");
 
     let itemSelectOptions = itemInfos.map(itemInfo => ({
-        value:itemInfo.itemInfoId,
-        label:itemInfo.itemInfoName
+        value: itemInfo.itemInfoId,
+        label: itemInfo.itemInfoName
     }))
 
     itemSelectOptions = [{
         value: -1,
-        label:"ALL"
-    },...itemSelectOptions]
+        label: "ALL"
+    }, ...itemSelectOptions]
 
     const getEventInfoList = useCallback(async () => {
         const response = await api.get('/eventInfo/getEventInfosByUserId');
         console.log(response.data.data);
         setEventInfoList(response.data.data);
-        if(response.data.data[0]) {
+        if (response?.data?.data?.[0]) {
+            // 默认打开所选择列表的第一条数据的人员详细信息
             setCurrentEventInfoId(response.data.data[0].eventInfoId)
         }
         setSelectedEventInfoList(response.data.data);
     }, [])
 
-    const getItemInfoList = useCallback(async() => {
+    const getItemInfoList = useCallback(async () => {
         const response = await api.get('/iteminfo');
         console.log(response.data);
         setItemInfos(response.data);
-    },[])
+    }, [])
 
     useEffect(() => {
         getItemInfoList();
-    },[getItemInfoList])
+    }, [getItemInfoList])
 
     useEffect(() => {
         getEventInfoList();
@@ -74,7 +79,6 @@ export default function EventInfoList() {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpenSnackbar(false);
     };
 
@@ -83,22 +87,51 @@ export default function EventInfoList() {
     }
 
     const hangdleItemChange = (value) => {
-
-        console.log(eventInfoList);
-        console.log(typeof value);
-        if (value === -1) {
-            setSelectedEventInfoList(eventInfoList);
-            return;
-        }
-        const _selectedEventInfoList = eventInfoList.filter(eventInfo => {
-            return eventInfo.eventItemId === value;
-        })
-        setSelectedEventInfoList(_selectedEventInfoList);
-        console.log(_selectedEventInfoList[0]?.eventInfoId);
-        if (_selectedEventInfoList.length >  0) {
-            setCurrentEventInfoId(_selectedEventInfoList[0]?.eventInfoId);
-        }
+        setSelectedItemId(value);
     }
+
+    const hangdleEventStatusChange = (eventStatus) => {
+        setSelectedEventStatus(eventStatus)
+    }
+
+    useEffect(() => {
+        const fliterEventListByItemId = () => {
+            console.log(eventInfoList);
+            console.log(typeof selectedItemId);
+            if (selectedItemId === -1) {
+                return eventInfoList;
+            }
+            return eventInfoList.filter(eventInfo => {
+                return eventInfo.eventItemId === selectedItemId;
+            })
+        }
+
+        const fliterEventListByEvenStatus = (newEventInfoListFiterByItemId) => {
+            console.log(selectedEventStatus);
+            if (selectedEventStatus === "all") {
+                return newEventInfoListFiterByItemId;
+            }
+            else if (selectedEventStatus === "ended") {
+                return newEventInfoListFiterByItemId.filter(eventInfo => {
+                    return new Date(`${eventInfo.eventOpenDay} ${eventInfo.eventOpenTime.split("-")[0]}`) < new Date()
+                })
+            }
+            else if (selectedEventStatus === "notStart") {
+                return newEventInfoListFiterByItemId.filter(eventInfo => {
+                    return new Date(`${eventInfo.eventOpenDay} ${eventInfo.eventOpenTime.split("-")[0]}`) >= new Date()
+                })
+            }
+        }
+
+        const newEventInfoListFiterByItemId = fliterEventListByEvenStatus(fliterEventListByItemId());
+
+        setSelectedEventInfoList(newEventInfoListFiterByItemId);
+        console.log(newEventInfoListFiterByItemId[0]?.eventInfoId);
+        if (newEventInfoListFiterByItemId.length >  0) {
+            setCurrentEventInfoId(newEventInfoListFiterByItemId[0]?.eventInfoId);
+        }
+
+    }, [selectedItemId,selectedEventStatus,eventInfoList])
 
     const handleDetailButtonClick = (eventInfoId) => {
         if (eventInfoId === currentEventInfoId) {
@@ -110,7 +143,7 @@ export default function EventInfoList() {
         setMemberNicknameList([]);
     }
 
-    const resetScores  = () => {
+    const resetScores = () => {
         setHomeTeamScore(0);
         setVisitorTeamScore(0);
     }
@@ -129,11 +162,11 @@ export default function EventInfoList() {
     }
 
     const getEventMemberNicknames = useCallback(async () => {
-        setIsLoading(true);
         console.log(currentEventInfoId);
         if (currentEventInfoId === 0) {
             return;
         }
+        setIsLoading(true);
         const params = { eventInfoId: currentEventInfoId };
         const response = await axios.get("/eventEntryInfo/getMemberNicknamesByEventID", { params });
         console.log(response.data.data);
@@ -220,14 +253,14 @@ export default function EventInfoList() {
                 </Alert>
             </Snackbar>
             <div id="event-select-container">
-                <div>
+                <div onClick={() => hangdleEventStatusChange("all")} style={{ cursor: "pointer",backgroundColor:selectedEventStatus === "all" ? "#cceeff":null}}>
                     全部イベント
                 </div>
-                <div>
+                <div onClick={() => hangdleEventStatusChange("ended")} style={{ cursor: "pointer",backgroundColor:selectedEventStatus === "ended" ? "#cceeff":null}}>
                     開催済み
                 </div>
-                <div>
-                    開催中
+                <div onClick={() => hangdleEventStatusChange("notStart")} style={{ cursor: "pointer",backgroundColor:selectedEventStatus === "notStart" ? "#cceeff":null}}>
+                    開催予定
                 </div>
                 <div>
                     <div>

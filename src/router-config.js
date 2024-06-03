@@ -20,6 +20,7 @@ import AdminPageEditCourtInfoPage from './pages/AdminPageEditCourtInfoPage/Admin
 import AdminPageCourtInfoListPage from './pages/AdminPageCourtInfoListPage/AdminPageCourtInfoListPage';
 import Dashboard from './pages/Dashboard/Dashboard';
 import EventInfoList from './pages/EventInfoList/EventInfoList';
+import EventManagerment from './pages/EventManagerment/EventManagerment';
 import IndexPage from './pages/IndexPage/IndexPage';
 import GeneralUserPage from './pages/GeneralUserPage/GeneralUserPage';
 
@@ -101,6 +102,10 @@ const routes = [
       {
         path: 'eventmanagement/eventinfolist',
         element: <EventInfoList/>,
+      },
+      {
+        path: 'eventManagerment',
+        element: <EventManagerment/>,
       },
     ]
   },

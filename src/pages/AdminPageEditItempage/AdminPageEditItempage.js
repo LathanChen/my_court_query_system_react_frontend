@@ -7,7 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Alert from '@mui/material/Alert';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import dayjs from 'dayjs';
-import axios from 'axios'; //部署用
+// import axios from 'axios'; //部署用
 import { useParams,useNavigate } from 'react-router-dom';
 import api from '../../api';
 
@@ -181,7 +181,7 @@ export default function AdminPageAddItempage(props) {
         }
         fetchData()
 
-    }, [showSuccessAlert, errorMsg])
+    }, [showSuccessAlert, errorMsg,infoid])
 
     return (
             <Box sx={{

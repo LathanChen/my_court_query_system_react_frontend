@@ -147,11 +147,11 @@ export default function AdminSlider(props) {
                 </ListItemIcon>
                 <ListItemText primary="活动列表" />
               </ListItemButton>
-              <ListItemButton sx={{ pl: 4 }}>
+              <ListItemButton sx={{ pl: 4 }} onClick={() => navigate('/adminpage/eventManagerment')}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>
-                <ListItemText primary="添加活动" />
+                <ListItemText primary="活动管理" />
               </ListItemButton>
             </List>
           </Collapse>
