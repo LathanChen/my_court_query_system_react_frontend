@@ -6,6 +6,11 @@ const initialState = {
   isLogin:false,
   todayEvents:{},
   adminPageLoading:true,
+  alertSettings:{
+    type:"info",
+    text:""
+  },
+  openSnackbar:false
 };
 
 // 创建store
@@ -24,6 +29,10 @@ function reducer(state = initialState, action) {
       return { ...state, todayEvents: action.payload};
     case 'ADMINPAGESTOPLOADING':
       return { ...state, adminPageLoading: action.payload};
+    case 'CHANGEALERTSETTINGS':
+      return { ...state, alertSettings: action.payload};
+    case 'CHANGEOPENSNACKBAR':
+      return { ...state, openSnackbar: action.payload};
     default:
       return state;
   }

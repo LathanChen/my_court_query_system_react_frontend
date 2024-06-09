@@ -271,7 +271,6 @@ export default function EventInfoList() {
                             onChange={hangdleItemChange}
                         />
                     </div>
-
                 </div>
             </div>
             <div id='event-detail-container'>

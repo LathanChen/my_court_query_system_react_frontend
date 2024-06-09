@@ -26,7 +26,7 @@ export default function Dashboard() {
     // 「今開催中活動」データを取得
     useEffect(() => {
         let responseData;
-        axios.get('/eventInfo/availableEvents')
+        api.get('/eventInfo/availableEvents')
             .then((response) => {
                 console.log(response.data.data);
                 responseData = response.data.data;
@@ -41,7 +41,7 @@ export default function Dashboard() {
 
     // 查找本日及之后开始的指定项目的活动的报名情况
     const getAvailableEventsOrganizerNameAndMemberNumsByItemId = useCallback(async () => {
-        const responseData = await (axios.get('/eventInfo/availableEventsOrganizerNameAndMemberNumsByItemId', { params: { eventItemId: selectedItemID } }))
+        const responseData = await (api.get('/eventInfo/availableEventsOrganizerNameAndMemberNumsByItemId', { params: { eventItemId: selectedItemID } }))
         console.log(responseData.data.data);
         const seriesDataList1 = []
         const seriesDataList2 = []

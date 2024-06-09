@@ -1,0 +1,19 @@
+#eventCalendar-eventInfo {
+    border: 2px solid transparent;
+    height: 40px;
+    padding: 5px;
+    background-color:#E0F7FA;
+    margin: 2px;
+}
+
+#eventCalendar-eventInfo:hover {
+    border: 2px solid gray;
+}
+
+/* .DroppableDateCell {
+
+}
+
+#insertEvent-Button {
+
+} */

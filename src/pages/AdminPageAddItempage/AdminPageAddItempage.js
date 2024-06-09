@@ -14,8 +14,8 @@ import "./AdminPageAddItempage.css"
 
 export default function AdminPageAddItempage(props) {
 
-    const [itemnames, setItemnames] = useState([])
-    const [courtnames, setCourtnames] = useState([])
+    const [itemnames, setItemnames] = useState([]);
+    const [courtnames, setCourtnames] = useState([]);
     const [courtOpenBeginTime, setCourtOpenBeginTime] = useState(null)
     const [courtOpenEndTime, setCourtOpenEndTime] = useState(null)
     const [alertMsg, setAlertMsg] = useState("");
@@ -153,8 +153,9 @@ export default function AdminPageAddItempage(props) {
                             }]}>
                             <Select>
                                 <Select.Option value="1">午前</Select.Option>
-                                <Select.Option value="2">午後</Select.Option>
-                                <Select.Option value="3">夜</Select.Option>
+                                <Select.Option value="2">午後1</Select.Option>
+                                <Select.Option value="3">午後2</Select.Option>
+                                <Select.Option value="4">夜</Select.Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
