@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo, useContext, createContext, useRef } from 'react';
+import React, { useState, useCallback, useEffect, useMemo, useContext, createContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { Calendar, Typography, Button, Modal, Form, Input, Select, TimePicker } from 'antd';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
@@ -12,13 +12,11 @@ const EventCalendarContext = createContext(null);
 
 const DraggableEvent = ({ event, handlerButtonShow }) => {
 
-    const { itemnames, courtnames } = useContext(EventCalendarContext);
-
     const [form] = Form.useForm();
 
-    const { setCllGetEventInfosByUserIdApiFlg,getEventInfoList,updateEventInfo } = useContext(EventCalendarContext);
+    const { itemnames, courtnames,setCllGetEventInfosByUserIdApiFlg,getEventInfoList,updateEventInfo,organizerInfo } = useContext(EventCalendarContext);
 
-    const [eventForForm, setEventForForm] = useState()
+    const [eventForForm, setEventForForm] = useState();
 
     const [deleteButtonShow, setDeleteButtonShow] = useState(false);
 
@@ -222,6 +220,17 @@ const DraggableEvent = ({ event, handlerButtonShow }) => {
                                         (<Select.Option value={String(item.courtId)} key={item.courtId}>{item.courtName}</Select.Option>))}
                                 </Select>
                             </Form.Item>
+                            <Form.Item label="開催団体" name="organizerId"
+                                rules={[{
+                                    required: true,
+                                    message: "入力必須項目です"
+                                }]}>
+                                <Select>
+                                    {/* <Select.Option value="demo">Demo</Select.Option> */}
+                                    {(Array.isArray(organizerInfo)) && organizerInfo.map((item) =>
+                                        (<Select.Option value={item.organizerId} key={item.organizerId}>{item.organizerName}</Select.Option>))}
+                                </Select>
+                            </Form.Item>
                             <Form.Item
                                 label="募集人数"
                                 name="eventMaxEnrollment"
@@ -240,6 +249,22 @@ const DraggableEvent = ({ event, handlerButtonShow }) => {
                                         }
                                     }
                                 ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="男性参加料"
+                                name="eventMaleCost"
+                                rules={[
+                                    { required: true, message: '入力必須項目です' } ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="女性参加料"
+                                name="eventFemaleCost"
+                                rules={[
+                                    { required: true, message: '入力必須項目です' } ]}
                             >
                                 <Input />
                             </Form.Item>
@@ -338,7 +363,7 @@ const DroppableDateCell = ({ date, events, onDropEvent, allowInsertEventButton }
 
     // useDrop 钩子应该依赖于 date，以确保在每次 date 变化时 drop 行为能够使用最新的 date。这可以通过将 date 传递给 useDrop 的依赖项数组来实现。
 
-    const { itemnames, courtnames } = useContext(EventCalendarContext);
+    const { itemnames, courtnames,organizerInfo,getEventInfoList } = useContext(EventCalendarContext);
 
     const [form] = Form.useForm();
 
@@ -349,6 +374,8 @@ const DroppableDateCell = ({ date, events, onDropEvent, allowInsertEventButton }
     const [modalOpen, setModalOpen] = useState(false);
 
     const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+
+    const dispatch = useDispatch();
 
     const setTimeRange = (timezoneValue) => {
         switch (timezoneValue) {
@@ -427,8 +454,53 @@ const DroppableDateCell = ({ date, events, onDropEvent, allowInsertEventButton }
         setModalOpen(true);
     };
 
-    const insertEventInfo = () => {
+    const insertEventInfo = async() => {
         console.table(form.getFieldsValue());
+        let insertInfo = form.getFieldsValue();
+        insertInfo = {
+            ...insertInfo,
+            eventUpdateTime:new Date(),
+            eventOpenDay:`${dayjs(date).format('YYYY-MM-DD')}`,
+            eventOpenTime:`${dayjs(insertInfo?.eventOpenTime?.[0]).format('HH:mm')}-${dayjs(insertInfo?.eventOpenTime?.[1]).format('HH:mm')}`
+        }
+        console.table(insertInfo);
+        setConfirmLoading(true);
+        const response = await api.post("eventInfo",insertInfo);
+        setModalOpen(false);
+        if (response.data.code === 200) {
+            dispatch({
+                type: "CHANGEOPENSNACKBAR",
+                payload: true
+            });
+
+            dispatch({
+                type: "CHANGEALERTSETTINGS",
+                payload: {
+                    type: "success",
+                    text: "登録しました！"
+                }
+            });
+            setConfirmLoading(false);
+            await getEventInfoList();
+            return true;
+        }
+        else {
+            dispatch({
+                type: "CHANGEOPENSNACKBAR",
+                payload: true
+            });
+
+            dispatch({
+                type: "CHANGEALERTSETTINGS",
+                payload: {
+                    type: "error",
+                    text: response.data.msg
+                }
+            });
+            setConfirmLoading(false);
+            getEventInfoList();
+            return false;
+        }
     }
 
     const onValuesChange = (changedValues, allValues) => {
@@ -484,6 +556,17 @@ const DroppableDateCell = ({ date, events, onDropEvent, allowInsertEventButton }
                                         (<Select.Option value={String(item.courtId)} key={item.courtId}>{item.courtName}</Select.Option>))}
                                 </Select>
                             </Form.Item>
+                            <Form.Item label="開催団体" name="organizerId"
+                                rules={[{
+                                    required: true,
+                                    message: "入力必須項目です"
+                                }]}>
+                                <Select>
+                                    {/* <Select.Option value="demo">Demo</Select.Option> */}
+                                    {(Array.isArray(organizerInfo)) && organizerInfo.map((item) =>
+                                        (<Select.Option value={item.organizerId} key={item.organizerId}>{item.organizerName}</Select.Option>))}
+                                </Select>
+                            </Form.Item>
                             <Form.Item
                                 label="募集人数"
                                 name="eventMaxEnrollment"
@@ -501,6 +584,22 @@ const DroppableDateCell = ({ date, events, onDropEvent, allowInsertEventButton }
                                         }
                                     }
                                 ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="男性参加料"
+                                name="eventMaleCost"
+                                rules={[
+                                    { required: true, message: '入力必須項目です' } ]}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="女性参加料"
+                                name="eventFemaleCost"
+                                rules={[
+                                    { required: true, message: '入力必須項目です' } ]}
                             >
                                 <Input />
                             </Form.Item>
@@ -588,12 +687,14 @@ const EventCalendar = () => {
     // 存储从api获取的原始数据
     const [events, setEvents] = useState([]);
 
-    // 对查询到的数据进行加工
-    const [eventList, setEventList] = useState([]);
+    // // 对查询到的数据进行加工
+    // const [eventList, setEventList] = useState([]);
 
     const [itemnames, setItemnames] = useState([]);
 
     const [courtnames, setCourtnames] = useState([]);
+
+    const [organizerInfo, setOrganizerInfo] = useState([]);
 
     const infoDivColor = useMemo(() => [
         {
@@ -620,12 +721,22 @@ const EventCalendar = () => {
 
     const fetchData = useCallback(async () => {
         try {
-            const response1 = await api.get('/iteminfo')
-            const response2 = await api.get('/courtinfo')
+            const response1 = await api.get('/iteminfo');
+            const response2 = await api.get('/courtinfo');
+            const response3 = await api.get('/organizer');
+            console.table(response3.data.data);
+
+            // 运动项目信息和体育馆信息肯定存在，所以这里做判断，如果长度为0说明没有正确获取数据
             if (response1.data.length !== 0 && response2.data.length !== 0) {
                 setItemnames(response1.data)
                 setCourtnames(response2.data)
             }
+
+            // 组织信息有且获取成功
+            if (response3.data.code === 200){
+                setOrganizerInfo(response3.data.data)
+            }
+            
         }
         catch (error) {
             console.error(error);
@@ -772,15 +883,18 @@ const EventCalendar = () => {
         else if (info.type === 'month') {
             const monthStart = dayjs(currentDate).startOf('month');
             const monthEnd = dayjs(currentDate).endOf('month');
-            const currentMonthEvents = eventList.filter((event) =>
-                dayjs(event.date).isBetween(monthStart, monthEnd, null, '[]')
+            const currentMonthEvents = events.filter((event) =>
+                dayjs(event.eventOpenDay).isBetween(monthStart, monthEnd, null, '[]')
             );
+            console.log(monthStart.toString());
+            console.log(monthStart.toString());
+            console.log(currentMonthEvents);
             return (
                 <div style={{ padding: '5px', minHeight: '100px' }}>
                     {currentMonthEvents.length > 0 ? (
                         <ul style={{ listStyleType: 'none', padding: 0 }}>
                             {currentMonthEvents.map((event) => (
-                                <li key={event.id}>{event.title}</li>
+                                <li key={event.eventInfoId}>{event.organizer.organizerName}</li>
                             ))}
                         </ul>
                     ) : (
@@ -801,7 +915,7 @@ const EventCalendar = () => {
     };
 
     return (
-        <EventCalendarContext.Provider value={{ setCllGetEventInfosByUserIdApiFlg, itemnames, courtnames,updateEventInfo,getEventInfoList }}>
+        <EventCalendarContext.Provider value={{ setCllGetEventInfosByUserIdApiFlg, itemnames, courtnames,organizerInfo,updateEventInfo,getEventInfoList }}>
             <div>
                 <div style={{ display: 'flex', gap: '1rem', textAlign: 'center', marginBottom: '1rem' }}>
                     {infoDivColor.map(infodiv => (
